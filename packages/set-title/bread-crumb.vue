@@ -30,8 +30,7 @@ export default defineComponent({
 		}
 	},
 	setup(_props) {
-		const Global = getCurrentInstance().appContext.config.globalProperties;
-		const $global = Global.$global;
+		const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
 		const leftW = ref(0);
 		const handleResize = ({ distance }) => {
@@ -39,17 +38,17 @@ export default defineComponent({
 		};
 
 		onBeforeMount(() => {
-			$global?.on?.('layout-left-menu', handleResize);
+			globalProperties.$global?.on?.('layout-left-menu', handleResize);
 		});
 
 		onMounted(() => {
 			// 让left-menu 再次告知它自己当前的宽度
-			$global?.emit?.('layout-top-menu', { distance: 55 });
-			$global?.emit?.('layout-left-menu-emit-again', { emit: true });
+			globalProperties.$global?.emit?.('layout-top-menu', { distance: 55 });
+			globalProperties.$global?.emit?.('layout-left-menu-emit-again', { emit: true });
 		});
 
 		onUnmounted(() => {
-			$global?.off?.('layout-left-menu', handleResize);
+			globalProperties.$global?.off?.('layout-left-menu', handleResize);
 		});
 
 		return {
