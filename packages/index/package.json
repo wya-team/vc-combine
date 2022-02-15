@@ -7,6 +7,7 @@
   "dependencies": {
     "@wya/vcc-paging": "^0.0.0",
     "@wya/vcc-set-title": "^0.0.0",
-    "@wya/vcc-section-title": "^0.0.0"
+    "@wya/vcc-section-title": "^0.0.0",
+    "@wya/vcc-footer": "^0.0.0"
   }
 }
