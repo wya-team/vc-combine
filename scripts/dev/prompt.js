@@ -10,7 +10,7 @@ fs.readdirSync(directory).forEach((file) => {
 	const fullpath = resolve(directory, file);
 	// 获取文件信息
 	const stat = fs.statSync(fullpath);
-	if (!(/(^_|index)/.test(file)) 
+	if (!(/(^_|tpl)/.test(file)) 
 		&& stat.isDirectory()
 	) {
 		components.push(file);

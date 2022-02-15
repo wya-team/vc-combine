@@ -42,8 +42,8 @@ class Gen {
 		contents += `\nimport App from '${relativePath}';\n`;
 
 		contents += `\nconst app = createApp(App);\n`;
-		contents += `\napp.mount('#app');\n`;
 		contents += `\ntypeof window !== 'undefined' && (window.app = app);\n`;
+		contents += `\napp.mount('#app');\n`;
 		return contents;
 	}
 
