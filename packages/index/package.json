@@ -1,13 +1,15 @@
 {
   "name": "@wya/vcc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "license": "MIT",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@wya/vcc-paging": "^0.0.0",
-    "@wya/vcc-set-title": "^0.0.0",
-    "@wya/vcc-section-title": "^0.0.0",
-    "@wya/vcc-footer": "^0.0.0"
+    "@wya/vcc-footer": "^0.0.1",
+    "@wya/vcc-paging": "^0.0.1",
+    "@wya/vcc-section-title": "^0.0.1",
+    "@wya/vcc-set-title": "^0.0.1"
   }
 }

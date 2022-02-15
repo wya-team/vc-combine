@@ -1,9 +1,11 @@
 {
   "name": "@wya/vcc-footer",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "license": "MIT",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@wya/vc": "~",
     "vue": "^3.2.31"
