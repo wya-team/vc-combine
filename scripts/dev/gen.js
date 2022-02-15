@@ -38,6 +38,7 @@ class Gen {
 		// stylePath = upath.normalize(stylePath);
 		// contents += `\nimport '${stylePath}';\n`;
 
+		contents += `\nimport '@wya/vc/lib/vc.min.css';\n`;
 		contents += `\nimport App from '${relativePath}';\n`;
 
 		contents += `\nconst app = createApp(App);\n`;

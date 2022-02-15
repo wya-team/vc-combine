@@ -23,6 +23,8 @@ class Builder {
 				input,
 				external: [
 					'@wya/vc', 
+					'@wya/http', 
+					'@wya/utils', 
 					'vue',
 					'lodash',
 					/^@wya\/vcc-/
