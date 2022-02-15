@@ -1,17 +1,17 @@
 <!-- 集成业务的面包屑，暂不考虑抽离 -->
 <template>
-	<div :style="{ left: `${leftW}px` }" class="vca-bread-crumb">
+	<div :style="{ left: `${leftW}px` }" class="vcc-bread-crumb">
 		<div 
 			v-for="(route, index) in routes"
 			:key="index"
 		>
 			<span 
-				:class="index === routes.length - 1 ? 'vca-bread-crumb__black' : route.path && 'vca-bread-crumb__link'"
+				:class="index === routes.length - 1 ? 'vcc-bread-crumb__black' : route.path && 'vcc-bread-crumb__link'"
 				@click="route.path && $router.push(route.path)"
 			>
 				{{ route.name }}
 			</span>
-			<span v-if="index < routes.length - 1" class="vca-bread-crumb__divider">/</span>
+			<span v-if="index < routes.length - 1" class="vcc-bread-crumb__divider">/</span>
 		</div>
 	</div>
 </template>
@@ -23,7 +23,7 @@ import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrent
  * 需要业务层实现$global的eventbus
  */
 export default defineComponent({
-	name: 'vca-bread-crumb',
+	name: 'vcc-bread-crumb',
 	props: {
 		routes: {
 			type: Array,
@@ -61,6 +61,36 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style lang="scss">
+.vcc-bread-crumb {
+	position: fixed;
+	top: 0px;
+	right: 0;
+	z-index: 999;
+	background-color: #ffffff;
+	padding: 0 15px;
+	border-bottom: 1px solid #d9d9d9;
+	height: 56px;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	&__link {
+		color: #676767;
+		cursor: pointer;
+		&:hover {
+			color: #5495f6;
+		}
+	}
+	&__divider {
+		margin: 0 6px;
+	}
+
+	&__black {
+		color: #000; 
+	}
+}
+</style>
 
 
 
