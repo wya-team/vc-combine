@@ -1,5 +1,5 @@
 <template>
-	<vc-paging
+	<vcc-paging
 		:data-source="listInfo.data"
 		:load-data="loadData"
 		:total="listInfo.total"
@@ -32,13 +32,13 @@
 		<template #loading>
 			<div>loading</div>
 		</template>
-	</vc-paging>
+	</vcc-paging>
 </template>
 <script>
 import { ref, reactive, defineComponent } from 'vue';
 import { ajax } from '@wya/http';
 import { Table } from '@wya/vc';
-import Paging from '../paging.vue';
+import Paging from '../index.ts';
 
 const initPage = () => ({
 	reset: false,
@@ -66,9 +66,9 @@ const getFakeData = (page, pageSize) => {
 };
 
 export default defineComponent({
-	name: "vc-paging-basic",
+	name: "vcc-paging-basic",
 	components: {
-		'vc-paging': Paging,
+		'vcc-paging': Paging,
 		'vc-table-item': Table.Item,
 		'vc-table-column': Table.Column,
 	},

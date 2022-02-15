@@ -19,6 +19,9 @@
 <script>
 import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrentInstance } from 'vue';
 
+/**
+ * 需要业务层实现$global的eventbus
+ */
 export default defineComponent({
 	name: 'vca-bread-crumb',
 	props: {
