@@ -37,6 +37,10 @@ class Builder {
 					'@wya/utils', 
 					'vue',
 					'lodash',
+					'echarts',
+					'photoswipe',
+					'quill',
+					'html2canvas',
 					/^@wya\/vcc-/
 				],
 				plugins: [
