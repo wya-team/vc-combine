@@ -4,7 +4,8 @@
 			v-if="filters && filters.length" 
 			style="margin-top: 12px; margin-bottom: 12px;"
 			:filters="filters"
-			v-bind="mergeProps"
+			:history="mergeProps.history"
+			:router="mergeProps.router"
 			@search="handleSearch"
 		/>
 		<vcc-paging-core

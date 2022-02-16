@@ -21,6 +21,14 @@ export default defineComponent({
 		'vcc-paging-filter': PagingFilter
 	},
 	props: {
+		// columns: Array,
+		// tableOptions: Object,
+		// pageOptions: Object,
+		// mode: String,
+		// disabled: Boolean,
+		// controls: Object,
+		// rowKey: String,
+		
 		history: Boolean,
 		router: [Boolean, Object],
 		footer: Boolean,

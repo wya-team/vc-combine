@@ -1,12 +1,13 @@
 <template>
 	<vcc-paging-group
+		ref="pagingGroup"
 		:history="true"
 		:footer="true"
 		:filters="filters"
 		:load-data="loadData"
 	>
 		<vc-tabs 
-			:value="type" 
+			:model-value="type" 
 			:animated="true" 
 			type="card"
 			@click="handleChange"
@@ -19,12 +20,15 @@
 			>
 				<vcc-paging
 					:disabled="item.value != type" 
+					:table-options="tableOptions"
 					style="width: 100%;"
+					@sort-change="handleSortChange"
 				>
 					<vc-table-column
 						prop="id"
 						label="ID"
 						width="180"
+						sortable
 					/>
 					<vc-table-column
 						prop="name"
@@ -42,7 +46,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { Tabs, Table } from '@wya/vc';
 import { ajax } from '@wya/http';
 import { URL } from '@wya/utils';
@@ -74,12 +78,20 @@ export default {
 	setup(props) {
 		const route = URL.parse();
 
+		const pagingGroup = ref(null);
 		const type = ref(String(route?.query?.type || 1));
 		const tabs = ref([
 			{ label: '标签一', value: '1' }, 
 			{ label: '标签二', value: '2' }, 
 			{ label: '标签三', value: '3' }
 		]);
+
+		const tableOptions = reactive({
+			defaultSort: {
+				prop: 'date',
+				order: 'descending'
+			}
+		});
 
 		const filters = ref([
 			{
@@ -160,12 +172,19 @@ export default {
 			}
 		};
 
+		const handleSortChange = (e) => {
+			pagingGroup.value.reset(1);
+		};
+
 		return {
 			tabs,
 			type,
 			filters,
+			tableOptions,
 			handleChange,
-			loadData
+			pagingGroup,
+			loadData,
+			handleSortChange
 		};
 	}
 };
