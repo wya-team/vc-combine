@@ -25,7 +25,6 @@
 			:data-source="data" 
 			v-bind="tableOptions"
 			v-on="tableHooks"
-			@selection-change="handleSelectionChange"
 		>
 			<template #default>
 				<slot />
@@ -68,6 +67,7 @@
 import { defineComponent, ref, computed, watch, getCurrentInstance, onMounted } from 'vue';
 import { Table, Page, VcInstance } from '@wya/vc';
 import { URL, Storage } from '@wya/utils';
+import { useListeners } from './use-listeners';
 
 let localPageSize = 0;
 let localPageSizeKey = '@wya/vc.paging.localPageSize';
@@ -111,7 +111,7 @@ export default defineComponent({
 			type: Boolean,
 			default: false
 		},
-		sync: {
+		router: {
 			type: Boolean,
 			default: false
 		},
@@ -123,11 +123,11 @@ export default defineComponent({
 			},
 			default: 'table'
 		},
-		show: {
+		disabled: {
 			type: Boolean,
-			default: true
+			default: false
 		},
-		reset: Boolean,
+		resetByCurrent: Boolean,
 		total: {
 			type: Number,
 			default: 0
@@ -145,7 +145,7 @@ export default defineComponent({
 			type: Boolean,
 			default: true
 		},
-		auth: {
+		controls: {
 			type: Object,
 			default: () => ({
 				pageSize: true
@@ -171,12 +171,13 @@ export default defineComponent({
 		let { pageSizeOptions } = props.pageOptions; // eslint-disable-line
 		const defaultPageSize = Number(
 			_pageSize
-			|| (props.auth.pageSize && localPageSize)
+			|| (props.controls.pageSize && localPageSize)
 			|| (pageSizeOptions && pageSizeOptions[0]) 
 			|| 10
 		);
+
 		const loading = ref(false);
-		const currentPage = ref(props.show ? Number(page) : 1);
+		const currentPage = ref(!props.disabled ? Number(page) : 1);
 		const pageSize = ref(defaultPageSize);
 		const selection = ref([]);
 		const hasTabsClick = ref(false); // TODO
@@ -193,6 +194,17 @@ export default defineComponent({
 		const resetSelection = () => {
 			// TODO
 		};
+
+		const listeners = useListeners();
+		const tableHooks = computed(() => {
+			return {
+				...listeners.value,
+				'page-size-change': (e) => {
+					reset(1);
+					emit('page-size-change', e);
+				} 
+			};
+		});
 
 		const setCurrentPage = ($page) => {
 			currentPage.value = $page;
@@ -249,7 +261,7 @@ export default defineComponent({
 					}
 				});
 				// 同步vue-router，this.$route
-				(globalProperties.$router && props.sync)
+				(globalProperties.$router && props.router)
 					? globalProperties.$router.replace(config)
 					: window.history.replaceState(null, null, config);
 			}
@@ -268,15 +280,15 @@ export default defineComponent({
 		};
 
 		watch(
-			() => props.show,
+			() => props.disabled,
 			(v) => {
-				if (!v) return;
+				if (v) return;
 				// tabs切换时保持pageSize不变
 				let { query } = URL.parse();
 				if (pageSize.value != query.pageSize) {
 					pageSize.value = Number(
 						query.pageSize 
-						|| (props.auth.pageSize && localPageSize) 
+						|| (props.controls.pageSize && localPageSize) 
 						|| defaultPageSize
 					);
 				}
@@ -289,12 +301,12 @@ export default defineComponent({
 		watch(
 			() => props.dataSource,
 			() => {
-				let $page = props.reset === true 
+				let $page = props.resetByCurrent === true 
 					? currentPage.value // 当前页刷新
 					: 1; // 首页刷新
 				if (props.count === 0) {
 					currentPage.value = 0;
-					props.show && handleChange($page);
+					!props.disabled && handleChange($page);
 				}
 			}
 		);
@@ -303,11 +315,11 @@ export default defineComponent({
 			let { query: { page: $page = 1 } } = URL.parse();
 			/**
 			 * 首次加载的时候特殊处理
-			 * props.show的情况下才去加载
+			 * !props.disabled的情况下才去加载
 			 * 页数history -> true 且未点击过tabs时为当前的page
 			 * 其他：适配ssr, 需要把请求放入到mounted
 			 */
-			props.show && loadData(props.history && !hasTabsClick.value ? $page : 1);
+			!props.disabled && loadData(props.history && !hasTabsClick.value ? $page : 1);
 		});
 
 		return {
@@ -315,12 +327,8 @@ export default defineComponent({
 			currentPage,
 			data,
 			pageSize,
-			// TODO: 优化
-			tableHooks: {
-				'sort-change': (...rest) => {
-					emit('sort-change', ...rest);
-				}
-			}, 
+			
+			tableHooks,
 			selection,
 
 			handleSelectionChange,

@@ -4,24 +4,24 @@
 		:load-data="rebuildLoadData"
 		:total="listInfo.total"
 		:count="listInfo.count"
-		:reset="listInfo.reset"
+		:reset-by-current="listInfo.resetByCurrent"
 		:page-options="pageOptions"
 		:table-options="tableOptions"
 		:history="true"
-		:show="show"
+		:disabled="disabled"
 		style="width: 100%;"
-		@page-size-change="() => handleReset(1)"
-		@sort-change="handleSortChange"
+		v-on="listeners"
 	>
-		<slot />
+		<slot />s
 	</vcc-paging-core>
 </template>
 <script>
-import { ref, reactive, defineComponent } from 'vue';
+import { ref, reactive, defineComponent, computed, onMounted, getCurrentInstance } from 'vue';
+import { useListeners } from './use-listeners';
 import PagingCore from './core.vue';
 
 const initPage = () => ({
-	reset: false,
+	resetByCurrent: false,
 	current: 0,
 	total: 0,
 	count: 0,
@@ -30,30 +30,21 @@ const initPage = () => ({
 	}
 });
 
-
 export default defineComponent({
 	name: "vcc-paging-basic",
 	components: {
 		'vcc-paging-core': PagingCore,
 	},
 	props: {
-		show: Boolean,
+		disabled: Boolean,
 		pageOptions: Object,
 		tableOptions: Object,
 		loadData: Function
 	},
-	emits: ['sort-change'],
+	emits: ['page-size-change'],
 	setup(props, { emit }) {
-		const show = ref(true);
 		const listInfo = ref(initPage());
-		const page = ref(undefined);
-		const table = reactive({
-			defaultSort: {
-				prop: 'date',
-				order: 'descending'
-			}
-		});
-
+		const instance = getCurrentInstance();
 		const rebuildLoadData = async ($page, pageSize) => {
 			const res = await props.loadData($page, pageSize);
 			if (!res || !res.data) {
@@ -69,36 +60,27 @@ export default defineComponent({
 			};
 		};
 
-		const handleReset = (force) => {
-			/**
-			 * 回到首页刷新
-			 */
+		const reset = (force) => {
+			// 回到首页刷新
 			if (force) {
 				listInfo.value = initPage();
 				return;
 			}
 
-			/**
-			 * 当前页刷新
-			 */
+			// 当前页刷新
 			listInfo.value = {
 				...initPage(),
-				reset: true,
+				resetByCurrent: true,
 			};
 		};
 
-		const handleSortChange = (...rest) => {
-			emit('sort-change', ...rest);
-		};
-
+		const listeners = useListeners();
 		return {
+			listeners,
 			listInfo,
 			rebuildLoadData,
-			handleSortChange,
-			handleReset,
 
-			// 外部使用
-			reset: handleReset,
+			reset
 		};
 	}
 });
