@@ -291,7 +291,7 @@ export default defineComponent({
 				}
 				
 				// 触发
-				handleChange(currentPage);
+				handleChange(currentPage.value);
 			}
 		);
 

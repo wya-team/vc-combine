@@ -1,11 +1,10 @@
 <template>
 	<div class="vcc-paging">
 		<vcc-paging-filter 
-			v-if="filters.length" 
+			v-if="filters && filters.length" 
 			style="margin-top: 12px; margin-bottom: 12px;"
 			:filters="filters"
-			:history="history"
-			:router="router"
+			v-bind="mergeProps"
 			@search="handleSearch"
 		/>
 		<vcc-paging-core
@@ -16,14 +15,12 @@
 			:page-options="pageOptions"
 			:table-options="tableOptions"
 			:columns="columns"
-			:history="history"
-			:router="router"
 			:mode="mode"
 			:disabled="disabled"
 			:load-data="rebuildLoadData"
-			:footer="footer"
 			:controls="controls"
 			:row-key="rowKey"
+			v-bind="mergeProps"
 			style="width: 100%;"
 			v-on="pagingHooks"
 		>
@@ -41,7 +38,7 @@
 	</div>
 </template>
 <script>
-import { ref, reactive, defineComponent, computed, onMounted, getCurrentInstance } from 'vue';
+import { inject, ref, reactive, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
 import PagingFilter from './filter.vue';
 import { useListeners } from './use-listeners';
 import PagingCore from './core.vue';
@@ -79,10 +76,21 @@ export default defineComponent({
 	},
 	emits: ['page-size-change'],
 	setup(props, { emit }) {
+		const group = inject('paging-group', { props: {} });
+
 		const listInfo = ref(initPage());
 		const instance = getCurrentInstance();
+
+		const mergeProps = computed(() => {
+			return ['history', 'router', 'footer'].reduce((pre, key) => {
+				pre[key] = props[key] || group.props[key];
+				return pre;
+			}, {});
+		});
+
 		const rebuildLoadData = async ($page, pageSize) => {
-			const res = await props.loadData($page, pageSize);
+			let fn = props.loadData || group.props.loadData; 
+			const res = await fn($page, pageSize);
 			if (!res || !res.data) {
 				return;
 			}
@@ -111,7 +119,7 @@ export default defineComponent({
 		};
 
 		const handleSearch = () => {
-			reset(true);
+			reset(1);
 		};
 
 		const listeners = useListeners();
@@ -125,12 +133,21 @@ export default defineComponent({
 			};
 		});
 
+		onMounted(() => {
+			group.add?.(instance);
+		});
+
+		onBeforeUnmount(() => {
+			group.remove?.(instance);
+		});
+
 		return {
 			listInfo,
 			pagingHooks,
+			mergeProps,
 			rebuildLoadData,
 			handleSearch,
-			reset
+			reset,
 		};
 	}
 });

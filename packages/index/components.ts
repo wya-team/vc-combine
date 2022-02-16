@@ -5,13 +5,13 @@ import SectionTitle from '@wya/vcc-section-title';
 import Footer from '@wya/vcc-footer';
 
 const PagingCore = Paging.Core;
-const PagingTabs = Paging.Tabs;
+const PagingGroup = Paging.Group;
 const PagingFilter = Paging.Filter;
 
 export {
 	Paging,
 	PagingCore,
-	PagingTabs,
+	PagingGroup,
 	PagingFilter,
 	SetTitle,
 	SectionTitle,
