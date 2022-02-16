@@ -7,6 +7,7 @@
 				v-bind="firstFilter"
 				:width="240"
 				class="vcc-paging-filter__item"
+				@search="handleSearch"
 			/>
 			<vc-button 
 				type="primary"
@@ -32,8 +33,8 @@
 					:key="item.field"
 					v-model="keywords[item.field]"
 					v-bind="item"
-					:width="220"
 					class="vcc-paging-filter__item"
+					@search="handleSearch"
 				/>
 			</div>
 		</vc-expand>
@@ -48,7 +49,9 @@ import { debounce } from 'lodash';
 import {
 	Input,
 	Select,
-	Cascader
+	Cascader,
+	SingleDatePicker,
+	RangeDatePicker
 } from './filters';
 
 const COMPONENT_PREFIX = 'vcc-paging-filter';
@@ -64,6 +67,8 @@ export default {
 		[getComponentName('input')]: Input,
 		[getComponentName('select')]: Select,
 		[getComponentName('cascader')]: Cascader,
+		[getComponentName('datePicker')]: SingleDatePicker,
+		[getComponentName('rangeDatePicker')]: RangeDatePicker,
 	},
 	props: {
 		filters: {

@@ -45,6 +45,20 @@ export default defineComponent({
 						]
 					}
 				]
+			},
+			{
+				type: 'datePicker',
+				label: '时间/日期选择',
+				field: 'datePicker',
+			},
+			{
+				type: 'rangeDatePicker',
+				label: '时间/日期范围选择',
+				field: 'rangeDatePicker',
+				// vc-date-picker组件配置
+				options: {
+					format: 'YYYY-MM-DD'
+				}
 			}
 		]);
 		
