@@ -63,7 +63,7 @@
 	</div>
 </template>
 <script>
-import { defineComponent, ref, computed, watch, getCurrentInstance, onMounted } from 'vue';
+import { inject, defineComponent, ref, computed, watch, getCurrentInstance, onMounted } from 'vue';
 import { Table, Page, VcInstance } from '@wya/vc';
 import { URL, Storage } from '@wya/utils';
 import { useListeners } from './use-listeners';
@@ -165,6 +165,7 @@ export default defineComponent({
 		'sort-change'
 	],
 	setup(props, { emit }) {
+		const group = inject('paging-group');
 		const { globalProperties } = getCurrentInstance().appContext.config;
 		let { query: { page = 1, pageSize: _pageSize } } = URL.parse();
 		let { pageSizeOptions } = props.pageOptions; // eslint-disable-line
@@ -179,7 +180,6 @@ export default defineComponent({
 		const currentPage = ref(!props.disabled ? Number(page) : 1);
 		const pageSize = ref(defaultPageSize);
 		const selection = ref([]);
-		const hasTabsClick = ref(false); // TODO
 		
 		const data = computed(() => {
 			let result = props.dataSource[currentPage.value];
@@ -311,13 +311,13 @@ export default defineComponent({
 
 		onMounted(() => {
 			let { query: { page: $page = 1 } } = URL.parse();
-			/**
-			 * 首次加载的时候特殊处理
-			 * !props.disabled的情况下才去加载
-			 * 页数history -> true 且未点击过tabs时为当前的page
-			 * 其他：适配ssr, 需要把请求放入到mounted
-			 */
-			!props.disabled && loadData(props.history && !hasTabsClick.value ? $page : 1);
+
+			// 首次加载的时候特殊处理, 选择卡切换时，需要重置到第1页
+			!props.disabled && loadData(
+				props.history && (group.pagings?.value || group.pagings.value.length === 0)
+					? $page 
+					: 1
+			);
 		});
 
 		return {

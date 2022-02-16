@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-import { provide, defineComponent } from 'vue';
+import { provide, ref, defineComponent } from 'vue';
 import PagingFilter from './filter.vue';
 
 export default defineComponent({
@@ -37,18 +37,19 @@ export default defineComponent({
 	},
 	emits: ['click', 'change'],
 	setup(props, { emit }) {
-		const fields = [];
+		const pagings = ref([]);
 		provide('paging-group', {
 			props,
+			pagings,
 			add: (item) => {
-				item && fields.push(item);
+				item && pagings.value.push(item);
 			},
 			remove: (item) => {
-				item.props.prop && fields.splice(fields.indexOf(item), 1);
+				item.props.prop && pagings.value.splice(pagings.value.indexOf(item), 1);
 			}
 		});
 		const reset = (force) => {
-			fields.forEach(i => i.proxy.reset(force));
+			pagings.value.forEach(i => i.proxy.reset(force));
 		};
 
 		const handleSearch = () => {
