@@ -69,10 +69,12 @@ export default {
 		filters: {
 			type: Array,
 			default: () => []
-		}
+		},
+		history: Boolean,
+		router: Boolean
 	},
 	emits: ['search'],
-	setup(props) {
+	setup(props, { emit }) {
 		const vm = getCurrentInstance();
 
 		const firstFilter = computed(() => props.filters[0]);
@@ -95,22 +97,25 @@ export default {
 		};
 
 		const routerReplace = (fullPath) => {
-			const { $router: router } = vm.appContext.config.globalProperties;
-			router
-				? router.replace(fullPath)
+			const { globalProperties } = vm.appContext.config;
+			(globalProperties.$router && props.router)
+				? globalProperties.$router.replace(fullPath)
 				: window.history.replaceState(null, null, fullPath);
 		};
 
 		const handleSearch = debounce(() => {
-			const route = vm.appContext.config.globalProperties.$route;
-			let query = {
-				...route.query,
-				...keywords,
-			};
-			routerReplace(URL.merge({
-				path: route.path, 
-				query
-			}));
+			if (props.history) {
+				const route = URL.parse();
+				let query = {
+					...route.query,
+					...keywords,
+				};
+				routerReplace(URL.merge({
+					path: route.path.join('/'), 
+					query
+				}));
+			}
+			
 			emit('search', keywords);
 		}, 300);
 

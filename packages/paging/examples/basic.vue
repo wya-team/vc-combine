@@ -4,8 +4,10 @@
 		:page-options="pageOptions"
 		:table-options="tableOptions"
 		:load-data="loadData"
+		:disabled="disabled"
+		:filters="filters"
 		:history="true"
-		:show="show"
+		:footer="true"
 		@sort-change="handleSortChange"
 	>
 		<vc-table-item>
@@ -57,7 +59,7 @@ export default defineComponent({
 	},
 
 	setup() {
-		const show = ref(true);
+		const disabled = ref(false);
 		const paging = ref(null);
 		const pageOptions = ref();
 		const tableOptions = reactive({
@@ -66,6 +68,40 @@ export default defineComponent({
 				order: 'descending'
 			}
 		});
+		const filters = ref([
+			{
+				type: 'input',
+				label: '关键词',
+				field: 'input',
+				placeholder: '请输入关键词进行搜索'
+			},
+			{
+				type: 'select',
+				label: '下拉选择项',
+				field: 'select',
+				dataSource: [
+					{ label: '选项一', value: 1 },
+					{ label: '选项二', value: 2 }
+				]
+			},
+			{
+				type: 'cascader',
+				label: '级联选择',
+				field: 'cascader',
+				dataSource: [
+					{ label: '选项一', value: 1 },
+					{ label: '选项二', value: 2 },
+					{ 
+						label: '选项三',
+						value: 3,
+						children: [
+							{ label: '选项三 - 1', value: 31 },
+							{ label: '选项三 - 2', value: 32 }    
+						]
+					}
+				]
+			}
+		]);
 
 		const loadData = async ($page, pageSize) => {
 			try {
@@ -98,8 +134,9 @@ export default defineComponent({
 		};
 
 		return {
-			show,
+			disabled,
 			paging,
+			filters,
 			pageOptions,
 			tableOptions,
 			loadData,

@@ -1,7 +1,7 @@
 <template>
-	<div class="vcc-paging">
+	<div class="vcc-paging-core">
 		<!-- 原生table -->
-		<table v-if="mode === 'native'" class="vcc-paging__native">
+		<table v-if="mode === 'native'" class="vcc-paging-core__native">
 			<thead>
 				<slot v-bind="columns" name="header">
 					<th v-for="item in columns" :key="item">
@@ -36,8 +36,7 @@
 				<slot name="empty" />
 			</template>
 		</vc-table>
-		
-		<div v-if="footer" class="vcc-paging__footer">
+		<div v-if="footer" class="vcc-paging-core__footer">
 			<div>
 				<slot name="extra" />
 			</div>
@@ -75,7 +74,7 @@ let localPageSizeKey = '@wya/vc.paging.localPageSize';
 Storage.get(localPageSizeKey);
 
 export default defineComponent({
-	name: "vcc-paging",
+	name: "vcc-paging-core",
 	components: {
 		'vc-table': Table,
 		'vc-page': Page
@@ -112,7 +111,7 @@ export default defineComponent({
 			default: false
 		},
 		router: {
-			type: Boolean,
+			type: [Boolean, Object],
 			default: false
 		},
 		// current: [Number, String], // .sync可以不声明；需要使用this.current, 必须声明
@@ -143,7 +142,7 @@ export default defineComponent({
 		},
 		footer: {
 			type: Boolean,
-			default: true
+			default: false
 		},
 		controls: {
 			type: Object,
@@ -342,7 +341,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-.vcc-paging {
+.vcc-paging-core {
 	&__native {
 		border-collapse: collapse;
 	}

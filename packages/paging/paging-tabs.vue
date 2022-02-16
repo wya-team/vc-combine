@@ -1,44 +1,29 @@
 <template>
-	<div class="vcc-paging">
-		<vcc-paging-filter 
-			v-if="filters.length" 
-			style="margin-top: 12px; margin-bottom: 12px;"
-			:filters="filters"
-			:history="history"
-			:router="router"
-			@search="handleSearch"
-		/>
-		<vcc-paging-core
-			:data-source="listInfo.data"
-			:total="listInfo.total"
-			:count="listInfo.count"
-			:reset-by-current="listInfo.resetByCurrent"
-			:page-options="pageOptions"
-			:table-options="tableOptions"
-			:columns="columns"
-			:history="history"
-			:router="router"
-			:mode="mode"
-			:disabled="disabled"
-			:load-data="rebuildLoadData"
-			:footer="footer"
-			:controls="controls"
-			:row-key="rowKey"
-			style="width: 100%;"
-			v-on="listeners"
-		>
-			<template #extra>
-				<slot name="extra" />
-			</template>
-			<template #append>
-				<slot name="append" />
-			</template>
-			<template #empty>
-				<slot name="empty" />
-			</template>
-			<slot />
-		</vcc-paging-core>
-	</div>
+	<vcc-paging-filter 
+		v-if="filters.length" 
+		:filters="filters"
+	/>
+	<vcc-paging-core
+		:data-source="listInfo.data"
+		:total="listInfo.total"
+		:count="listInfo.count"
+		:reset-by-current="listInfo.resetByCurrent"
+		:page-options="pageOptions"
+		:table-options="tableOptions"
+		:columns="columns"
+		:history="history"
+		:router="router"
+		:mode="mode"
+		:disabled="disabled"
+		:load-data="rebuildLoadData"
+		:footer="footer"
+		:controls="controls"
+		:row-key="rowKey"
+		style="width: 100%;"
+		v-on="listeners"
+	>
+		<slot />
+	</vcc-paging-core>
 </template>
 <script>
 import { ref, reactive, defineComponent, computed, onMounted, getCurrentInstance } from 'vue';
@@ -67,7 +52,7 @@ export default defineComponent({
 		tableOptions: Object,
 		pageOptions: Object,
 		history: Boolean,
-		router: [Boolean, Object],
+		router: Boolean,
 		mode: String,
 		disabled: Boolean,
 		loadData: Function,
@@ -75,7 +60,7 @@ export default defineComponent({
 		controls: Object,
 		rowKey: String,
 
-		filters: Array
+		filters: Object
 	},
 	emits: ['page-size-change'],
 	setup(props, { emit }) {
@@ -110,16 +95,12 @@ export default defineComponent({
 			};
 		};
 
-		const handleSearch = () => {
-			reset(true);
-		};
-
 		const listeners = useListeners();
 		return {
 			listeners,
 			listInfo,
 			rebuildLoadData,
-			handleSearch,
+
 			reset
 		};
 	}
