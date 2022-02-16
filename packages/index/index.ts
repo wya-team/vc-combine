@@ -7,6 +7,7 @@ const install = (app: App, _options: Options): void => {
 	});
 };
 
+export { install };
 export default {
 	install
 };
