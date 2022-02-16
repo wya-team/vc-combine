@@ -55,7 +55,7 @@ const initPage = () => ({
 });
 
 export default defineComponent({
-	name: "vcc-paging-basic",
+	name: "vcc-paging",
 	components: {
 		'vcc-paging-core': PagingCore,
 		'vcc-paging-filter': PagingFilter

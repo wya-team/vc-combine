@@ -16,7 +16,7 @@ import { provide, defineComponent } from 'vue';
 import PagingFilter from './filter.vue';
 
 export default defineComponent({
-	name: "vcc-paging-basic",
+	name: "vcc-paging-group",
 	components: {
 		'vcc-paging-filter': PagingFilter
 	},
