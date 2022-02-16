@@ -54,6 +54,7 @@ export default defineComponent({
 			{
 				type: 'rangeDatePicker',
 				label: '时间/日期范围选择',
+				// field: ['rangeDatePicker_start', 'rangeDatePicker_end'],
 				field: 'rangeDatePicker',
 				// vc-date-picker组件配置
 				options: {
@@ -85,7 +86,7 @@ export default defineComponent({
 						],
 					},
 					{
-						type: 'input',
+						type: 'rangeDatePicker',
 						field: 'selectComboFilter',
 						placeholder: '请输入xxx'
 					}

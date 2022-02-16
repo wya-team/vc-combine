@@ -5,18 +5,20 @@
 				:is="getComponentName(item.type)"
 				v-for="item in outerModules"
 				:key="item.field"
-				v-model="keywords[item.field]"
+				:model-value="getModelValue(item)"
 				v-bind="item"
 				:width="240"
 				class="vcc-paging-filter__item is-outer"
+				@update:model-value="handleModelValueChange(item, $event)"
 				@search="handleSearch"
 			>
 				<!-- 下拉组合筛选项 存在该插槽 -->
 				<component 
 					:is="getComponentName(item.children[1].type)"
 					v-if="item.type === 'selectCombo'"
-					v-model="keywords[item.children[1].field]"
+					:model-value="getModelValue(item.children[1])"
 					v-bind="item.children[1]"
+					@update:model-value="handleModelValueChange(item.children[1], $event)"
 					@search="handleSearch"
 				/>
 			</component>
@@ -62,8 +64,9 @@
 					>
 						<component 
 							:is="getComponentName(item.children[1].type)"
-							v-model="keywords[item.children[1].field]"
+							:model-value="getModelValue(item.children[1])"
 							v-bind="item.children[1]"
+							@update:model-value="handleModelValueChange(item.children[1], $event)"
 							@search="handleSearch"
 						/>
 					</component>
@@ -72,9 +75,10 @@
 					<component 
 						:is="getComponentName(item.type)"
 						v-else
-						v-model="keywords[item.field]"
+						:model-value="getModelValue(item)"
 						v-bind="item"
 						class="vcc-paging-filter__item"
+						@update:model-value="handleModelValueChange(item, $event)"
 						@search="handleSearch"
 					/>
 				</template>
@@ -84,7 +88,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, watch, getCurrentInstance } from 'vue';
+import { ref, computed, getCurrentInstance } from 'vue';
 import { Button, Expand, Icon } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
@@ -97,6 +101,7 @@ import {
 	SingleDatePicker,
 	RangeDatePicker
 } from './modules';
+import { useModules } from './hooks';
 
 const COMPONENT_PREFIX = 'vcc-paging-filter';
 
@@ -138,27 +143,12 @@ export default {
 
 		let isExpand = ref(false);
 		// let labelWidth = ref(0);
-		let keywords;
 
-		const makeKeywords = () => {
-			const map = {};
-			const { query } = URL.parse();
-			let field;
-			const getFields = (fieldItems) => {
-				fieldItems.forEach(it => {
-					if (it.children && it.children.length) {
-						getFields(it.children);
-					} else {
-						field = it.field;
-						if (field) {
-							map[field] = String(query[field] || '');
-						}
-					}
-				});
-			};
-			getFields(props.modules);
-			keywords = reactive(map);
-		};
+		const {
+			keywords,
+			getModelValue,
+			handleModelValueChange
+		} = useModules(props);
 
 		const routerReplace = (fullPath) => {
 			const { globalProperties } = vm.appContext.config;
@@ -187,8 +177,6 @@ export default {
 			isExpand.value = !isExpand.value;
 		};
 
-		watch(props.modules, makeKeywords, { immediate: true });
-		
 		return {
 			isExpand, 
 			showExpand,
@@ -199,6 +187,8 @@ export default {
 			handleSearch,
 			handleToggle,
 			getComponentName,
+			getModelValue,
+			handleModelValueChange
 		};
 	},
 };
