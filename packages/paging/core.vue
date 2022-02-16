@@ -114,7 +114,7 @@ export default defineComponent({
 			type: [Boolean, Object],
 			default: false
 		},
-		// current: [Number, String], // .sync可以不声明；需要使用this.current, 必须声明
+		current: [Number, String],
 		mode: {
 			type: String,
 			validator(value) {
@@ -257,6 +257,7 @@ export default defineComponent({
 						pageSize: $pageSize
 					}
 				});
+
 				// 同步vue-router，this.$route
 				(globalProperties.$router && props.router)
 					? globalProperties.$router.replace(config)

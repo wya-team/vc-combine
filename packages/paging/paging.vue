@@ -1,14 +1,15 @@
 <template>
 	<div class="vcc-paging">
 		<vcc-paging-filter 
-			v-if="filters && filters.length" 
+			v-if="filterOptions && filterOptions.modules && filterOptions.modules.length" 
 			style="margin-top: 12px; margin-bottom: 12px;"
-			:filters="filters"
 			:history="mergeProps.history"
 			:router="mergeProps.router"
+			v-bind="filterOptions"
 			@search="handleSearch"
 		/>
 		<vcc-paging-core
+			v-model:current="currentPage"
 			:data-source="listInfo.data"
 			:total="listInfo.total"
 			:count="listInfo.count"
@@ -39,7 +40,7 @@
 	</div>
 </template>
 <script lang="js">
-import { inject, ref, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
+import { inject, ref, watch, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
 import PagingFilter from './filter.vue';
 import { useListeners } from './use-listeners';
 import PagingCore from './core.vue';
@@ -72,8 +73,9 @@ export default defineComponent({
 		footer: Boolean,
 		controls: Object,
 		rowKey: String,
+		current: [Number, String],
 
-		filters: Array
+		filterOptions: Object
 	},
 	emits: ['page-size-change'],
 	setup(props, { emit }) {
@@ -134,6 +136,14 @@ export default defineComponent({
 			};
 		});
 
+		const currentPage = ref(props.current);
+		watch(
+			() => props.current, 
+			() => {
+				currentPage.value = props.current;
+			}
+		);
+
 		onMounted(() => {
 			group?.add?.(instance);
 		});
@@ -143,6 +153,7 @@ export default defineComponent({
 		});
 
 		return {
+			currentPage,
 			listInfo,
 			pagingHooks,
 			mergeProps,

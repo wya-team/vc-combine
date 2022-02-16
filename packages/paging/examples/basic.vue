@@ -3,9 +3,11 @@
 		ref="paging"
 		:page-options="pageOptions"
 		:table-options="tableOptions"
+		:filter-options="{
+			modules
+		}"
 		:load-data="loadData"
 		:disabled="disabled"
-		:filters="filters"
 		:history="true"
 		:footer="true"
 		@sort-change="handleSortChange"
@@ -68,7 +70,7 @@ export default defineComponent({
 				order: 'descending'
 			}
 		});
-		const filters = ref([
+		const modules = ref([
 			{
 				type: 'input',
 				label: '关键词',
@@ -136,7 +138,7 @@ export default defineComponent({
 		return {
 			disabled,
 			paging,
-			filters,
+			modules,
 			pageOptions,
 			tableOptions,
 			loadData,

@@ -3,7 +3,9 @@
 		ref="pagingGroup"
 		:history="true"
 		:footer="true"
-		:filters="filters"
+		:filter-options="{
+			modules
+		}"
 		:load-data="loadData"
 	>
 		<vc-tabs 
@@ -19,6 +21,7 @@
 				:name="item.value"
 			>
 				<vcc-paging
+					v-model:current="current[item.value]"
 					:disabled="item.value != type" 
 					:table-options="tableOptions"
 					style="width: 100%;"
@@ -86,6 +89,7 @@ export default {
 			{ label: '标签三', value: '3' }
 		]);
 
+		const current = reactive({});
 		const tableOptions = reactive({
 			defaultSort: {
 				prop: 'date',
@@ -93,7 +97,7 @@ export default {
 			}
 		});
 
-		const filters = ref([
+		const modules = ref([
 			{
 				type: 'input',
 				label: '关键词',
@@ -134,7 +138,8 @@ export default {
 				path,
 				query: {
 					...query,
-					...values
+					...values,
+					page: current[type.value] || 1
 				}
 			}));
 		};
@@ -179,7 +184,8 @@ export default {
 		return {
 			tabs,
 			type,
-			filters,
+			modules,
+			current,
 			tableOptions,
 			handleChange,
 			pagingGroup,

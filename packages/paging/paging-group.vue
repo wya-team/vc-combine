@@ -1,11 +1,11 @@
 <template>
 	<div class="vcc-paging-group">
 		<vcc-paging-filter 
-			v-if="filters && filters.length" 
+			v-if="filterOptions && filterOptions.modules && filterOptions.modules.length" 
 			style="margin-top: 12px; margin-bottom: 12px;"
-			:filters="filters"
 			:history="history"
 			:router="router"
+			v-bind="filterOptions"
 			@search="handleSearch"
 		/>
 		<slot />
@@ -33,7 +33,7 @@ export default defineComponent({
 		router: [Boolean, Object],
 		footer: Boolean,
 		loadData: Function,
-		filters: Array
+		filterOptions: Object
 	},
 	emits: ['click', 'change'],
 	setup(props, { emit }) {
