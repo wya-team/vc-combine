@@ -9,9 +9,11 @@
 			:precision="0"
 			:clearable="clearable"
 			placeholder="" 
-			:style="`width: ${start.width || 64}px`" 
+			:style="{ width: `${start.width || 64}px` }"
+			class="vcc-paging-filter-range__input-start"
 			v-bind="start"
-			@change="$emit('update:startValue', $event)"
+			@clear="handleSearch"
+			@update:model-value="$emit('update:startValue', $event)"
 		/>
 		~
 		<vc-input-number
@@ -22,9 +24,11 @@
 			:precision="0"
 			:clearable="clearable"
 			placeholder="" 
-			:style="`width: ${end.width || 64}px`" 
+			:style="{ width: `${end.width || 64}px` }"
+			class="vcc-paging-filter-range__input-end"
 			v-bind="end"
-			@change="$emit('update:endValue', $event)"
+			@clear="handleSearch"
+			@update:model-value="$emit('update:endValue', $event)"
 		/>
 	</div>
 </template>
@@ -63,9 +67,6 @@ export default {
 		const handleSearch = () => {
 			emit('search');
 		};
-		const handleChange = (value) => {
-			emit('update:modelValue', value);
-		};
 
 		const getEdgeValue = (edgeType, userOpts) => {
 			return edgeType === 'max' 
@@ -83,7 +84,6 @@ export default {
 			end,
 			getEdgeValue,
 			handleSearch,
-			handleChange
 		};
 	},
 };
@@ -91,7 +91,15 @@ export default {
 
 <style lang="scss">
 .vcc-paging-filter-range {
-	display: inline-flex;
+	display: inline-flex !important;
 	align-items: center;
+
+	&__input-start {
+		margin-right: 5px;
+	}
+
+	&__input-end {
+		margin-left: 5px;
+	}
 }
 </style>

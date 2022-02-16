@@ -29,15 +29,28 @@
 		</div>
 		<vc-expand v-if="showExpand" v-model="isExpand">
 			<div class="vcc-paging-filter__expand-modules">
-				<component 
-					:is="getComponentName(item.type)"
-					v-for="item in innerModules"
-					:key="item.field"
-					v-model="keywords[item.field]"
-					v-bind="item"
-					class="vcc-paging-filter__item"
-					@search="handleSearch"
-				/>
+				<template v-for="item in innerModules" :key="item.field">
+					<!-- 数值范围筛选项 type === 'range' -->
+					<component 
+						:is="getComponentName(item.type)"
+						v-if="item.type === 'range'"
+						v-model:start-value="keywords[item.children[0].field]"
+						v-model:end-value="keywords[item.children[1].field]"
+						v-bind="item"
+						class="vcc-paging-filter__item"
+						@search="handleSearch"
+					/>
+
+					<!-- 其它筛选项 -->
+					<component 
+						:is="getComponentName(item.type)"
+						v-else
+						v-model="keywords[item.field]"
+						v-bind="item"
+						class="vcc-paging-filter__item"
+						@search="handleSearch"
+					/>
+				</template>
 			</div>
 		</vc-expand>
 	</div>
@@ -45,13 +58,14 @@
 
 <script>
 import { ref, reactive, computed, watch, getCurrentInstance } from 'vue';
-import { Button, Expand, Icon } from '@wya/vc';
+import { Button, Expand, Icon, InputNumber } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
 import {
 	Input,
 	Select,
 	Cascader,
+	Range,
 	SingleDatePicker,
 	RangeDatePicker
 } from './modules';
@@ -69,6 +83,7 @@ export default {
 		[getComponentName('input')]: Input,
 		[getComponentName('select')]: Select,
 		[getComponentName('cascader')]: Cascader,
+		[getComponentName('range')]: Range,
 		[getComponentName('datePicker')]: SingleDatePicker,
 		[getComponentName('rangeDatePicker')]: RangeDatePicker,
 	},
@@ -100,10 +115,17 @@ export default {
 			const map = {};
 			const { query } = URL.parse();
 			let field;
-			props.modules.forEach(it => {
-				field = it.field;
-				map[field] = String(query[field] || '');
-			});
+			const getFields = (fieldItems) => {
+				fieldItems.forEach(it => {
+					if (it.type === 'range') {
+						getFields(it.children);
+					} else {
+						field = it.field;
+						map[field] = String(query[field] || '');
+					}
+				});
+			};
+			getFields(props.modules);
 			keywords = reactive(map);
 		};
 

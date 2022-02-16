@@ -59,6 +59,20 @@ export default defineComponent({
 				options: {
 					format: 'YYYY-MM-DD'
 				}
+			},
+			{
+				type: 'range',
+				label: '整数/小数范围',
+				children: [
+					{
+						field: 'rangeStart',
+						max: 2,
+					},
+					{
+						field: 'rangeEnd',
+						max: 2
+					}
+				]
 			}
 		]);
 		
