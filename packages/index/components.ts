@@ -1,4 +1,4 @@
-import { Paging } from '@wya/vcc-paging';
+import Paging from '@wya/vcc-paging';
 
 import SetTitle from '@wya/vcc-set-title';
 import SectionTitle from '@wya/vcc-section-title';
