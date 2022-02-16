@@ -1,12 +1,14 @@
 <template>
 	<div class="vcc-paging-filter">
-		<div v-if="firstFilter">
+		<div v-if="outerFilters.length">
 			<component 
-				:is="getComponentName(firstFilter.type)"
-				v-model="keywords[firstFilter.field]"
-				v-bind="firstFilter"
+				:is="getComponentName(item.type)"
+				v-for="item in outerFilters"
+				:key="item.field"
+				v-model="keywords[item.field]"
+				v-bind="item"
 				:width="240"
-				class="vcc-paging-filter__item"
+				class="vcc-paging-filter__item is-outer"
 				@search="handleSearch"
 			/>
 			<vc-button 
@@ -29,7 +31,7 @@
 			<div class="vcc-paging-filter__expand-filters">
 				<component 
 					:is="getComponentName(item.type)"
-					v-for="item in toExpandFilters"
+					v-for="item in innerFilters"
 					:key="item.field"
 					v-model="keywords[item.field]"
 					v-bind="item"
@@ -75,6 +77,10 @@ export default {
 			type: Array,
 			default: () => []
 		},
+		outerCount: {
+			type: Number,
+			default: 1
+		},
 		history: Boolean,
 		router: Boolean
 	},
@@ -82,8 +88,8 @@ export default {
 	setup(props, { emit }) {
 		const vm = getCurrentInstance();
 
-		const firstFilter = computed(() => props.filters[0]);
-		const toExpandFilters = computed(() => props.filters.slice(1));
+		const outerFilters = computed(() => props.filters.slice(0, props.outerCount));
+		const innerFilters = computed(() => props.filters.slice(props.outerCount));
 		const showExpand = computed(() => props.filters.length > 1);
 
 		let isExpand = ref(false);
@@ -133,8 +139,8 @@ export default {
 		return {
 			isExpand, 
 			showExpand,
-			firstFilter,
-			toExpandFilters,
+			outerFilters,
+			innerFilters,
 			keywords,
 			routerReplace,
 			handleSearch,
@@ -169,6 +175,12 @@ export default {
 
 	&__item {
 		display: inline-block;
+
+		&.is-outer {
+			&:not(:first-child) {
+				margin-left: 24px;
+			}
+		}
 	}
 }
 </style>
