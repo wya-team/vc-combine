@@ -1,6 +1,6 @@
 <template>
 	<div style="padding: 20px;">
-		<vcc-paging-filter :filters="filters" history />
+		<vcc-paging-filter :modules="modules" history />
 	</div>
 </template>
 <script>
@@ -13,7 +13,7 @@ export default defineComponent({
 		'vcc-paging-filter': Paging.Filter,
 	},
 	setup() {
-		const filters = ref([
+		const modules = ref([
 			{
 				type: 'input',
 				label: '关键词',
@@ -63,7 +63,7 @@ export default defineComponent({
 		]);
 		
 		return {
-			filters
+			modules
 		};
 	}
 });

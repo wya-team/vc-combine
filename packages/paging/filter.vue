@@ -1,9 +1,9 @@
 <template>
 	<div class="vcc-paging-filter">
-		<div v-if="outerFilters.length">
+		<div v-if="outerModules.length">
 			<component 
 				:is="getComponentName(item.type)"
-				v-for="item in outerFilters"
+				v-for="item in outerModules"
 				:key="item.field"
 				v-model="keywords[item.field]"
 				v-bind="item"
@@ -28,10 +28,10 @@
 			</span>
 		</div>
 		<vc-expand v-if="showExpand" v-model="isExpand">
-			<div class="vcc-paging-filter__expand-filters">
+			<div class="vcc-paging-filter__expand-modules">
 				<component 
 					:is="getComponentName(item.type)"
-					v-for="item in innerFilters"
+					v-for="item in innerModules"
 					:key="item.field"
 					v-model="keywords[item.field]"
 					v-bind="item"
@@ -54,7 +54,7 @@ import {
 	Cascader,
 	SingleDatePicker,
 	RangeDatePicker
-} from './filters';
+} from './modules';
 
 const COMPONENT_PREFIX = 'vcc-paging-filter';
 
@@ -73,7 +73,7 @@ export default {
 		[getComponentName('rangeDatePicker')]: RangeDatePicker,
 	},
 	props: {
-		filters: {
+		modules: {
 			type: Array,
 			default: () => []
 		},
@@ -88,9 +88,9 @@ export default {
 	setup(props, { emit }) {
 		const vm = getCurrentInstance();
 
-		const outerFilters = computed(() => props.filters.slice(0, props.outerCount));
-		const innerFilters = computed(() => props.filters.slice(props.outerCount));
-		const showExpand = computed(() => props.filters.length > 1);
+		const outerModules = computed(() => props.modules.slice(0, props.outerCount));
+		const innerModules = computed(() => props.modules.slice(props.outerCount));
+		const showExpand = computed(() => props.modules.length > 1);
 
 		let isExpand = ref(false);
 		// let labelWidth = ref(0);
@@ -100,7 +100,7 @@ export default {
 			const map = {};
 			const { query } = URL.parse();
 			let field;
-			props.filters.forEach(it => {
+			props.modules.forEach(it => {
 				field = it.field;
 				map[field] = String(query[field] || '');
 			});
@@ -134,13 +134,13 @@ export default {
 			isExpand.value = !isExpand.value;
 		};
 
-		watch(props.filters, makeKeywords, { immediate: true });
+		watch(props.modules, makeKeywords, { immediate: true });
 		
 		return {
 			isExpand, 
 			showExpand,
-			outerFilters,
-			innerFilters,
+			outerModules,
+			innerModules,
 			keywords,
 			routerReplace,
 			handleSearch,
@@ -166,7 +166,7 @@ export default {
 		user-select: none;
 	}
 
-	&__expand-filters {
+	&__expand-modules {
 		min-width: 720px;
 		margin-top: 20px;
 		line-height: 45px;
