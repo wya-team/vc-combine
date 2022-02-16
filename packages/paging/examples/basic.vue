@@ -1,16 +1,12 @@
 <template>
 	<vcc-paging
-		:data-source="listInfo.data"
+		ref="paging"
+		:page-options="pageOptions"
+		:table-options="tableOptions"
 		:load-data="loadData"
-		:total="listInfo.total"
-		:count="listInfo.count"
-		:reset="listInfo.reset"
-		:page-options="page"
-		:table-options="table"
 		:history="true"
 		:show="show"
-		style="width: 100%;"
-		@page-size-change="handleResetFirst"
+		@sort-change="handleSortChange"
 	>
 		<vc-table-item>
 			<vc-table-column
@@ -29,9 +25,6 @@
 				label="地址"
 			/>
 		</vc-table-item>
-		<template #loading>
-			<div>loading</div>
-		</template>
 	</vcc-paging>
 </template>
 <script>
@@ -39,16 +32,6 @@ import { ref, reactive, defineComponent } from 'vue';
 import { ajax } from '@wya/http';
 import { Table } from '@wya/vc';
 import Paging from '../index.ts';
-
-const initPage = () => ({
-	reset: false,
-	current: 0,
-	total: 0,
-	count: 0,
-	data: {
-
-	}
-});
 
 const getFakeData = (page, pageSize) => {
 	let fakeData = [];
@@ -74,24 +57,19 @@ export default defineComponent({
 	},
 
 	setup() {
-
 		const show = ref(true);
-		const listInfo = ref(initPage());
-		const page = ref(undefined);
-		const table = reactive({
+		const paging = ref(null);
+		const pageOptions = ref();
+		const tableOptions = reactive({
 			defaultSort: {
 				prop: 'date',
 				order: 'descending'
 			}
 		});
 
-		const loadData = ($page, pageSize) => {
-			return new Promise((reslove, reject) => {
-				setTimeout(() => {
-					reslove();
-				}, 3000);
-			}).then(() => {
-				return ajax({
+		const loadData = async ($page, pageSize) => {
+			try {
+				const res = await ajax({
 					url: 'test.json',
 					localData: {
 						status: 1,
@@ -105,46 +83,27 @@ export default defineComponent({
 						}
 
 					}
-				}).then((res) => {
-					console.log(`page: ${$page}@success`);
-					listInfo.value = {
-						...listInfo.value,
-						...res.data.page,
-						data: {
-							...listInfo.value.data,
-							[$page]: res.data.list
-						}
-					};
-				}).catch((e) => {
-					console.log(e);
 				});
-			});
+				console.log(`page: ${$page}@success`);
+
+				return res;
+			} catch (e) {
+				// throw e;
+				console.log(e);
+			}
 		};
 
-		/**
-		 * 回到首页刷新
-		 */
-		const handleResetFirst = () => {
-			listInfo.value = initPage();
-		};
-		/**
-		 * 当前页刷新
-		 */
-		const handleResetCur = () => {
-			listInfo.value = {
-				...initPage(),
-				reset: true,
-			};
+		const handleSortChange = (e) => {
+			paging.value.reset(1);
 		};
 
 		return {
 			show,
-			listInfo,
-			page,
-			table,
+			paging,
+			pageOptions,
+			tableOptions,
 			loadData,
-			handleResetFirst,
-			handleResetCur
+			handleSortChange
 		};
 	}
 });
