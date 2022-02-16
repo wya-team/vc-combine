@@ -38,8 +38,8 @@
 		</vcc-paging-core>
 	</div>
 </template>
-<script>
-import { inject, ref, reactive, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
+<script lang="js">
+import { inject, ref, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
 import PagingFilter from './filter.vue';
 import { useListeners } from './use-listeners';
 import PagingCore from './core.vue';
@@ -77,20 +77,20 @@ export default defineComponent({
 	},
 	emits: ['page-size-change'],
 	setup(props, { emit }) {
-		const group = inject('paging-group', { props: {} });
+		const group = inject('paging-group', {});
 
 		const listInfo = ref(initPage());
 		const instance = getCurrentInstance();
 
 		const mergeProps = computed(() => {
 			return ['history', 'router', 'footer'].reduce((pre, key) => {
-				pre[key] = props[key] || group.props[key];
+				pre[key] = props[key] || group?.props?.[key];
 				return pre;
 			}, {});
 		});
 
 		const rebuildLoadData = async ($page, pageSize) => {
-			let fn = props.loadData || group.props.loadData; 
+			let fn = props.loadData || group?.props?.loadData; 
 			const res = await fn($page, pageSize);
 			if (!res || !res.data) {
 				return;
@@ -135,11 +135,11 @@ export default defineComponent({
 		});
 
 		onMounted(() => {
-			group.add?.(instance);
+			group?.add?.(instance);
 		});
 
 		onBeforeUnmount(() => {
-			group.remove?.(instance);
+			group?.remove?.(instance);
 		});
 
 		return {

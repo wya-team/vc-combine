@@ -6,7 +6,7 @@ import {
 	ref,
 	watchEffect
 } from 'vue';
-import { kebabCase, camelCase } from 'lodash';
+import { kebabCase } from 'lodash';
 
 export const useListeners = (options: Options = {}) => {
 	const { exclude = [] } = options;
@@ -14,7 +14,7 @@ export const useListeners = (options: Options = {}) => {
 	const listeners = ref({});
 
 	watchEffect(() => {
-		const res = Object.entries(instance.vnode.props)
+		const res = Object.entries(instance?.vnode?.props || {})
 			.reduce((pre, [key, val]) => {
 				if (exclude.includes(key)) return pre;
 				if (/^on([A-Z])/.test(key)) {
