@@ -198,10 +198,8 @@ export default defineComponent({
 		const tableHooks = computed(() => {
 			return {
 				...listeners.value,
-				'page-size-change': (e) => {
-					reset(1);
-					emit('page-size-change', e);
-				} 
+				// 由内部触发
+				'selection-change': handleSelectionChange
 			};
 		});
 

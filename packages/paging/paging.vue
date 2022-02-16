@@ -25,7 +25,7 @@
 			:controls="controls"
 			:row-key="rowKey"
 			style="width: 100%;"
-			v-on="listeners"
+			v-on="pagingHooks"
 		>
 			<template #extra>
 				<slot name="extra" />
@@ -115,9 +115,19 @@ export default defineComponent({
 		};
 
 		const listeners = useListeners();
+		const pagingHooks = computed(() => {
+			return {
+				...listeners.value,
+				'page-size-change': (e) => {
+					reset(1);
+					emit('page-size-change', e);
+				} 
+			};
+		});
+
 		return {
-			listeners,
 			listInfo,
+			pagingHooks,
 			rebuildLoadData,
 			handleSearch,
 			reset
