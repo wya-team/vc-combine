@@ -10,7 +10,16 @@
 				:width="240"
 				class="vcc-paging-filter__item is-outer"
 				@search="handleSearch"
-			/>
+			>
+				<!-- 下拉组合筛选项 存在该插槽 -->
+				<component 
+					:is="getComponentName(item.children[1].type)"
+					v-if="item.type === 'selectCombo'"
+					v-model="keywords[item.children[1].field]"
+					v-bind="item.children[1]"
+					@search="handleSearch"
+				/>
+			</component>
 			<vc-button 
 				type="primary"
 				class="vcc-paging-filter__search-btn"
@@ -41,6 +50,24 @@
 						@search="handleSearch"
 					/>
 
+					<!-- 下拉组合筛选项 type === 'selectCombo' -->
+					<component 
+						:is="getComponentName(item.type)"
+						v-else-if="item.type === 'selectCombo'"
+						v-model:select-value="keywords[item.children[0].field]"
+						v-model:combo-value="keywords[item.children[1].field]"
+						v-bind="item"
+						class="vcc-paging-filter__item"
+						@search="handleSearch"
+					>
+						<component 
+							:is="getComponentName(item.children[1].type)"
+							v-model="keywords[item.children[1].field]"
+							v-bind="item.children[1]"
+							@search="handleSearch"
+						/>
+					</component>
+
 					<!-- 其它筛选项 -->
 					<component 
 						:is="getComponentName(item.type)"
@@ -58,7 +85,7 @@
 
 <script>
 import { ref, reactive, computed, watch, getCurrentInstance } from 'vue';
-import { Button, Expand, Icon, InputNumber } from '@wya/vc';
+import { Button, Expand, Icon } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
 import {
@@ -66,6 +93,7 @@ import {
 	Select,
 	Cascader,
 	Range,
+	SelectCombo,
 	SingleDatePicker,
 	RangeDatePicker
 } from './modules';
@@ -84,6 +112,7 @@ export default {
 		[getComponentName('select')]: Select,
 		[getComponentName('cascader')]: Cascader,
 		[getComponentName('range')]: Range,
+		[getComponentName('selectCombo')]: SelectCombo,
 		[getComponentName('datePicker')]: SingleDatePicker,
 		[getComponentName('rangeDatePicker')]: RangeDatePicker,
 	},
@@ -117,11 +146,13 @@ export default {
 			let field;
 			const getFields = (fieldItems) => {
 				fieldItems.forEach(it => {
-					if (it.type === 'range') {
+					if (it.children && it.children.length) {
 						getFields(it.children);
 					} else {
 						field = it.field;
-						map[field] = String(query[field] || '');
+						if (field) {
+							map[field] = String(query[field] || '');
+						}
 					}
 				});
 			};

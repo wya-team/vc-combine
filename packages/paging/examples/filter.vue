@@ -73,6 +73,23 @@ export default defineComponent({
 						max: 2
 					}
 				]
+			},
+			{
+				type: 'selectCombo',
+				children: [
+					{
+						field: 'selectComboType',
+						dataSource: [
+							{ label: '选项一', value: '1' },
+							{ label: '选项二', value: '2' }
+						],
+					},
+					{
+						type: 'input',
+						field: 'selectComboFilter',
+						placeholder: '请输入xxx'
+					}
+				]
 			}
 		]);
 		
