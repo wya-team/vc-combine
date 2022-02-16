@@ -101,7 +101,7 @@ export default {
 				: window.history.replaceState(null, null, fullPath);
 		};
 
-		const handleSearch = debounce(function () {
+		const handleSearch = debounce(() => {
 			const route = vm.appContext.config.globalProperties.$route;
 			let query = {
 				...route.query,
@@ -111,7 +111,7 @@ export default {
 				path: route.path, 
 				query
 			}));
-			this.$emit('search', keywords);
+			emit('search', keywords);
 		}, 300);
 
 		const handleToggle = () => {
