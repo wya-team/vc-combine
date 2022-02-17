@@ -5,6 +5,7 @@
 		v-if="module.type === 'range'"
 		:start-value="getModelValue(module.children[0])"
 		:end-value="getModelValue(module.children[1])"
+		:label-width="labelWidth"
 		:class="$attrs.class"
 		v-bind="module"
 		@search="handleSearch"
@@ -18,6 +19,7 @@
 		v-else-if="module.type === 'selectCombo'"
 		:select-value="getModelValue(module.children[0])"
 		:combo-value="getModelValue(module.children[1])"
+		:label-width="labelWidth"
 		:class="$attrs.class"
 		v-bind="module"
 		@search="handleSearch"
@@ -29,6 +31,7 @@
 			:module="module.children[1]"
 			:get-model-value="getModelValue"
 			:on-model-value-change="onModelValueChange"
+			:label-width="labelWidth"
 		/>
 	</component>
 
@@ -37,6 +40,7 @@
 		:is="getComponentName(module.type)"
 		v-else
 		:model-value="getModelValue(module)"
+		:label-width="labelWidth"
 		:class="$attrs.class"
 		v-bind="module"
 		@update:model-value="onModelValueChange(module, $event)"
@@ -75,7 +79,8 @@ export default {
 			default: () => ({})
 		},
 		getModelValue: Function,
-		onModelValueChange: Function
+		onModelValueChange: Function,
+		labelWidth: String
 	},
 	emits: ['search'],
 	
@@ -92,5 +97,8 @@ export default {
 </script>
 
 <style lang="scss">
-
+.vcc-paging-filter-item-label {
+	display: inline-block;
+	text-align: right;
+}
 </style>

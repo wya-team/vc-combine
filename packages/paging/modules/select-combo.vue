@@ -1,6 +1,12 @@
 <template>
 	<div class="vcc-paging-filter-select-combo">
-		<span v-if="label">{{ label }}：</span>
+		<span 
+			v-if="label" 
+			:style="{ width: labelWidth }"
+			class="vcc-paging-filter-item-label"
+		>
+			{{ label }}：
+		</span>
 		<vc-select
 			:model-value="selectValue"
 			:style="`width: ${selectModule.width || 90}px`" 
@@ -32,6 +38,7 @@ export default {
 		'vc-select': Select,
 		'vc-option': Option
 	},
+	inject: ['labelWidth'],
 	props: {
 		label: String,
 		selectValue: {

@@ -7,6 +7,7 @@
 				:module="item"
 				:get-model-value="getModelValue"
 				:on-model-value-change="onModelValueChange"
+				label-width="auto"
 				class="vcc-paging-filter__item"
 				@search="handleSearch"
 			/>
@@ -34,6 +35,7 @@
 					:module="item"
 					:get-model-value="getModelValue"
 					:on-model-value-change="onModelValueChange"
+					:label-width="labelWidth"
 					class="vcc-paging-filter__item"
 					@search="handleSearch"
 				/>
@@ -79,10 +81,10 @@ export default {
 		const showExpand = computed(() => props.modules.length > 1);
 
 		let isExpand = ref(false);
-		// let labelWidth = ref(0);
 
 		const {
 			keywords,
+			labelWidth,
 			getModelValue,
 			onModelValueChange
 		} = useModules(props);
@@ -122,6 +124,7 @@ export default {
 			outerModules,
 			innerModules,
 			keywords,
+			labelWidth,
 			routerReplace,
 			handleSearch,
 			handleToggle,

@@ -1,6 +1,12 @@
 <template>
 	<div>
-		<span v-if="label">{{ label }}：</span>
+		<span 
+			v-if="label" 
+			:style="{ width: labelWidth }"
+			class="vcc-paging-filter-item-label"
+		>
+			{{ label }}：
+		</span>
 		<vc-date-picker
 			:model-value="modelValue"
 			:style="`width: ${width}px`" 

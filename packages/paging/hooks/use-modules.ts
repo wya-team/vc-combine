@@ -1,5 +1,9 @@
-import { watch, reactive } from 'vue';
+import { ref, watch, computed, reactive } from 'vue';
 import { URL } from '@wya/utils';
+
+const getLabelWidth = length => {
+	return `calc(${length}em + 24px)`;
+};
 
 export const useModules = (props) => {
 	const normalizeField = (field, type) => {
@@ -15,14 +19,23 @@ export const useModules = (props) => {
 		return field;	
 	};
 
+
 	let keywords;
+	let maxLength = ref(0);
 
 	const makeKeywords = () => {
 		const map = {};
 		const { query } = URL.parse();
 		let field;
+		let length;
+		
 		const getFields = (fieldItems) => {
 			fieldItems.forEach(it => {
+				length = it.label && it.label.length;
+				if (length && length > maxLength.value) {
+					maxLength.value = length;
+				}
+
 				if (it.children && it.children.length) {
 					getFields(it.children);
 				} else {
@@ -63,10 +76,13 @@ export const useModules = (props) => {
 		return keywords[field];
 	};
 
+	const labelWidth = computed(() => getLabelWidth(maxLength.value));
+
 	watch(props.modules, makeKeywords, { immediate: true });
 
 	return {
 		keywords,
+		labelWidth,
 		getModelValue,
 		onModelValueChange
 	};

@@ -1,6 +1,12 @@
 <template>
 	<div class="vcc-paging-filter-input">
-		<span v-if="label">{{ label }}：</span>
+		<span 
+			v-if="label" 
+			:style="{ width: labelWidth }"
+			class="vcc-paging-filter-item-label"
+		>
+			{{ label }}：
+		</span>
 		<vc-input
 			:model-value="modelValue"
 			:style="{ width: width + 'px' }"

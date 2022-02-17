@@ -1,6 +1,12 @@
 <template>
 	<div>
-		<span v-if="label">{{ label }}：</span>
+		<span 
+			v-if="label" 
+			:style="{ width: labelWidth }"
+			class="vcc-paging-filter-item-label"
+		>
+			{{ label }}：
+		</span>
 		<vc-select
 			:model-value="modelValue"
 			:style="`width: ${width}px`" 
@@ -47,7 +53,7 @@ export default {
 			emit('update:modelValue', value);
 			handleSearch();
 		};
-		
+
 		return {
 			handleSearch,
 			handleChange
