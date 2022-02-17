@@ -32,7 +32,7 @@
 			:style="{ width: `${end.width || 64}px` }"
 			class="vcc-paging-filter-range__input-end"
 			clearable
-			v-bind="end"
+			v-bind="end.options"
 			@clear="handleSearch"
 			@update:model-value="$emit('update:endValue', $event)"
 		/>
