@@ -9,7 +9,7 @@
 		</span>
 		<vc-select
 			:model-value="selectValue"
-			:style="`width: ${selectModule.width || 90}px`" 
+			:style="{ width: `${selectModule.width || 90}px`, marginLeft: label ? '' : '24px' }" 
 			class="vcc-paging-filter-select-combo__select"
 			v-bind="selectModule.options"
 			@change="$emit('update:selectValue', $event)"
@@ -77,17 +77,20 @@ export default {
 	align-items: center;
 
 	&__select {
-		margin-right: -1px;
+		height: 28px;
 
 		.vc-select__input {
-			margin-top: -1px;
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;
 		}
 	}
 
 	&__combo {
-		.vc-input,
+		height: 28px;
+		margin-left: 3px;
+		line-height: 28px;
+
+		.vc-input:first-child,
 		.vc-select,
 		.vc-date-picker {
 			border-bottom-left-radius: 0;

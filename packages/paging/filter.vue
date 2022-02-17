@@ -8,7 +8,7 @@
 				:get-model-value="getModelValue"
 				:on-model-value-change="onModelValueChange"
 				label-width="auto"
-				class="vcc-paging-filter__item"
+				class="vcc-paging-filter__item is-outer"
 				@search="handleSearch"
 			/>
 			<vc-button 
