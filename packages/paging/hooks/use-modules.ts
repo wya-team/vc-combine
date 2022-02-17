@@ -5,6 +5,19 @@ const getLabelWidth = length => {
 	return `calc(${length}em + 24px)`;
 };
 
+const getValue = (module, field, query, childModule) => {
+	const { type } = module;
+	const { defaultValue } = childModule;
+	let value;
+
+	// 级联选择的modelValue需为数组，需解析query上逗号拼接的字符串
+	if (type === 'cascader') {
+		value = query[field];
+		return value ? value.split(',') : (defaultValue || []);
+	}
+	return String(query[field] || defaultValue || '');
+};
+
 export const useModules = (props) => {
 	const normalizeField = (field, type) => {
 		if (type === 'rangeDatePicker') {
@@ -28,9 +41,16 @@ export const useModules = (props) => {
 		const { query } = URL.parse();
 		let field;
 		let length;
-		
+		// 记录当前正在处理的module
+		let activeModule = null;
+
 		const getFields = (fieldItems) => {
 			fieldItems.forEach(it => {
+				const type = it.type;
+				if (type) {
+					activeModule = it;
+				}
+
 				length = it.label && it.label.length;
 				if (length && length > maxLength.value) {
 					maxLength.value = length;
@@ -39,20 +59,24 @@ export const useModules = (props) => {
 				if (it.children && it.children.length) {
 					getFields(it.children);
 				} else {
-					field = normalizeField(it.field, it.type);
+					field = normalizeField(it.field, type);
 					if (field) {
 						if (Array.isArray(field)) {
 							field.forEach(_field => {
-								map[_field] = String(query[_field] || '');
+								// 存在children的module，此时it是activeModule.children的子项，而非activeModule
+								map[_field] = getValue(activeModule, _field, query, it);
 							});
 						} else {
-							map[field] = String(query[field] || '');
+							map[field] = getValue(activeModule, field, query, it);
 						}
 					}
 				}
 			});
 		};
+		
 		getFields(props.modules);
+		// 递归遍历完后，清除activeModule缓存
+		activeModule = null;
 		keywords = reactive(map);
 	};
 
