@@ -13,7 +13,7 @@ const getValue = (module, field, query, childModule) => {
 	// 级联选择的modelValue需为数组，需解析query上逗号拼接的字符串
 	if (type === 'cascader') {
 		value = query[field];
-		return value ? value.split(',') : (defaultValue || []);
+		return value ? String(value).split(',') : (defaultValue || []);
 	}
 	return String(query[field] || defaultValue || '');
 };

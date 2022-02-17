@@ -9,7 +9,7 @@
 		</span>
 		<vc-cascader
 			:model-value="modelValue"
-			:data-source="dataSource"
+			:data-source="optionList"
 			:style="`width: ${width}px`" 
 			placeholder="请选择"
 			change-on-select
@@ -17,6 +17,7 @@
 			v-bind="options"
 			@clear="handleSearch"
 			@change="handleChange"
+			@visible-change="handleVisibleChange"
 		/>
 	</div>
 </template>
@@ -24,6 +25,7 @@
 <script>
 import { Cascader } from '@wya/vc';
 import { commonProps } from './use-common';
+import { useDataSource } from '../hooks';
 
 export default {
 	name: 'vcc-paging-filter-input',
@@ -37,7 +39,7 @@ export default {
 			default: () => []
 		},
 		dataSource: {
-			type: Array,
+			type: [Array, Function],
 			default: () => []
 		}
 	},
@@ -50,10 +52,23 @@ export default {
 			emit('update:modelValue', value);
 			handleSearch();
 		};
+
+		const {
+			isLoading,
+			dataSource,
+			getDataSource,
+		} = useDataSource(props);
+
+		const handleVisibleChange = () => {
+			getDataSource(props.dataSource);
+		};
 		
 		return {
+			isLoading,
+			optionList: dataSource,
 			handleSearch,
-			handleChange
+			handleChange,
+			handleVisibleChange
 		};
 	},
 };
