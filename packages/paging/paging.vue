@@ -40,7 +40,7 @@
 	</div>
 </template>
 <script lang="js">
-import { inject, ref, watch, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
+import { provide, inject, ref, watch, defineComponent, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
 import PagingFilter from './filter.vue';
 import { useListeners } from './use-listeners';
 import PagingCore from './core.vue';
@@ -150,6 +150,11 @@ export default defineComponent({
 
 		onBeforeUnmount(() => {
 			group?.remove?.(instance);
+		});
+
+		provide('paging', {
+			listInfo,
+			reset
 		});
 
 		return {

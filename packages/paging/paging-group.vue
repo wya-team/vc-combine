@@ -38,6 +38,15 @@ export default defineComponent({
 	emits: ['click', 'change'],
 	setup(props, { emit }) {
 		const pagings = ref([]);
+
+		const reset = (force) => {
+			pagings.value.forEach(i => i.proxy.reset(force));
+		};
+
+		const handleSearch = () => {
+			reset(1);
+		};
+
 		provide('paging-group', {
 			props,
 			pagings,
@@ -46,15 +55,9 @@ export default defineComponent({
 			},
 			remove: (item) => {
 				item.props.prop && pagings.value.splice(pagings.value.indexOf(item), 1);
-			}
+			},
+			reset
 		});
-		const reset = (force) => {
-			pagings.value.forEach(i => i.proxy.reset(force));
-		};
-
-		const handleSearch = () => {
-			reset(1);
-		};
 
 		return {
 			handleSearch,
