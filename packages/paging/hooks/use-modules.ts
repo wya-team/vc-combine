@@ -43,7 +43,7 @@ export const useModules = (props) => {
 		keywords = reactive(map);
 	};
 
-	const handleModelValueChange = (module, value) => {
+	const onModelValueChange = (module, value) => {
 		const { type, field } = module;
 		if (type === 'rangeDatePicker') {
 			const fields = normalizeField(field, type);
@@ -68,7 +68,6 @@ export const useModules = (props) => {
 	return {
 		keywords,
 		getModelValue,
-		normalizeField,
-		handleModelValueChange
+		onModelValueChange
 	};
 };
