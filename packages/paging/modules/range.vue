@@ -19,6 +19,7 @@
 			clearable
 			v-bind="start.options"
 			@clear="handleSearch"
+			@enter="handleSearch"
 			@update:model-value="$emit('update:startValue', $event)"
 		/>
 		~
@@ -34,6 +35,7 @@
 			clearable
 			v-bind="end.options"
 			@clear="handleSearch"
+			@enter="handleSearch"
 			@update:model-value="$emit('update:endValue', $event)"
 		/>
 	</div>
