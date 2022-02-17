@@ -150,21 +150,23 @@ export default {
 			handleModelValueChange
 		} = useModules(props);
 
-		const routerReplace = (fullPath) => {
+		const routerReplace = async (fullPath) => {
 			const { globalProperties } = vm.appContext.config;
-			(globalProperties.$router && props.router)
-				? globalProperties.$router.replace(fullPath)
-				: window.history.replaceState(null, null, fullPath);
+			if (globalProperties.$router && props.router) {
+				await globalProperties.$router.replace(fullPath);
+			} else {
+				window.history.replaceState(null, null, fullPath);
+			}
 		};
 
-		const handleSearch = debounce(() => {
+		const handleSearch = debounce(async () => {
 			if (props.history) {
 				const route = URL.parse();
 				let query = {
 					...route.query,
 					...keywords,
 				};
-				routerReplace(URL.merge({
+				await routerReplace(URL.merge({
 					path: route.path.join('/'), 
 					query
 				}));

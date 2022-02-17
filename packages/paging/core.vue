@@ -244,7 +244,7 @@ export default defineComponent({
 			}
 		};
 
-		const handleChange = ($page, $pageSize = pageSize.value) => {
+		const handleChange = async ($page, $pageSize = pageSize.value) => {
 			// this.$emit('page-change', page);
 			$page = $page || 1;
 			if (props.history) {
@@ -259,9 +259,11 @@ export default defineComponent({
 				});
 
 				// 同步vue-router，this.$route
-				(globalProperties.$router && props.router)
-					? globalProperties.$router.replace(config)
-					: window.history.replaceState(null, null, config);
+				if (globalProperties.$router && props.router) {
+					await globalProperties.$router.replace(config);
+				} else {
+					window.history.replaceState(null, null, config);
+				}
 			}
 			loadData($page, $pageSize);
 		};
