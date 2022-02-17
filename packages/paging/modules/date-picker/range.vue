@@ -3,13 +3,12 @@
 		<span v-if="label">{{ label }}：</span>
 		<vc-date-picker
 			:model-value="modelValue"
-			:clearable="clearable"
-			:placeholder="placeholder"
 			:style="`width: ${width}px`" 
 			type="datetimerange"
 			format="YYYY-MM-DD HH:mm:ss"
 			placement="bottom-left"
 			confirm
+			clearable
 			v-bind="options"
 			@clear="handleSearch"
 			@change="handleChange"
@@ -20,8 +19,7 @@
 
 <script>
 import { DatePicker } from '@wya/vc';
-import { commonProps } from '../filter';
-import { datePickerProps } from './date-picker';
+import { commonProps } from '../use-common';
 
 export default {
 	name: 'vcc-paging-filter-date-picker-range',
@@ -30,7 +28,6 @@ export default {
 	},
 	props: {
 		...commonProps,
-		...datePickerProps,
 		modelValue: {
 			type: Array,
 			default: () => []

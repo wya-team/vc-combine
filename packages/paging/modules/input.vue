@@ -3,9 +3,9 @@
 		<span v-if="label">{{ label }}：</span>
 		<vc-input
 			:model-value="modelValue"
-			:placeholder="placeholder"
 			:style="{ width: width + 'px' }"
-			:clearable="clearable"
+			clearable
+			v-bind="options"
 			@enter="handleSearch"
 			@change="handleChange"
 		/>
@@ -14,7 +14,7 @@
 
 <script>
 import { Input } from '@wya/vc';
-import { commonProps } from './filter';
+import { commonProps } from './use-common';
 
 export default {
 	name: 'vcc-paging-filter-input',
@@ -31,9 +31,7 @@ export default {
 			emit('search');
 		};
 		const handleChange = (e) => {
-			console.log(e);
 			const value = e.target.value;
-			console.log(value);
 			emit('update:modelValue', value);
 			if (!value) {
 				handleSearch();

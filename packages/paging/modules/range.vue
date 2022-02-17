@@ -7,11 +7,11 @@
 			:min="getEdgeValue('min', start)"
 			:step="false"
 			:precision="0"
-			:clearable="clearable"
 			placeholder="" 
 			:style="{ width: `${start.width || 64}px` }"
 			class="vcc-paging-filter-range__input-start"
-			v-bind="start"
+			clearable
+			v-bind="start.options"
 			@clear="handleSearch"
 			@update:model-value="$emit('update:startValue', $event)"
 		/>
@@ -22,10 +22,10 @@
 			:min="getEdgeValue('min', end)"
 			:step="false"
 			:precision="0"
-			:clearable="clearable"
 			placeholder="" 
 			:style="{ width: `${end.width || 64}px` }"
 			class="vcc-paging-filter-range__input-end"
+			clearable
 			v-bind="end"
 			@clear="handleSearch"
 			@update:model-value="$emit('update:endValue', $event)"
@@ -36,7 +36,7 @@
 <script>
 import { computed } from 'vue';
 import { InputNumber } from '@wya/vc';
-import { commonProps } from './filter';
+import { commonProps } from './use-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
 
 export default {

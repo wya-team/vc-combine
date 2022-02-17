@@ -3,8 +3,9 @@
 		<span v-if="label">{{ label }}：</span>
 		<vc-select
 			:model-value="modelValue"
-			:clearable="clearable"
 			:style="`width: ${width}px`" 
+			clearable
+			v-bind="options"
 			@clear="handleSearch"
 			@change="handleChange"
 		>
@@ -21,7 +22,7 @@
 
 <script>
 import { Select, Option } from '@wya/vc';
-import { commonProps } from './filter';
+import { commonProps } from './use-common';
 
 export default {
 	name: 'vcc-paging-filter-select',
@@ -31,10 +32,6 @@ export default {
 	},
 	props: {
 		...commonProps,
-		placeholder: {
-			type: String,
-			default: '请选择'
-		},
 		modelValue: [Number, String],
 		dataSource: {
 			type: [Array, Function],

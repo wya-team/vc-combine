@@ -4,7 +4,6 @@
 		<vc-date-picker
 			:model-value="modelValue"
 			:clearable="clearable"
-			:placeholder="placeholder"
 			:style="`width: ${width}px`" 
 			type="datetime"
 			format="YYYY-MM-DD HH:mm:ss"
@@ -20,8 +19,7 @@
 
 <script>
 import { DatePicker } from '@wya/vc';
-import { commonProps } from '../filter';
-import { datePickerProps } from './date-picker';
+import { commonProps } from '../use-common';
 
 export default {
 	name: 'vcc-paging-filter-date-picker-single',
@@ -30,7 +28,6 @@ export default {
 	},
 	props: {
 		...commonProps,
-		...datePickerProps,
 		modelValue: {
 			type: [Date, String],
 			default: ''

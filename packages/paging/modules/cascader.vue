@@ -4,10 +4,11 @@
 		<vc-cascader
 			:model-value="modelValue"
 			:data-source="dataSource"
-			:clearable="clearable"
-			:placeholder="placeholder"
 			:style="`width: ${width}px`" 
+			placeholder="请选择"
 			change-on-select
+			clearable
+			v-bind="options"
 			@clear="handleSearch"
 			@change="handleChange"
 		/>
@@ -16,7 +17,7 @@
 
 <script>
 import { Cascader } from '@wya/vc';
-import { commonProps } from './filter';
+import { commonProps } from './use-common';
 
 export default {
 	name: 'vcc-paging-filter-input',
@@ -25,10 +26,6 @@ export default {
 	},
 	props: {
 		...commonProps,
-		placeholder: {
-			type: String,
-			default: '请选择'
-		},
 		modelValue: {
 			type: Array,
 			default: () => []

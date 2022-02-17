@@ -3,13 +3,13 @@
 		<span v-if="label">{{ label }}：</span>
 		<vc-select
 			:model-value="selectValue"
-			:style="`width: ${selectOptions.width || 90}px`" 
+			:style="`width: ${selectModule.width || 90}px`" 
 			class="vcc-paging-filter-select-combo__select"
-			v-bind="selectOptions"
+			v-bind="selectModule.options"
 			@change="$emit('update:selectValue', $event)"
 		>
 			<vc-option
-				v-for="item in selectOptions.dataSource"
+				v-for="item in selectModule.dataSource"
 				:key="item.value"
 				:value="item.value"
 			>
@@ -49,13 +49,14 @@ export default {
 	},
 	emits: ['update:selectValue', 'update:comboValue', 'search'],
 	setup(props, { emit }) {
-		const selectOptions = computed(() => props.children[0]);
+		const selectModule = computed(() => props.children[0]);
+
 		const handleSearch = () => {
 			emit('search');
 		};
 		
 		return {
-			selectOptions,
+			selectModule,
 
 			handleSearch,
 		};

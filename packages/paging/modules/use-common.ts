@@ -1,3 +1,5 @@
+// import { computed } from 'vue';
+
 export const commonProps = {
 	label: String,
 	field: String,
@@ -5,9 +7,8 @@ export const commonProps = {
 		type: Number,
 		default: 220
 	},
-	placeholder: String,
-	clearable: {
-		type: Boolean,
-		default: true
+	options: {
+		type: Object,
+		default: () => ({})
 	}
 };
