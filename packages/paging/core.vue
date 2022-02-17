@@ -165,7 +165,7 @@ export default defineComponent({
 		'sort-change'
 	],
 	setup(props, { emit }) {
-		const group = inject('paging-group');
+		const group = inject('paging-group', {});
 		const { globalProperties } = getCurrentInstance().appContext.config;
 		let { query: { page = 1, pageSize: _pageSize } } = URL.parse();
 		let { pageSizeOptions } = props.pageOptions; // eslint-disable-line
@@ -314,7 +314,7 @@ export default defineComponent({
 
 			// 首次加载的时候特殊处理, 选择卡切换时，需要重置到第1页
 			!props.disabled && loadData(
-				props.history && (group.pagings?.value || group.pagings.value.length === 0)
+				props.history && (!group.pagings || group.pagings.value.length === 0)
 					? $page 
 					: 1
 			);
