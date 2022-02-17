@@ -38,9 +38,9 @@ export default {
 		'vc-select': Select,
 		'vc-option': Option
 	},
-	inject: ['labelWidth'],
 	props: {
 		label: String,
+		labelWidth: String,
 		selectValue: {
 			type: [String, Number],
 			default: ''

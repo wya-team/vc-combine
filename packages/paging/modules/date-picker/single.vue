@@ -9,12 +9,12 @@
 		</span>
 		<vc-date-picker
 			:model-value="modelValue"
-			:clearable="clearable"
 			:style="`width: ${width}px`" 
 			type="datetime"
 			format="YYYY-MM-DD HH:mm:ss"
 			placement="bottom-left"
 			confirm
+			clearable
 			v-bind="options"
 			@clear="handleSearch"
 			@change="handleChange"
