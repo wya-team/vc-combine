@@ -5,7 +5,7 @@
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
-			{{ label }}：
+			{{ label }}
 		</span>
 		<vc-input-number
 			:model-value="startValue"
