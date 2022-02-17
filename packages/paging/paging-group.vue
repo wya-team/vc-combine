@@ -2,7 +2,7 @@
 	<div class="vcc-paging-group">
 		<vcc-paging-filter 
 			v-if="filterOptions && filterOptions.modules && filterOptions.modules.length" 
-			style="margin-top: 12px; margin-bottom: 12px;"
+			style="margin-bottom: 12px;"
 			:history="history"
 			:router="router"
 			v-bind="filterOptions"

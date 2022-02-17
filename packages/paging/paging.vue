@@ -2,7 +2,7 @@
 	<div class="vcc-paging">
 		<vcc-paging-filter 
 			v-if="filterOptions && filterOptions.modules && filterOptions.modules.length" 
-			style="margin-top: 12px; margin-bottom: 12px;"
+			style="margin-bottom: 12px;"
 			:history="mergeProps.history"
 			:router="mergeProps.router"
 			v-bind="filterOptions"
