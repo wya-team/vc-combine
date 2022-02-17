@@ -78,7 +78,7 @@ export default {
 
 		const outerModules = computed(() => props.modules.slice(0, props.outerCount));
 		const innerModules = computed(() => props.modules.slice(props.outerCount));
-		const showExpand = computed(() => props.modules.length > 1);
+		const showExpand = computed(() => props.modules.length > props.outerCount);
 
 		let isExpand = ref(false);
 
