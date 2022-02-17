@@ -18,7 +18,10 @@ export default defineComponent({
 				type: 'input',
 				label: '关键词',
 				field: 'input',
-				placeholder: '请输入关键词进行搜索'
+				// 将会绑定在vc-input组件上的属性
+				options: {
+					placeholder: '请输入关键词进行搜索',
+				}
 			},
 			{
 				type: 'select',
@@ -50,13 +53,17 @@ export default defineComponent({
 				type: 'datePicker',
 				label: '时间/日期选择',
 				field: 'datePicker',
+				// 将会绑定在vc-date-picker组件上的属性
+				// options: {
+				// 	format: 'YYYY-MM-DD HH:mm:ss'
+				// }
 			},
 			{
 				type: 'rangeDatePicker',
 				label: '时间/日期范围选择',
 				// field: ['rangeDatePicker_start', 'rangeDatePicker_end'],
 				field: 'rangeDatePicker',
-				// vc-date-picker组件配置
+				// 将会绑定在vc-date-picker组件上的属性
 				options: {
 					format: 'YYYY-MM-DD'
 				}
@@ -67,11 +74,16 @@ export default defineComponent({
 				children: [
 					{
 						field: 'rangeStart',
-						max: 2,
+						// 将会绑定在vc-input-number组件上的属性
+						options: {
+							max: 2,
+						}
 					},
 					{
 						field: 'rangeEnd',
-						max: 2
+						options: {
+							max: 2,
+						}
 					}
 				]
 			},
@@ -84,11 +96,12 @@ export default defineComponent({
 							{ label: '选项一', value: '1' },
 							{ label: '选项二', value: '2' }
 						],
+						// 将会绑定在vc-select组件上的属性
+						// options: {}
 					},
 					{
 						type: 'rangeDatePicker',
 						field: 'selectComboFilter',
-						placeholder: '请输入xxx'
 					}
 				]
 			}
