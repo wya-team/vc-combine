@@ -84,10 +84,6 @@ export default {
 		};
 		
 		return {
-			AMOUNT_MIN,
-			AMOUNT_MAX,
-			INT_MIN,
-			INT_MAX,
 			start,
 			end,
 			getEdgeValue,
