@@ -42,7 +42,7 @@
 <script>
 import { computed } from 'vue';
 import { InputNumber } from '@wya/vc';
-import { commonProps } from './use-common';
+import { commonProps } from '../hooks/use-filter-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
 
 export default {

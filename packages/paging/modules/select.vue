@@ -36,7 +36,7 @@
 <script>
 import { onMounted } from 'vue';
 import { Select, Option, Spin } from '@wya/vc';
-import { commonProps } from './use-common';
+import { commonProps } from '../hooks/use-filter-common';
 import { useDataSource } from '../hooks';
 
 export default {

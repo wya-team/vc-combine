@@ -20,7 +20,7 @@
 
 <script>
 import { Input } from '@wya/vc';
-import { commonProps } from './use-common';
+import { commonProps } from '../hooks/use-filter-common';
 
 export default {
 	name: 'vcc-paging-filter-input',

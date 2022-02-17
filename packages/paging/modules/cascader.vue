@@ -24,7 +24,7 @@
 
 <script>
 import { Cascader } from '@wya/vc';
-import { commonProps } from './use-common';
+import { commonProps } from '../hooks/use-filter-common';
 import { useDataSource } from '../hooks';
 
 export default {
