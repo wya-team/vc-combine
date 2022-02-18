@@ -10,6 +10,7 @@
 		:disabled="disabled"
 		:history="true"
 		:footer="true"
+		:single="true"
 		row-key="id"
 		@sort-change="handleSortChange"
 	>

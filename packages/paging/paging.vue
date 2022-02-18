@@ -23,6 +23,7 @@
 			:load-data="rebuildLoadData"
 			:controls="controls"
 			:row-key="rowKey"
+			:single="single"
 			v-bind="mergeProps"
 			style="width: 100%;"
 			v-on="pagingHooks"
@@ -76,12 +77,12 @@ export default defineComponent({
 		rowKey: String,
 		current: [Number, String],
 		filterOptions: Object,
-		max: Number
+		max: Number,
+		single: Boolean
 	},
 	emits: ['page-size-change'],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
-
 		const core = ref(null);
 		const table = ref(null);
 		const listInfo = ref(initPage());
@@ -100,12 +101,30 @@ export default defineComponent({
 			if (!res || !res.data) {
 				return;
 			}
+
+			let body;
+			if (res.data instanceof Array) {
+				body.list = res.data;
+				body.page = {
+					current: 1,
+					total: 1,
+					count: res.data.length,
+				};
+			} else {
+				body = res.data;
+			}
+
+			if (!body.page || !(body.list instanceof Array)) {
+				// 约定格式错误
+				return;
+			}
+
 			listInfo.value = {
 				...listInfo.value,
-				...res.data.page,
+				...body.page,
 				data: {
 					...listInfo.value.data,
-					[$page]: res.data.list
+					[$page]: body.list
 				}
 			};
 		};

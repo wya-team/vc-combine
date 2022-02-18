@@ -50,7 +50,7 @@
 				</vc-checkbox>
 				<slot name="extra" />
 			</div>
-			<div>
+			<div v-if="!single">
 				<slot 
 					v-if="$slots.page"
 					:total="total"
@@ -169,6 +169,12 @@ export default defineComponent({
 		max: {
 			type: Number,
 			default: Infinity
+		},
+
+		// 单页
+		single: {
+			type: Boolean,
+			default: false
 		}
 	},
 	emits: [
@@ -266,14 +272,6 @@ export default defineComponent({
 		};
 
 
-		const listeners = useListeners();
-		const tableHooks = computed(() => {
-			return {
-				...listeners.value,
-				// 由内部触发
-				'selection-change': handleSelectionChange
-			};
-		});
 
 		const setCurrentPage = ($page) => {
 			currentPage.value = $page;
@@ -316,12 +314,20 @@ export default defineComponent({
 			}
 		};
 
+		const routerReplace = async (fullPath) => {
+			if (globalProperties.$router && props.router) {
+				await globalProperties.$router.replace(fullPath);
+			} else {
+				window.history.replaceState(null, null, fullPath);
+			}
+		};
+
 		const handleChange = async ($page, $pageSize = pageSize.value) => {
 			// this.$emit('page-change', page);
 			$page = $page || 1;
 			if (props.history) {
 				let { path, query } = URL.parse();
-				let config = URL.merge({
+				let fullPath = URL.merge({
 					path,
 					query: {
 						...query,
@@ -330,12 +336,7 @@ export default defineComponent({
 					}
 				});
 
-				// 同步vue-router，this.$route
-				if (globalProperties.$router && props.router) {
-					await globalProperties.$router.replace(config);
-				} else {
-					window.history.replaceState(null, null, config);
-				}
+				await routerReplace(fullPath);
 			}
 			loadData($page, $pageSize);
 		};
@@ -350,6 +351,34 @@ export default defineComponent({
 
 			handleChange(1, $pageSize);
 		};
+
+		const handleSortChange = async (e) => {
+			const { prop, order } = e;
+			if (props.history) {
+				const route = URL.parse();
+				let fullPath = URL.merge({
+					path: route.path,
+					query: {
+						...route.query,
+						sortField: prop,
+						sortOrder: order,
+					}
+				});
+
+				await routerReplace(fullPath);
+			}
+			emit('sort-change', e);
+		};
+
+		const listeners = useListeners();
+		const tableHooks = computed(() => {
+			return {
+				...listeners.value,
+				// 由内部触发
+				'selection-change': handleSelectionChange,
+				'sort-change': handleSortChange
+			};
+		});
 
 		watch(
 			() => props.disabled,
