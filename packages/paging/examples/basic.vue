@@ -10,9 +10,13 @@
 		:disabled="disabled"
 		:history="true"
 		:footer="true"
+		row-key="id"
 		@sort-change="handleSortChange"
 	>
 		<vc-table-item>
+			<vc-table-column
+				type="selection"
+			/>
 			<vc-table-column
 				prop="date"
 				label="日期"

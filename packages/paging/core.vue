@@ -38,6 +38,16 @@
 		</vc-table>
 		<div v-if="footer" class="vcc-paging-core__footer">
 			<div>
+				<!-- 传键值，代表开启全选 -->
+				<vc-checkbox
+					v-if="rowKey"
+					:model-value="isSelectionAll"
+					:disabled="!data.length"
+					class="vcc-paging-core__checkbox"
+					@change="handleSelectionAll"
+				>
+					<span class="vcc-paging-core__checkbox--label">全选</span>
+				</vc-checkbox>
 				<slot name="extra" />
 			</div>
 			<div>
@@ -63,8 +73,8 @@
 	</div>
 </template>
 <script>
-import { inject, defineComponent, ref, computed, watch, getCurrentInstance, onMounted } from 'vue';
-import { Table, Page, VcInstance } from '@wya/vc';
+import { inject, defineComponent, ref, computed, watch, getCurrentInstance, onMounted, nextTick } from 'vue';
+import { Table, Page, VcInstance, Checkbox } from '@wya/vc';
 import { URL, Storage } from '@wya/utils';
 import { useListeners } from './use-listeners';
 
@@ -77,7 +87,8 @@ export default defineComponent({
 	name: "vcc-paging-core",
 	components: {
 		'vc-table': Table,
-		'vc-page': Page
+		'vc-page': Page,
+		'vc-checkbox': Checkbox
 	},
 	props: {
 		// ---- table 组件属性 start, 其他属性使用$attrs
@@ -152,6 +163,12 @@ export default defineComponent({
 		},
 		rowKey: {
 			type: String
+		},
+
+		// 多选，单选， max: 1 单选
+		max: {
+			type: Number,
+			default: Infinity
 		}
 	},
 	emits: [
@@ -162,7 +179,8 @@ export default defineComponent({
 		'load-finish',
 		'page-change',
 		'update:current',
-		'sort-change'
+		'sort-change',
+		'selection-change'
 	],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
@@ -176,6 +194,7 @@ export default defineComponent({
 			|| 10
 		);
 
+		const table = ref(null);
 		const loading = ref(false);
 		const currentPage = ref(!props.disabled ? Number(page) : 1);
 		const pageSize = ref(defaultPageSize);
@@ -186,13 +205,66 @@ export default defineComponent({
 			return result || [];
 		});
 
-		const handleSelectionChange = () => {
-			// TODO
+		const isSelectionAll = computed(() => {
+			const { rowKey } = props;
+			if (!rowKey || !data.value.length || !selection.value.length) {
+				return false;
+			}
+			const rowKeyValues = selection.value.map(item => item[rowKey]);
+			return data.value.every(i => rowKeyValues.includes(i[rowKey]));
+		});
+
+		let reSelecting = false;
+		const toggleSelection = (rows, status) => {
+			reSelecting = !!rows.length;
+
+			rows.forEach((item, index) => nextTick(() => {
+				table.value.toggleRowSelection(item, status);
+				if (index === rows.length - 1) {
+					reSelecting = false;
+				}
+			}));
+		};
+		const resetSelection = (isLoaded) => {
+			const { rowKey } = props;
+			if (!rowKey) return;
+			if (data.value.length && selection.value.length) {
+				let rows = [];
+				const rowKeyValues = selection.value.map(item => item[rowKey]);
+				data.value.forEach((row, index) => {
+					if (rowKeyValues.includes(row[rowKey])) {
+						rows.push(row);
+					}
+				});
+
+				isLoaded && emit('selection-change', selection.value, rows);
+				toggleSelection(rows, true);
+			}
 		};
 
-		const resetSelection = () => {
-			// TODO
+		const handleSelectionChange = ($selection) => {
+			const { rowKey } = props;
+			if (!rowKey) return emit('selection-change', $selection, $selection);
+
+			const dataSelectionValues = data.value.map(item => item[rowKey]);
+			const rowKeyValues = $selection.map(item => item[rowKey]);
+			// 过滤掉当前页面的选择的数据，再合并当前页面选择的数据
+			selection.value = selection.value
+				.filter(item => {
+					return !dataSelectionValues.includes(item[rowKey]);
+				})
+				.filter(item => {
+					return !rowKeyValues.includes(item[rowKey]);
+				})
+				.concat($selection);
+
+			!reSelecting && emit('selection-change', selection.value, selection);
 		};
+
+		const handleSelectionAll = (v) => {
+			table.value.toggleAllSelection();
+		};
+
 
 		const listeners = useListeners();
 		const tableHooks = computed(() => {
@@ -323,6 +395,7 @@ export default defineComponent({
 		});
 
 		return {
+			table,
 			loading,
 			currentPage,
 			data,
@@ -330,10 +403,12 @@ export default defineComponent({
 			
 			tableHooks,
 			selection,
+			isSelectionAll,
 
 			handleSelectionChange,
 			handleChangePageSize,
 			handleChange,
+			handleSelectionAll,
 
 			// 外部调用
 			go: handleChange
@@ -353,6 +428,14 @@ export default defineComponent({
 		padding: 32px 0 0 0;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	&__checkbox {
+		padding-left: 26px;
+
+		&--label {
+			padding-left: 12px;
+		}
 	}
 }
 </style>

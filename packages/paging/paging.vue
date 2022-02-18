@@ -9,6 +9,7 @@
 			@search="handleSearch"
 		/>
 		<vcc-paging-core
+			ref="core"
 			v-model:current="currentPage"
 			:data-source="listInfo.data"
 			:total="listInfo.total"
@@ -74,13 +75,15 @@ export default defineComponent({
 		controls: Object,
 		rowKey: String,
 		current: [Number, String],
-
-		filterOptions: Object
+		filterOptions: Object,
+		max: Number
 	},
 	emits: ['page-size-change'],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
 
+		const core = ref(null);
+		const table = ref(null);
 		const listInfo = ref(initPage());
 		const instance = getCurrentInstance();
 
@@ -146,6 +149,7 @@ export default defineComponent({
 
 		onMounted(() => {
 			group?.add?.(instance);
+			table.value = core.value?.table;
 		});
 
 		onBeforeUnmount(() => {
@@ -154,7 +158,9 @@ export default defineComponent({
 
 		provide('paging', {
 			listInfo,
-			reset
+			reset,
+			table,
+			core
 		});
 
 		return {
@@ -165,6 +171,8 @@ export default defineComponent({
 			rebuildLoadData,
 			handleSearch,
 			reset,
+			core,
+			table
 		};
 	}
 });

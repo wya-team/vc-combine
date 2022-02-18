@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-import { provide, ref, defineComponent } from 'vue';
+import { provide, ref, defineComponent, computed } from 'vue';
 import PagingFilter from './filter.vue';
 
 export default defineComponent({
@@ -43,6 +43,10 @@ export default defineComponent({
 			pagings.value.forEach(i => i.proxy.reset(force));
 		};
 
+		const current = computed(() => {
+			return pagings.value.find(i => !i.props.disabled);
+		});
+
 		const handleSearch = () => {
 			reset(1);
 		};
@@ -50,6 +54,7 @@ export default defineComponent({
 		provide('paging-group', {
 			props,
 			pagings,
+			current, // 有且仅一个激活
 			add: (item) => {
 				item && pagings.value.push(item);
 			},
