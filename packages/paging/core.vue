@@ -23,6 +23,7 @@
 			v-else 
 			ref="table" 
 			:data-source="data" 
+			:default-sort="defaultSort"
 			v-bind="tableOptions"
 			v-on="tableHooks"
 		>
@@ -73,7 +74,7 @@
 	</div>
 </template>
 <script>
-import { inject, defineComponent, ref, computed, watch, getCurrentInstance, onMounted, nextTick } from 'vue';
+import { reactive, inject, defineComponent, ref, computed, watch, getCurrentInstance, onMounted, nextTick } from 'vue';
 import { Table, Page, VcInstance, Checkbox } from '@wya/vc';
 import { URL, Storage } from '@wya/utils';
 import { useListeners } from './use-listeners';
@@ -191,10 +192,10 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
 		const { globalProperties } = getCurrentInstance().appContext.config;
-		let { query: { page = 1, pageSize: _pageSize } } = URL.parse();
+		let { query: $query = {} } = URL.parse();
 		let { pageSizeOptions } = props.pageOptions; // eslint-disable-line
 		const defaultPageSize = Number(
-			_pageSize
+			$query.pageSize
 			|| (props.controls.pageSize && localPageSize)
 			|| (pageSizeOptions && pageSizeOptions[0]) 
 			|| 10
@@ -202,10 +203,15 @@ export default defineComponent({
 
 		const table = ref(null);
 		const loading = ref(false);
-		const currentPage = ref(!props.disabled ? Number(page) : 1);
+		const currentPage = ref(!props.disabled ? Number($query.page || 1) : 1);
 		const pageSize = ref(defaultPageSize);
 		const selection = ref([]);
 		
+		const defaultSort = reactive({
+			prop: $query.sortField,
+			order: $query.sortOrder
+		});
+
 		const data = computed(() => {
 			let result = props.dataSource[currentPage.value];
 			return result || [];
@@ -354,6 +360,10 @@ export default defineComponent({
 
 		const handleSortChange = async (e) => {
 			const { prop, order } = e;
+
+			defaultSort.sortField = prop;
+			defaultSort.sortOrder = order;
+
 			if (props.history) {
 				const route = URL.parse();
 				let fullPath = URL.merge({
@@ -438,6 +448,8 @@ export default defineComponent({
 			handleChangePageSize,
 			handleChange,
 			handleSelectionAll,
+
+			defaultSort,
 
 			// 外部调用
 			go: handleChange
