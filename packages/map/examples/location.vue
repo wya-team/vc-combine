@@ -2,7 +2,7 @@
 	<div style="position: relative;">
 		<vc-input-search 
 			v-if="searchable"
-			v-model="search"
+			v-model="currentSearch"
 			placeholder="请输入关键词，按回车搜索"
 			:style="[
 				`
@@ -21,7 +21,7 @@
 			:id="mapId" 
 			ui 
 			:style="['height: 300px;', mapStyle]" 
-			:options="options"
+			:options="mapOptions"
 			@ready="handleMapReady"
 		/>
 		<input :id="searchInputId" style="display: none;">
@@ -60,6 +60,26 @@ const props = defineProps({
 		type: Boolean,
 		default: true
 	},
+	mapId: {
+		type: String,
+		default: () => Utils.getUid('map')
+	},
+	mapOptions: {
+		type: Object,
+		default: () => ({
+			zoom: 16,
+			resizeEnable: true,
+			scrollWhell: false,
+		})
+	},
+	searchInputId: {
+		type: String,
+		default: () => Utils.getUid('search-input')
+	},
+	searchResultsId: {
+		type: String,
+		default: () => Utils.getUid('search-results')
+	},
 	searchInputStyle: [String, Object],
 	searchResultsStyle: [String, Object],
 	mapStyle: [String, Object]
@@ -68,17 +88,8 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'change']);
 const formItem = inject('form-item', {});
 
-const options = ref({
-	zoom: 16,
-	resizeEnable: true,
-	scrollWhell: false,
-});
-
-const search = ref('');
+const currentSearch = ref('');
 const currentValue = ref([]);
-const mapId = ref(Utils.getUid('map'));
-const searchInputId = ref(Utils.getUid('search-input'));
-const searchResultsId = ref(Utils.getUid('search-results'));
 const mapAssist = reactive({
 	instance: null,
 	marker: null,
@@ -89,7 +100,7 @@ const mapAssist = reactive({
 
 const sync = (result, lnglat) => {
 	currentValue.value = lnglat;
-	
+		
 	emit('update:modelValue', lnglat, result.regeocode);
 	emit('change', lnglat, result.regeocode);
 
@@ -156,16 +167,20 @@ const handleMapReady = (e) => {
 		});
 	}
 
+	if (currentValue.value.length) {
+		handleMapClick(currentValue.value, true);
+	}
+
 	AMapUI.loadUI(['misc/PoiPicker'], (PoiPicker) => {
 		const picker = new PoiPicker({
-			input: searchInputId.value,
+			input: props.searchInputId,
 			placeSearchOptions: {
 				map: e.target,
 				city: 'auto',
 				pageSize: 10
 			},
-			searchResultsContainer: searchResultsId.value,
-			suggestContainer: searchResultsId.value
+			searchResultsContainer: props.searchResultsId,
+			suggestContainer: props.searchResultsId
 		});
 		picker.on('poiPicked', async (poiResult) => {
 			picker.hideSearchResults();
@@ -176,8 +191,6 @@ const handleMapReady = (e) => {
 			const { lng, lat } = poiResult.item.location;
 			const result = await regeoCode([lng, lat]);
 			sync(result, [lng, lat]);
-
-			handleMapClick([lng, lat], true);
 		});
 		mapAssist.poiPicker = picker;
 	});
@@ -185,7 +198,7 @@ const handleMapReady = (e) => {
 
 const handleMapSearch = (e) => {
 	if (e.keyCode == 13 || e.keyCode == 108) {
-		mapAssist.poiPicker.searchByKeyword(search.value);
+		mapAssist.poiPicker.searchByKeyword(currentSearch.value);
 	}
 };
 
@@ -201,5 +214,5 @@ watch(() => props.modelValue, (v) => {
 			handleMapClick(v, true);
 		}
 	}
-});
+}, { immediate: true });
 </script>
