@@ -31,12 +31,13 @@ export default defineComponent({
 				...props.options
 			});
 			
-			mapManager.value.ready(() => {
+			mapManager.value?.ready?.(() => {
 				emit('ready', mapManager.value);
 			});
 		});
 
-		(instance?.proxy as any).mapManager = mapManager;
+		// @ts-ignore
+		instance && (instance.proxy.mapManager = mapManager);
 		return () => {
 			return h(props.tag, {
 				id: props.id
