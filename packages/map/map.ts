@@ -2,7 +2,7 @@ import { onMounted, h, ref, defineComponent, getCurrentInstance } from 'vue';
 import MapManager from './map-manager';
 
 export default defineComponent({
-	name: "vca-map",
+	name: "vcc-map",
 	props: {
 		id: {
 			type: String,

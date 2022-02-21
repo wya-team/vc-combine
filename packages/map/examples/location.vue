@@ -1,53 +1,72 @@
 <template>
 	<div style="position: relative;">
 		<vc-input-search 
+			v-if="searchable"
 			v-model="search"
 			placeholder="请输入关键词，按回车搜索"
-			:style="`
-				position: absolute;
-				top: 5px;
-				left: 12px;
-				width: 300px;
-				background-color: #fff;
-				z-index: 999;
-			`"
+			:style="[
+				`
+					position: absolute;
+					top: 5px;
+					left: 5px;
+					width: 240px;
+					background-color: #fff;
+					z-index: 999;
+				`,
+				searchInputStyle
+			]"
 			@keyup="handleMapSearch"
 		/>
 		<vcc-map 
 			:id="mapId" 
 			ui 
-			style="height: 300px;" 
+			:style="['height: 300px;', mapStyle]" 
 			:options="options"
 			@ready="handleMapReady"
 		/>
 		<input :id="searchInputId" style="display: none;">
 		<div 
 			:id="searchResultsId" 
-			:style="`
-				overflow: auto;
-				position: absolute;
-				top: 50px;
-				left: 12px;
-				height: 200px;
-				max-width: 300px;
-				background-color: #fff;
-				z-index: 999;
-			`"
+			:style="[
+				`
+					overflow: auto;
+					position: absolute;
+					top: 40px;
+					left: 5px;
+					height: 220px;
+					max-width: 240px;
+					background-color: #fff;
+					z-index: 999;
+				`,
+				searchResultsStyle
+			]"
 		/>
 	</div>
 </template>
 
 <script setup>
-import { ref, reactive, defineProps } from 'vue';
-import { Input } from '@wya/vc';
+import { watch, ref, reactive, defineProps, inject } from 'vue';
 import { Utils } from '@wya/utils';
+import { Input } from '@wya/vc';
 import VccMap from '../index.ts';
 
-const props = defineProps({
-	longitude: String,
-	latitude: String
-});
 const VcInputSearch = Input.Search;
+const props = defineProps({
+	modelValue: {
+		type: Array,
+		default: () => ([])
+	},
+	searchable: {
+		type: Boolean,
+		default: true
+	},
+	searchInputStyle: [String, Object],
+	searchResultsStyle: [String, Object],
+	mapStyle: [String, Object]
+});
+
+const emit = defineEmits(['update:modelValue', 'change']);
+const formItem = inject('form-item', {});
 
 const options = ref({
 	zoom: 16,
@@ -56,6 +75,7 @@ const options = ref({
 });
 
 const search = ref('');
+const currentValue = ref([]);
 const mapId = ref(Utils.getUid('map'));
 const searchInputId = ref(Utils.getUid('search-input'));
 const searchResultsId = ref(Utils.getUid('search-results'));
@@ -67,8 +87,13 @@ const mapAssist = reactive({
 	poiPicker: null
 });
 
-const setCurrent = (v) => {
+const sync = (result, lnglat) => {
+	currentValue.value = lnglat;
 	
+	emit('update:modelValue', lnglat, result.regeocode);
+	emit('change', lnglat, result.regeocode);
+
+	formItem?.change?.(currentValue.value);
 };
 
 // 通过经纬度调用高德逆地理编码（坐标 -> 地址）api  AMap.Geocoder
@@ -82,25 +107,25 @@ const regeoCode = (lnglat) => {
 	});
 };
 
-const handleMapClick = async (e) => {
-	const lnglat = [e.lnglat.getLng(), e.lnglat.getLat()];
+const handleMapClick = async (e, isFake) => {
+	const lnglat = isFake ? e : [e.lnglat.getLng(), e.lnglat.getLat()];
 
 	mapAssist.marker.setPosition(lnglat);
 
 	if (mapAssist.infoWindow.getIsOpen()) {
-		mapAssist.infoWindow.setPosition(position);
+		mapAssist.infoWindow.setPosition(lnglat);
 	} else {
-		mapAssist.infoWindow.open(mapAssist.instance, position);
+		mapAssist.infoWindow.open(mapAssist.instance, lnglat);
 	}
 
 	const result = await regeoCode(lnglat);
 	mapAssist.infoWindow.setContent(
 		`<div>${result.regeocode.formattedAddress}</div>`
 	);
-
-	setCurrent(result);
+	
+	isFake && mapAssist.instance.setCenter(lnglat);
+	!isFake && sync(result, lnglat);
 };
-
 
 const handleMapReady = (e) => {
 	mapAssist.instance = e.target;
@@ -150,21 +175,12 @@ const handleMapReady = (e) => {
 			}
 			const { lng, lat } = poiResult.item.location;
 			const result = await regeoCode([lng, lat]);
-			setCurrent(result);
+			sync(result, [lng, lat]);
+
+			handleMapClick([lng, lat], true);
 		});
 		mapAssist.poiPicker = picker;
 	});
-
-	 // 如果存在经纬度，说明已经设置过地址，直接点标记展示即可
-	if (props.longitude && props.latitude) {
-		const lnglat = {
-			getLng: () => longitude,
-			getLat: () => latitude
-		};
-
-		handleMapClick({ lnglat });
-		mapAssist.instance.setCenter([longitude, latitude]);
-	}
 };
 
 const handleMapSearch = (e) => {
@@ -173,5 +189,17 @@ const handleMapSearch = (e) => {
 	}
 };
 
-
+watch(() => props.modelValue, (v) => {
+	if (
+		v.length !== currentValue.value.length 
+		|| v[0] != currentValue.value[0] 
+		|| v[1] != currentValue.value[1]
+	) {
+		currentValue.value = v;
+		 // 如果存在经纬度，说明已经设置过地址，直接点标记展示即可
+		if (currentValue.value.length && mapAssist.instance) {
+			handleMapClick(v, true);
+		}
+	}
+});
 </script>
