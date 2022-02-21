@@ -9,6 +9,8 @@ const PagingCore = Paging.Core;
 const PagingGroup = Paging.Group;
 const PagingFilter = Paging.Filter;
 
+const MapLocation = Map.Location;
+
 export {
 	Paging,
 	PagingCore,
@@ -17,5 +19,6 @@ export {
 	SetTitle,
 	SectionTitle,
 	Footer,
-	Map
+	Map,
+	MapLocation
 };
