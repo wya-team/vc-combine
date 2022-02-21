@@ -3,6 +3,7 @@ import Paging from '@wya/vcc-paging';
 import SetTitle from '@wya/vcc-set-title';
 import SectionTitle from '@wya/vcc-section-title';
 import Footer from '@wya/vcc-footer';
+import Map from '@wya/vcc-map';
 
 const PagingCore = Paging.Core;
 const PagingGroup = Paging.Group;
@@ -15,5 +16,6 @@ export {
 	PagingFilter,
 	SetTitle,
 	SectionTitle,
-	Footer
+	Footer,
+	Map
 };
