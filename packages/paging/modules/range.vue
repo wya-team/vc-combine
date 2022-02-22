@@ -10,7 +10,7 @@
 		<vc-input-number
 			:model-value="startValue"
 			:max="getEdgeValue('max', start)"
-			:min="getEdgeValue('min', start)"
+			:min="start.min"
 			:step="false"
 			:precision="0"
 			placeholder="" 
@@ -26,7 +26,7 @@
 		<vc-input-number
 			:model-value="endValue"
 			:max="getEdgeValue('max', end)"
-			:min="getEdgeValue('min', end)"
+			:min="end.min"
 			:step="false"
 			:precision="0"
 			placeholder="" 
