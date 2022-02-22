@@ -103,7 +103,7 @@ export default {
 				const route = URL.parse();
 				let query = {
 					...route.query,
-					...keywords,
+					...keywords.value,
 				};
 				await routerReplace(URL.merge({
 					path: route.path.join('/'), 
@@ -111,7 +111,7 @@ export default {
 				}));
 			}
 			
-			emit('search', keywords);
+			emit('search', keywords.value);
 		}, 300);
 
 		const handleToggle = () => {

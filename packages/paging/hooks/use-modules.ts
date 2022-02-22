@@ -33,7 +33,7 @@ export const useModules = (props) => {
 	};
 
 
-	let keywords;
+	let keywords = ref({});
 	let maxLength = ref(0);
 
 	const makeKeywords = () => {
@@ -77,17 +77,17 @@ export const useModules = (props) => {
 		getFields(props.modules);
 		// 递归遍历完后，清除activeModule缓存
 		activeModule = null;
-		keywords = reactive(map);
+		keywords.value = map;
 	};
 
 	const onModelValueChange = (module, value) => {
 		const { type, field } = module;
 		if (type === 'rangeDatePicker') {
 			const fields = normalizeField(field, type);
-			keywords[fields[0]] = value[0];
-			keywords[fields[1]] = value[1];
+			keywords.value[fields[0]] = value[0];
+			keywords.value[fields[1]] = value[1];
 		} else {
-			keywords[field] = value;
+			keywords.value[field] = value;
 		}
 	};
 
@@ -95,9 +95,9 @@ export const useModules = (props) => {
 		const { type, field } = module;
 		if (type === 'rangeDatePicker') {
 			const fields = normalizeField(field, type);
-			return [keywords[fields[0]], keywords[fields[1]]];
+			return [keywords.value[fields[0]], keywords.value[fields[1]]];
 		}
-		return keywords[field];
+		return keywords.value[field];
 	};
 
 	const labelWidth = computed(() => getLabelWidth(maxLength.value));
