@@ -5,17 +5,22 @@ const getLabelWidth = length => {
 	return `calc(${length}em + 24px)`;
 };
 
-const getValue = (module, field, query, childModule) => {
+const getValue = (module, field, historyData, childModule) => {
 	const { type } = module;
 	const { defaultValue } = childModule;
 	let value;
 
-	// 级联选择的modelValue需为数组，需解析query上逗号拼接的字符串
+	// 级联选择的modelValue需为数组，需单独处理
 	if (type === 'cascader') {
-		value = query[field];
-		return value ? String(value).split(',') : (defaultValue || []);
+		value = historyData[field];
+		// history为true的模式下，是从query上取的逗号拼接的字符串
+		return value 
+			? Array.isArray(value)
+				? value
+				: String(value).split(',') 
+			: (defaultValue || []);
 	}
-	return String(query[field] || defaultValue || '');
+	return String(historyData[field] || defaultValue || '');
 };
 
 export const useModules = (props) => {
@@ -39,6 +44,9 @@ export const useModules = (props) => {
 	const makeKeywords = () => {
 		const map = {};
 		const { query } = URL.parse();
+		const historyData = props.history 
+			? { ...query, ...keywords.value } 
+			: keywords.value;
 		let field;
 		let length;
 		// 记录当前正在处理的module
@@ -64,10 +72,10 @@ export const useModules = (props) => {
 						if (Array.isArray(field)) {
 							field.forEach(_field => {
 								// 存在children的module，此时it是activeModule.children的子项，而非activeModule
-								map[_field] = getValue(activeModule, _field, query, it);
+								map[_field] = getValue(activeModule, _field, historyData, it);
 							});
 						} else {
-							map[field] = getValue(activeModule, field, query, it);
+							map[field] = getValue(activeModule, field, historyData, it);
 						}
 					}
 				}
