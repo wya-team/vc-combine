@@ -35,7 +35,7 @@ export default defineComponent({
 		loadData: Function,
 		filterOptions: Object
 	},
-	emits: ['click', 'change'],
+	emits: ['click', 'change', 'search'],
 	setup(props, { emit }) {
 		const pagings = ref([]);
 
@@ -47,8 +47,9 @@ export default defineComponent({
 			return pagings.value.find(i => !i.props.disabled);
 		});
 
-		const handleSearch = () => {
+		const handleSearch = (...rest) => {
 			reset(1);
+			emit('search', ...rest);
 		};
 
 		provide('paging-group', {

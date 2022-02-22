@@ -80,7 +80,7 @@ export default defineComponent({
 		max: Number,
 		single: Boolean
 	},
-	emits: ['page-size-change'],
+	emits: ['page-size-change', 'search'],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
 		const core = ref(null);
@@ -144,7 +144,8 @@ export default defineComponent({
 			};
 		};
 
-		const handleSearch = () => {
+		const handleSearch = (...rest) => {
+			emit('search', ...rest);
 			reset(1);
 		};
 
