@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-import { provide, ref, defineComponent, computed } from 'vue';
+import { provide, reactive, defineComponent, computed } from 'vue';
 import PagingFilter from './filter.vue';
 
 export default defineComponent({
@@ -37,14 +37,14 @@ export default defineComponent({
 	},
 	emits: ['click', 'change', 'search'],
 	setup(props, { emit }) {
-		const pagings = ref([]);
+		const pagings = reactive([]);
 
 		const reset = (force) => {
-			pagings.value.forEach(i => i.proxy.reset(force));
+			pagings.forEach(i => i.proxy.reset(force));
 		};
 
 		const current = computed(() => {
-			return pagings.value.find(i => !i.props.disabled);
+			return pagings.find(i => !i.props.disabled);
 		});
 
 		const handleSearch = (...rest) => {
@@ -57,16 +57,18 @@ export default defineComponent({
 			pagings,
 			current, // 有且仅一个激活
 			add: (item) => {
-				item && pagings.value.push(item);
+				item && pagings.push(item);
 			},
 			remove: (item) => {
-				item.props.prop && pagings.value.splice(pagings.value.indexOf(item), 1);
+				item.props.prop && pagings.splice(pagings.indexOf(item), 1);
 			},
 			reset
 		});
 
 		return {
 			handleSearch,
+			pagings,
+			current,
 			reset
 		};
 	}

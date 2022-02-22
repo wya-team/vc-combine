@@ -427,7 +427,7 @@ export default defineComponent({
 
 			// 首次加载的时候特殊处理, 选择卡切换时，需要重置到第1页
 			!props.disabled && loadData(
-				props.history && (!group.pagings || group.pagings.value.length === 0)
+				props.history && (!group.pagings || group.pagings.length === 0)
 					? $page 
 					: 1
 			);
