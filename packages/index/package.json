@@ -1,6 +1,6 @@
 {
   "name": "@wya/vcc",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "main": "dist/index.js",
   "license": "MIT",
   "publishConfig": {
@@ -9,7 +9,7 @@
   "dependencies": {
     "@wya/vcc-footer": "^0.0.6",
     "@wya/vcc-map": "^0.0.3",
-    "@wya/vcc-operate": "^0.0.1",
+    "@wya/vcc-operate": "^0.0.2",
     "@wya/vcc-paging": "^0.0.18",
     "@wya/vcc-section-title": "^0.0.6",
     "@wya/vcc-service": "^0.0.2",
