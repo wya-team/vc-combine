@@ -9,6 +9,7 @@
   "dependencies": {
     "@wya/vcc-footer": "^0.0.6",
     "@wya/vcc-map": "^0.0.3",
+    "@wya/vcc-operate": "^0.0.0",
     "@wya/vcc-paging": "^0.0.16",
     "@wya/vcc-section-title": "^0.0.6",
     "@wya/vcc-service": "^0.0.2",

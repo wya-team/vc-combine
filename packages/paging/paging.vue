@@ -98,11 +98,12 @@ export default defineComponent({
 		const rebuildLoadData = async ($page, pageSize) => {
 			let fn = props.loadData || group?.props?.loadData; 
 			const res = await fn($page, pageSize);
-			if (!res || !res.data) {
+			if (!res) {
+				// 无数据返回
 				return;
 			}
 
-			let body;
+			let body = {};
 			if (res.data instanceof Array) {
 				body.list = res.data;
 				body.page = {
@@ -111,10 +112,10 @@ export default defineComponent({
 					count: res.data.length,
 				};
 			} else {
-				body = res.data;
+				body = res.data || res;
 			}
 
-			if (!body.page || !(body.list instanceof Array)) {
+			if (!body || !body.page || !(body.list instanceof Array)) {
 				// 约定格式错误
 				return;
 			}
