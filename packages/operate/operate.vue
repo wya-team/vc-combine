@@ -1,5 +1,9 @@
 <template>
-	<div v-if="dataSource.length > 0" class="vcc-operate">
+	<div 
+		v-if="currentValue.length > 0" 
+		:class="{ [`is-${align}`]: true }"
+		class="vcc-operate"
+	>
 		<template v-for="(item, index) in beforeItems" :key="item.label">
 			<vcc-operate-item 
 				:info="item"
@@ -7,14 +11,14 @@
 				@cancel="handleCancel(item)"
 			/>
 			<vc-divider
-				v-if="index < beforeItems.length - 1 || dataSource.length > outerCount"
+				v-if="index < beforeItems.length - 1 || currentValue.length > outerCount"
 				:key="index"
 				vertical
 			/>
 		</template>
 			
 		<vc-dropdown
-			v-if="dataSource.length > outerCount"
+			v-if="currentValue.length > outerCount"
 			portal-class-name="vcc-dropdown"
 			placement="bottom-right"
 		>
@@ -27,7 +31,7 @@
 			</div>
 			<template #list>
 				<vc-dropdown-menu>
-					<template v-for="(item) in dataSource.slice(outerCount)" :key="item.label">
+					<template v-for="(item) in currentValue.slice(outerCount)" :key="item.label">
 						<!-- 带操作确认的操作项 -->
 						<vc-popconfirm
 							v-if="item.message && !item.disabled"
@@ -87,7 +91,7 @@
 	</div>
 </template>
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, watch, ref } from 'vue';
 import { Dropdown, Popconfirm, Popover, Icon, Divider } from '@wya/vc';
 import Item from './item.vue';
 
@@ -105,20 +109,25 @@ export default defineComponent({
 		'vcc-operate-item': Item
 	},
 	props: {
+		dataSource: Array, // [{ show: boolean, label: string, disabled: boolean, message: string, tip: string }]
 		/**
 		 * 外部展示的个数，其余的放在“更多”里面；
-		 * outgoing 外向的（外向的在外面，内向的躲在“更多”里面）
+		 * outerCount 外向的（外向的在外面，内向的躲在“更多”里面）
 		 */
 		outerCount: {
 			type: Number,
 			default: 1
 		},
-		dataSource: Array
+		align: {
+			type: String,
+			default: 'right' // left | center | right
+		}
 	},
 	emits: ['cancel', 'ok', 'click'],
 	setup(props, { emit }) {
+		const currentValue = ref([]);
 		const beforeItems = computed(() => {
-			return props.dataSource.slice(0, props.outerCount);
+			return currentValue.value.slice(0, props.outerCount);
 		});
 
 		const handleOk = (item) => {
@@ -130,7 +139,16 @@ export default defineComponent({
 			emit('cancel', item.label, item);
 		};
 
+		watch(() => props.dataSource, (v = []) => {
+			currentValue.value = v.filter(i => {
+				return typeof i.show === 'undefined' || i.show;
+			});
+		}, {
+			immediate: true
+		});
+
 		return {
+			currentValue,
 			beforeItems,
 			handleOk,
 			handleCancel
@@ -141,8 +159,15 @@ export default defineComponent({
 <style lang="scss">
 .vcc-operate {
 	display: flex;
-	justify-content: flex-end;
 	align-items: center;
+
+	&.is-center {
+		justify-content: center;
+	}
+
+	&.is-right {
+		justify-content: flex-end;
+	}
 }
 
 .vcc-operate__text {

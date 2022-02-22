@@ -1,3 +1,3 @@
-import Opreate from './opreate.vue';
+import Operate from './operate.vue';
 
-export default Opreate;
+export default Operate;
