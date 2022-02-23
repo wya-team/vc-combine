@@ -11,13 +11,12 @@
 		:history="true"
 		:footer="true"
 		:single="true"
+		:selectable="true"
+		:max="10"
 		row-key="id"
 		@sort-change="handleSortChange"
 	>
 		<vc-table-item>
-			<vc-table-column
-				type="selection"
-			/>
 			<vc-table-column
 				prop="date"
 				label="日期"

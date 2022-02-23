@@ -28,6 +28,27 @@
 			v-on="tableHooks"
 		>
 			<template #default>
+				<template v-if="selectable && primaryKey">
+					<vc-table-column
+						v-if="max >= 1"
+						type="selection"
+						v-bind="tableColumnOptions"
+					/>
+					<vc-table-column 
+						v-else
+						width="80"
+						v-bind="tableColumnOptions"
+					>
+						<template #default="{ row }">
+							<vc-radio
+								:label="row[primaryKey]"
+								v-bind="radioOptions"
+							>
+								{{ '' }}
+							</vc-radio>
+						</template>
+					</vc-table-column>
+				</template>
 				<slot />
 			</template>
 			<template #append>
@@ -39,9 +60,8 @@
 		</vc-table>
 		<div v-if="footer" class="vcc-paging-core__footer">
 			<div>
-				<!-- 传键值，代表开启全选 -->
 				<vc-checkbox
-					v-if="primaryKey"
+					v-if="selectable && primaryKey && max > 1"
 					:model-value="isSelectionAll"
 					:disabled="!data.length"
 					class="vcc-paging-core__checkbox"
@@ -75,7 +95,7 @@
 </template>
 <script>
 import { reactive, inject, defineComponent, ref, computed, watch, getCurrentInstance, onMounted, nextTick } from 'vue';
-import { Table, Page, VcInstance, Checkbox } from '@wya/vc';
+import { Table, Page, VcInstance, Checkbox, Radio } from '@wya/vc';
 import { URL, Storage } from '@wya/utils';
 import { useListeners } from './use-listeners';
 
@@ -88,10 +108,17 @@ export default defineComponent({
 	name: "vcc-paging-core",
 	components: {
 		'vc-table': Table,
+		'vc-table-column': Table.Column,
+		'vc-radio': Radio,
 		'vc-page': Page,
 		'vc-checkbox': Checkbox
 	},
 	props: {
+		// checkedKeys -> modelValue
+		modelValue: {
+			type: Array,
+			default: () => ([])
+		},
 		// ---- table 组件属性 start, 其他属性使用$attrs
 		dataSource: {
 			type: Object,
@@ -103,6 +130,8 @@ export default defineComponent({
 			type: Object,
 			default: () => (VcInstance.config?.Paging?.tableOptions || {})
 		},
+		tableColumnOptions: Object,
+		radioOptions: Object,
 		columns: Array, // native table
 		// ---- end
 		// ---- page 组件属性 start
@@ -174,6 +203,11 @@ export default defineComponent({
 
 		// 单页
 		single: {
+			type: Boolean,
+			default: false
+		},
+
+		selectable: {
 			type: Boolean,
 			default: false
 		}

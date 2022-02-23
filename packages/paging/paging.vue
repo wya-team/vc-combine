@@ -11,6 +11,7 @@
 		<vcc-paging-core
 			ref="core"
 			v-model:current="currentPage"
+			:model-value="modelValue"
 			:data-source="listInfo.data"
 			:total="listInfo.total"
 			:count="listInfo.count"
@@ -24,6 +25,8 @@
 			:controls="controls"
 			:row-key="rowKey"
 			:single="single"
+			:selectable="selectable"
+			:max="max"
 			v-bind="mergeProps"
 			style="width: 100%;"
 			v-on="pagingHooks"
@@ -64,6 +67,8 @@ export default defineComponent({
 		'vcc-paging-filter': PagingFilter
 	},
 	props: {
+		// checkedKeys -> modelValue
+		modelValue: Array,
 		columns: Array,
 		tableOptions: Object,
 		pageOptions: Object,
@@ -78,7 +83,8 @@ export default defineComponent({
 		current: [Number, String],
 		filterOptions: Object,
 		max: Number,
-		single: Boolean
+		single: Boolean,
+		selectable: Boolean,
 	},
 	emits: ['page-size-change', 'search'],
 	setup(props, { emit }) {
