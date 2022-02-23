@@ -41,7 +41,7 @@
 			<div>
 				<!-- 传键值，代表开启全选 -->
 				<vc-checkbox
-					v-if="rowKey"
+					v-if="primaryKey"
 					:model-value="isSelectionAll"
 					:disabled="!data.length"
 					class="vcc-paging-core__checkbox"
@@ -212,13 +212,17 @@ export default defineComponent({
 			order: $query.sortOrder
 		});
 
+		const primaryKey = computed(() => {
+			return props.rowKey || props.tableOptions.rowKey;
+		});
+
 		const data = computed(() => {
 			let result = props.dataSource[currentPage.value];
 			return result || [];
 		});
 
 		const isSelectionAll = computed(() => {
-			const { rowKey } = props;
+			const rowKey = primaryKey.value;
 			if (!rowKey || !data.value.length || !selection.value.length) {
 				return false;
 			}
@@ -238,7 +242,7 @@ export default defineComponent({
 			}));
 		};
 		const resetSelection = (isLoaded) => {
-			const { rowKey } = props;
+			const rowKey = primaryKey.value;
 			if (!rowKey) return;
 			if (data.value.length && selection.value.length) {
 				let rows = [];
@@ -255,7 +259,7 @@ export default defineComponent({
 		};
 
 		const handleSelectionChange = ($selection) => {
-			const { rowKey } = props;
+			const rowKey = primaryKey.value;
 			if (!rowKey) return emit('selection-change', $selection, $selection);
 
 			const dataSelectionValues = data.value.map(item => item[rowKey]);
@@ -439,6 +443,7 @@ export default defineComponent({
 			currentPage,
 			data,
 			pageSize,
+			primaryKey,
 			
 			tableHooks,
 			selection,
