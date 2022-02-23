@@ -95,7 +95,6 @@ import { defineComponent, computed, watch, ref } from 'vue';
 import { Dropdown, Popconfirm, Popover, Icon, Divider } from '@wya/vc';
 import Item from './item.vue';
 
-console.log(Popconfirm);
 export default defineComponent({
 	name: 'vcc-operate',
 	components: {
