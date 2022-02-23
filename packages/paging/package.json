@@ -1,6 +1,6 @@
 {
   "name": "@wya/vcc-paging",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "dist/index.js",
   "license": "MIT",
   "publishConfig": {
