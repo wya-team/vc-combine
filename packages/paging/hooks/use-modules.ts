@@ -23,7 +23,7 @@ const getValue = (module, field, historyData, childModule) => {
 	return String(historyData[field] || defaultValue || '');
 };
 
-export const useModules = (props) => {
+export const useModules = (props, modules) => {
 	const normalizeField = (field, type) => {
 		if (type === 'rangeDatePicker') {
 			if (Array.isArray(field)) {
@@ -82,7 +82,7 @@ export const useModules = (props) => {
 			});
 		};
 		
-		getFields(props.modules);
+		getFields(modules.value);
 		// 递归遍历完后，清除activeModule缓存
 		activeModule = null;
 		keywords.value = map;
@@ -110,7 +110,7 @@ export const useModules = (props) => {
 
 	const labelWidth = computed(() => getLabelWidth(maxLength.value));
 
-	watch(props.modules, makeKeywords, { immediate: true });
+	watch(modules, makeKeywords, { immediate: true });
 
 	return {
 		keywords,

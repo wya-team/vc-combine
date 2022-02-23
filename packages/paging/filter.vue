@@ -76,9 +76,12 @@ export default {
 	setup(props, { emit }) {
 		const vm = getCurrentInstance();
 
-		const outerModules = computed(() => props.modules.slice(0, props.outerCount));
-		const innerModules = computed(() => props.modules.slice(props.outerCount));
-		const showExpand = computed(() => props.modules.length > props.outerCount);
+		// module项可通过‘show'字段控制是否展示，show=true或者不设置show字段则展示
+		const enableModules = computed(() => props.modules.filter(it => it.show !== false));
+
+		const outerModules = computed(() => enableModules.value.slice(0, props.outerCount));
+		const innerModules = computed(() => enableModules.value.slice(props.outerCount));
+		const showExpand = computed(() => enableModules.value.length > props.outerCount);
 
 		let isExpand = ref(false);
 
@@ -87,7 +90,7 @@ export default {
 			labelWidth,
 			getModelValue,
 			onModelValueChange
-		} = useModules(props);
+		} = useModules(props, enableModules);
 
 		const routerReplace = async (fullPath) => {
 			const { globalProperties } = vm.appContext.config;
