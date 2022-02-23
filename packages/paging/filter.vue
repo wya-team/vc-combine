@@ -3,7 +3,7 @@
 		<div v-if="outerModules.length">
 			<vcc-paging-filter-item
 				v-for="item in outerModules"
-				:key="item.field"
+				:key="'' + item.field"
 				:module="item"
 				:get-model-value="getModelValue"
 				:on-model-value-change="onModelValueChange"

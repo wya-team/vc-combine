@@ -34,6 +34,7 @@ export default {
 	},
 	props: {
 		...commonProps,
+		field: [String, Array],
 		modelValue: {
 			type: Array,
 			default: () => []
