@@ -52,6 +52,22 @@ export default defineComponent({
 			emit('search', ...rest);
 		};
 
+		const getCurrentData = (all = false) => {
+			const listInfo = current?.value?.proxy?.listInfo;
+			return all 
+				? listInfo
+				: (listInfo.data[listInfo.current || 1] || []);
+		};
+
+		const getData = (all = false) => {
+			return pagings.map(i => {
+				const listInfo = i?.proxy?.listInfo;
+				return all 
+					? listInfo
+					: (listInfo.data[listInfo.current || 1] || []);
+			});
+		};
+
 		provide('paging-group', {
 			props,
 			pagings,
@@ -62,14 +78,18 @@ export default defineComponent({
 			remove: (item) => {
 				item.props.prop && pagings.splice(pagings.indexOf(item), 1);
 			},
-			reset
+			reset,
+			getCurrentData,
+			getData
 		});
 
 		return {
 			handleSearch,
 			pagings,
 			current,
-			reset
+			reset,
+			getData,
+			getCurrentData
 		};
 	}
 });

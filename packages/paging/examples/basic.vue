@@ -36,7 +36,7 @@
 	</vcc-paging>
 </template>
 <script>
-import { ref, reactive, defineComponent } from 'vue';
+import { ref, reactive, defineComponent, onMounted } from 'vue';
 import { ajax } from '@wya/http';
 import { Table } from '@wya/vc';
 import Paging from '../index.ts';
@@ -138,6 +138,13 @@ export default defineComponent({
 		const handleSortChange = (e) => {
 			paging.value.reset(1);
 		};
+
+		onMounted(() => {
+			setTimeout(() => {
+				console.log(paging.value.getData());
+				console.log(paging.value.getData(true));
+			}, 2000);
+		});
 
 		return {
 			disabled,

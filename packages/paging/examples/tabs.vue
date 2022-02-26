@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { Tabs, Table } from '@wya/vc';
 import { ajax } from '@wya/http';
 import { URL } from '@wya/utils';
@@ -180,6 +180,15 @@ export default {
 		const handleSortChange = (e) => {
 			pagingGroup.value.reset(1);
 		};
+
+		onMounted(() => {
+			setTimeout(() => {
+				console.log(pagingGroup.value.getCurrentData());
+				console.log(pagingGroup.value.getCurrentData(true));
+				console.log(pagingGroup.value.getData());
+				console.log(pagingGroup.value.getData(true));
+			}, 2000);
+		});
 
 		return {
 			tabs,

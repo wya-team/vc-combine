@@ -150,6 +150,12 @@ export default defineComponent({
 			};
 		};
 
+		const getData = (all = false) => {
+			return all 
+				? listInfo.value
+				: (listInfo.value.data[listInfo.value.current || 1] || []);
+		};
+
 		const handleSearch = (...rest) => {
 			emit('search', ...rest);
 			reset(1);
@@ -187,7 +193,8 @@ export default defineComponent({
 			listInfo,
 			reset,
 			table,
-			core
+			core,
+			getData
 		});
 
 		return {
@@ -199,7 +206,8 @@ export default defineComponent({
 			handleSearch,
 			reset,
 			core,
-			table
+			table,
+			getData
 		};
 	}
 });
