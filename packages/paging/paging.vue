@@ -40,7 +40,10 @@
 			<template #empty>
 				<slot name="empty" />
 			</template>
-			<slot />
+			<template #default="it">
+				<slot v-if="mode === 'piece'" v-bind="it" />
+				<slot v-else />
+			</template>		
 		</vcc-paging-core>
 	</div>
 </template>
