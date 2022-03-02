@@ -14,7 +14,7 @@
 			:step="false"
 			:precision="0"
 			placeholder="" 
-			:style="{ width: `${start.width || 64}px` }"
+			:style="{ width: `${start.width || 100}px` }"
 			class="vcc-paging-filter-range__input-start"
 			clearable
 			v-bind="start.options"
@@ -30,7 +30,7 @@
 			:step="false"
 			:precision="0"
 			placeholder="" 
-			:style="{ width: `${end.width || 64}px` }"
+			:style="{ width: `${end.width || 100}px` }"
 			class="vcc-paging-filter-range__input-end"
 			clearable
 			v-bind="end.options"
