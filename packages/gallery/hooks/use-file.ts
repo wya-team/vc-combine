@@ -2,13 +2,12 @@ import { ref, computed } from 'vue';
 import { Message } from '@wya/vc';
 import { useConfig } from './use-config';
 import { isValidMime, getExtsByMimeStr } from '../utils';
-import { MoveFile } from '../popup';
 
 export const useFile = (props) => {
-	const { valueKey, apis, http, SOURCE_MAP, mode } = useConfig();
+	const { valueKey, apis, http, mode } = useConfig();
 	const { fileId } = valueKey;
 
-	const selectedFiles = ref([]);
+	const selectedFiles: { value: object[] } = ref([]);
 	const selectedFileIds = computed(() => selectedFiles.value.map(item => item[fileId]));
 	let fileUploadOpts;
 
@@ -51,7 +50,7 @@ export const useFile = (props) => {
 	const getDisabledReason = (file) => {
 		const { fileUrl, fileSize } = valueKey;
 		const { size } = fileUploadOpts;
-		const reasons = [];
+		const reasons: Array<string> = [];
 		// 文件格式判断
 		!isValidMime(file[fileUrl], validFileExts) && reasons.push('格式不匹配');
 		// 文件大小判断
@@ -85,7 +84,7 @@ export const useFile = (props) => {
 	};
 
 	const toggleFile = (it: object) => {
-		const temp = [...selectedFiles.value];
+		const temp: object[] = [...selectedFiles.value];
 
 		const index = temp.findIndex(item => item[fileId] === it[fileId]);
 
