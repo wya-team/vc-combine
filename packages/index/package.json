@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@wya/vcc-footer": "^0.0.6",
+    "@wya/vcc-gallery": "^0.0.0",
     "@wya/vcc-map": "^0.0.3",
     "@wya/vcc-operate": "^0.0.3",
     "@wya/vcc-paging": "^0.0.23",

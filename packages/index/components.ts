@@ -4,7 +4,7 @@ import SetTitle from '@wya/vcc-set-title';
 import SectionTitle from '@wya/vcc-section-title';
 import Footer from '@wya/vcc-footer';
 import Map from '@wya/vcc-map';
-import Opreate from '@wya/vcc-operate';
+import Operate from '@wya/vcc-operate';
 
 const PagingCore = Paging.Core;
 const PagingGroup = Paging.Group;
@@ -22,5 +22,5 @@ export {
 	Footer,
 	Map,
 	MapLocation,
-	Opreate
+	Operate
 };
