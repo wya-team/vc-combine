@@ -257,18 +257,6 @@ setTimeout(() => {
 $c-border: #e8e8e8;
 
 .vca-gallery {
-	.vc-modal__container {
-		height: 674px !important;
-		padding-bottom: 0;
-		overflow: hidden;
-	}
-
-	.vc-modal__content {
-		display: flex;
-		padding: 0 0 63px 0;
-		flex: 1;
-	}
-
 	font-size: 14px;
 
 	&__content {
@@ -303,8 +291,6 @@ $c-border: #e8e8e8;
 		position: relative;
 		padding: 0 24px;
 		overflow: hidden;
-		// flex: 1;
-		// display: flex;
 	}
 
 	&__view {
@@ -339,10 +325,18 @@ $c-border: #e8e8e8;
 		height: 100%;
 		overflow-y: auto;
 	}
-	// .vcc-paging-core__footer {
-	// position: absolute;
-	// bottom: 0;
-	// }
+
+	.vc-modal__container {
+		height: 674px !important;
+		padding-bottom: 0;
+		overflow: hidden;
+	}
+
+	.vc-modal__content {
+		display: flex;
+		padding: 0 0 63px 0;
+		flex: 1;
+	}
 }
 
 </style>
