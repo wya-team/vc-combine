@@ -25,7 +25,7 @@ import {
 	Select as VcSelect,
 	Option as VcOption
 } from '@wya/vc';
-import { useConfig } from '../hooks';
+import { useConfig } from '../hooks/use-config';
 
 const props = defineProps({
 	// 当前所在分组

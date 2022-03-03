@@ -98,7 +98,7 @@ import { VideoPreviewer } from './video-previewer/index';
 import { AudioPreviewer } from './audio-previewer/index';
 import { SOURCE_MAP } from '../constants';
 import { getExtsByMimeStr } from '../utils'; 
-import { useConfig } from '../hooks';
+import { useConfig } from '../hooks/use-config';
 
 const VcFormItem = VcForm.Item;
 
