@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@wya/vc": "~",
     "vue": "^3.2.31"
