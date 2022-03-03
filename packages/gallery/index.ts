@@ -1,4 +1,4 @@
-import Portal from '@wya/vc/lib/portal';
+import { Portal } from '@wya/vc';
 import { ajax } from '@wya/http';
 import wrapperComponent from './gallery.vue';
 import { SOURCE_MAP } from './constants.js';
