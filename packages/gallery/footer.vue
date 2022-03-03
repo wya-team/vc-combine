@@ -107,8 +107,10 @@ const handleDel = async () => {
 		flex: 1;
 	}
 
-	&__btn-cancel {
-		margin-right: 8px;
+	&__btn-group {
+		.vc-button {
+			margin-left: 8px;
+		}
 	}
 }
 </style>
