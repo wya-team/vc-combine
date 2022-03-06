@@ -77,7 +77,7 @@ export default {
 		};
 
 		onMounted(() => {
-			if (props.modelValue !== undefined) {
+			if (props.modelValue !== '' && props.modelValue !== undefined) {
 				getDataSource(props.dataSource);
 			}
 		});

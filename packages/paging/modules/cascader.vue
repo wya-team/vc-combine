@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { onMounted } from 'vue';
 import { Cascader } from '@wya/vc';
 import { commonProps } from '../hooks/use-filter-common';
 import { useDataSource } from '../hooks';
@@ -63,6 +64,12 @@ export default {
 		const handleVisibleChange = () => {
 			getDataSource(props.dataSource);
 		};
+
+		onMounted(() => {
+			if (props.modelValue && props.modelValue.length) {
+				getDataSource(props.dataSource);
+			}
+		});
 		
 		return {
 			isLoading,
