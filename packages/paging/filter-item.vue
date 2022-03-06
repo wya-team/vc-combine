@@ -1,7 +1,7 @@
 <template>
 	<!-- 数值范围筛选项 type === 'range' -->
 	<component 
-		:is="getComponentName(module.type)"
+		:is="getComponentName('range')"
 		v-if="module.type === 'range'"
 		:start-value="getModelValue(module.children[0])"
 		:end-value="getModelValue(module.children[1])"
