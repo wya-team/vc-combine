@@ -19,6 +19,7 @@
 			@clear="handleSearch"
 			@change="handleChange"
 			@ok="handleSearch"
+			v-on="hooks"
 		/>
 	</div>
 </template>

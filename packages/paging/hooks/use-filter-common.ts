@@ -1,3 +1,4 @@
+import { computed } from 'vue';
 
 export const commonProps = {
 	label: String,
@@ -8,6 +9,11 @@ export const commonProps = {
 		default: 220
 	},
 	options: {
+		type: Object,
+		default: () => ({})
+	},
+	// 事件绑定，如：{ change: handleChange }
+	hooks: {
 		type: Object,
 		default: () => ({})
 	}

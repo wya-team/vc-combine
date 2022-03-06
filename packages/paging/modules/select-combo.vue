@@ -11,8 +11,9 @@
 			:model-value="selectValue"
 			:style="{ width: `${selectModule.width || 90}px`, marginLeft: label ? '' : '24px' }" 
 			class="vcc-paging-filter-select-combo__select"
-			v-bind="selectModule.options"
+			v-bind="selectModule.options || {}"
 			@change="$emit('update:selectValue', $event)"
+			v-on="selectModule.hooks || {}"
 		>
 			<vc-option
 				v-for="item in selectModule.dataSource"

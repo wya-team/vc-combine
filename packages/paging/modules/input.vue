@@ -14,6 +14,7 @@
 			v-bind="options"
 			@enter="handleSearch"
 			@change="handleChange"
+			v-on="hooks"
 		/>
 	</div>
 </template>

@@ -37,6 +37,7 @@
 			@clear="handleSearch"
 			@enter="handleSearch"
 			@update:model-value="$emit('update:endValue', $event)"
+			v-on="hooks"
 		/>
 	</div>
 </template>

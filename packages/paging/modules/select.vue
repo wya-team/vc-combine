@@ -16,6 +16,7 @@
 			@clear="handleSearch"
 			@change="handleChange"
 			@visible-change="handleVisibleChange"
+			v-on="hooks"
 		>
 			<vc-spin 
 				v-if="isLoading"

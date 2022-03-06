@@ -18,6 +18,7 @@
 			@clear="handleSearch"
 			@change="handleChange"
 			@visible-change="handleVisibleChange"
+			v-on="hooks"
 		/>
 	</div>
 </template>
