@@ -4,7 +4,7 @@ import { useConfig } from './use-config';
 import { isValidMime, getExtsByMimeStr } from '../utils';
 
 export const useFile = (props) => {
-	const { valueKey, apis, http, mode } = useConfig();
+	const { valueKey, apis, http, mode, SOURCE_MAP } = useConfig();
 	const { fileId } = valueKey;
 
 	const selectedFiles: { value: object[] } = ref([]);
@@ -64,7 +64,7 @@ export const useFile = (props) => {
 	};
 
 	const loadFiles = async (categoryId, page, pageSize) => {
-		const { catId } = valueKey;
+		const { catId, catType } = valueKey;
 		const res = await http({
 			url: apis['URL_GALLERY_FILE_LIST'],
 			type: 'GET',
@@ -72,6 +72,7 @@ export const useFile = (props) => {
 				page,
 				pageSize: 40,
 				[catId]: categoryId,
+				[catType]: SOURCE_MAP[mode].fileType
 			}
 		});
 		res.data.list.forEach(it => {
