@@ -32,6 +32,7 @@
 			:get-model-value="getModelValue"
 			:on-model-value-change="onModelValueChange"
 			:label-width="labelWidth"
+			@search="handleSearch"
 		/>
 	</component>
 
