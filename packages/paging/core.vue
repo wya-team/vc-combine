@@ -19,45 +19,51 @@
 		</template>
 	
 		<!-- TODO loading 包着table -->
-		<vc-table
+		<vc-radio-group 
 			v-else 
-			ref="table" 
-			:data-source="data" 
-			:default-sort="defaultSort"
-			v-bind="tableOptions"
-			v-on="tableHooks"
+			v-model="currentRadio" 
+			style="width: 100%;"
+			v-bind="radioGroupOptions"
 		>
-			<template #default>
-				<template v-if="selectable && primaryKey">
-					<vc-table-column
-						v-if="max >= 1"
-						type="selection"
-						v-bind="tableColumnOptions"
-					/>
-					<vc-table-column 
-						v-else
-						width="80"
-						v-bind="tableColumnOptions"
-					>
-						<template #default="{ row }">
-							<vc-radio
-								:label="row[primaryKey]"
-								v-bind="radioOptions"
-							>
-								{{ '' }}
-							</vc-radio>
-						</template>
-					</vc-table-column>
+			<vc-table
+				ref="table" 
+				:data-source="data" 
+				:default-sort="defaultSort"
+				v-bind="tableOptions"
+				v-on="tableHooks"
+			>
+				<template #default>
+					<template v-if="selectable && primaryKey">
+						<vc-table-column
+							v-if="max > 1"
+							type="selection"
+							v-bind="tableColumnOptions"
+						/>
+						<vc-table-column 
+							v-else
+							width="80"
+							v-bind="tableColumnOptions"
+						>
+							<template #default="{ row }">
+								<vc-radio
+									:label="row[primaryKey]"
+									v-bind="radioOptions"
+								>
+									{{ '' }}
+								</vc-radio>
+							</template>
+						</vc-table-column>
+					</template>
+					<slot />
 				</template>
-				<slot />
-			</template>
-			<template #append>
-				<slot name="append" />
-			</template>
-			<template #empty>
-				<slot name="empty" />
-			</template>
-		</vc-table>
+				<template #append>
+					<slot name="append" />
+				</template>
+				<template #empty>
+					<slot name="empty" />
+				</template>
+			</vc-table>
+		</vc-radio-group>
 		<div v-if="footer" class="vcc-paging-core__footer">
 			<div>
 				<vc-checkbox
@@ -110,6 +116,7 @@ export default defineComponent({
 	components: {
 		'vc-table': Table,
 		'vc-table-column': Table.Column,
+		'vc-radio-group': Radio.Group,
 		'vc-radio': Radio,
 		'vc-page': Page,
 		'vc-checkbox': Checkbox
@@ -133,6 +140,7 @@ export default defineComponent({
 		},
 		tableColumnOptions: Object,
 		radioOptions: Object,
+		radioGroupOptions: Object,
 		columns: Array, // native table
 		// ---- end
 		// ---- page 组件属性 start
@@ -241,6 +249,7 @@ export default defineComponent({
 		const currentPage = ref(!props.disabled ? Number($query.page || 1) : 1);
 		const pageSize = ref(defaultPageSize);
 		const selection = ref([]);
+		const currentRadio = ref('');
 		
 		const defaultSort = reactive({
 			prop: $query.sortField,
@@ -292,6 +301,17 @@ export default defineComponent({
 
 				isLoaded && emit('selection-change', selection.value, rows);
 				toggleSelection(rows, true);
+			}
+		};
+
+		const handleRowClick = (row) => {
+			const rowKey = primaryKey.value;
+			if (props.selectable && rowKey) {
+				if (props.max == 1) {
+					selection.value = [{ ...row }];
+					currentRadio.value = row[rowKey];
+					emit('selection-change', selection.value, selection);
+				}
 			}
 		};
 
@@ -426,6 +446,7 @@ export default defineComponent({
 			return {
 				...listeners.value,
 				// 由内部触发
+				'row-click': handleRowClick,
 				'selection-change': handleSelectionChange,
 				'sort-change': handleSortChange
 			};
@@ -485,7 +506,9 @@ export default defineComponent({
 			tableHooks,
 			selection,
 			checkedStatus,
+			currentRadio,
 
+			handleRowClick,
 			handleSelectionChange,
 			handleChangePageSize,
 			handleChange,
