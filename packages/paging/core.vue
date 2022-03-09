@@ -62,7 +62,8 @@
 			<div>
 				<vc-checkbox
 					v-if="selectable && primaryKey && max > 1"
-					:model-value="isSelectionAll"
+					:model-value="checkedStatus == 1"
+					:indeterminate="checkedStatus == 2"
 					:disabled="!data.length"
 					class="vcc-paging-core__checkbox"
 					@change="handleSelectionAll"
@@ -255,13 +256,15 @@ export default defineComponent({
 			return result || [];
 		});
 
-		const isSelectionAll = computed(() => {
+		const checkedStatus = computed(() => {
+			if (!data.value) return 3;
 			const rowKey = primaryKey.value;
-			if (!rowKey || !data.value.length || !selection.value.length) {
-				return false;
-			}
-			const rowKeyValues = selection.value.map(item => item[rowKey]);
-			return data.value.every(i => rowKeyValues.includes(i[rowKey]));
+			const temp = data.value.filter(row => {
+				return selection.value.findIndex(it => it[rowKey] === row[rowKey]) > -1;
+			});
+			return temp.length
+				? (temp.length === data.value.length ? 1 : 2)
+				: 3;
 		});
 
 		let reSelecting = false;
@@ -481,7 +484,7 @@ export default defineComponent({
 			
 			tableHooks,
 			selection,
-			isSelectionAll,
+			checkedStatus,
 
 			handleSelectionChange,
 			handleChangePageSize,
