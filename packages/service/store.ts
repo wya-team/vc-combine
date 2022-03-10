@@ -71,7 +71,7 @@ class StoreService extends Base {
 						param,
 						response
 					};
-					result[key] = parser ? parser(store.response.data) : store.response.data;
+					result[key].value = parser ? parser(store.response.data) : store.response.data;
 					typeof cache === 'function' 
 						? cache(key, store) 
 						: (cache && Storage.set(`${key}`, store));
