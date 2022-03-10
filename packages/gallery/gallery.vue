@@ -211,6 +211,7 @@ const handleUpload = () => {
 		http: props.ajax
 	}).then(({ catId }) => {
 		setActiveCategory(catId);
+		loadCategories();
 	});
 };
 
