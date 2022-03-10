@@ -30,7 +30,7 @@
 							暂无素材，请上传
 						</div>
 						<vcc-paging
-							v-else-if="categories.length >= 1"
+							v-else-if="activeCategoryId && categories.length >= 1"
 							ref="pagingRef"
 							:page-options="pageOptions"
 							:load-data="loadFiles"

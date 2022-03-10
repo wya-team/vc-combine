@@ -34,7 +34,6 @@ export const useCategory = (refreshFiles) => {
 	};
 
 	const setActiveCategory = (id) => {
-		console.log(id, activeCategoryId.value, 'activeCategoryId.value');
 		if (id === activeCategoryId.value) return;
 
 		const { catId } = valueKey;
