@@ -14,6 +14,7 @@
 			:step="false"
 			:precision="0"
 			placeholder="" 
+			output="string"
 			:style="{ width: `${start.width || 100}px` }"
 			class="vcc-paging-filter-range__input-start"
 			clearable
@@ -30,6 +31,7 @@
 			:step="false"
 			:precision="0"
 			placeholder="" 
+			output="string"
 			:style="{ width: `${end.width || 100}px` }"
 			class="vcc-paging-filter-range__input-end"
 			clearable
