@@ -54,7 +54,7 @@ class StoreService extends Base {
 			const loadingKey = `loading${strFn}`;
 
 			const responseData = (store.response || {}).data || [];
-			result[key] = reactive(parser ? parser(responseData) : responseData);
+			result[key] = ref(parser ? parser(responseData) : responseData);
 			result[loadingKey] = ref(false);
 
 			result[loadKey] = (param: any, opts: Options = {}) => { // eslint-disable-line
@@ -71,10 +71,7 @@ class StoreService extends Base {
 						param,
 						response
 					};
-					Object.assign(
-						result[key], 
-						parser ? parser(store.response.data) : store.response.data
-					);
+					result[key] = parser ? parser(store.response.data) : store.response.data;
 					typeof cache === 'function' 
 						? cache(key, store) 
 						: (cache && Storage.set(`${key}`, store));

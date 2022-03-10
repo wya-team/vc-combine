@@ -108,7 +108,7 @@ export default defineComponent({
 				field: 'rangeDatePicker',
 				// 将会绑定在vc-date-picker组件上的属性
 				options: {
-					format: 'YYYY-MM-DD'
+					format: 'YYYY-MM-DD HH:mm:ss'
 				}
 			},
 			{
