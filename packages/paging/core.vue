@@ -415,8 +415,6 @@ export default defineComponent({
 			localPageSize = $pageSize;
 
 			Storage.set(localPageSizeKey, $pageSize);
-
-			handleChange(1, $pageSize);
 		};
 
 		const handleSortChange = async (e) => {
