@@ -69,10 +69,7 @@ export default defineComponent({
 		const paging = ref(null);
 		const pageOptions = ref();
 		const tableOptions = reactive({
-			defaultSort: {
-				prop: 'date',
-				order: 'descending'
-			}
+			
 		});
 		const modules = ref([
 			{
@@ -136,7 +133,8 @@ export default defineComponent({
 		};
 
 		const handleSortChange = (e) => {
-			paging.value.reset(1);
+			// 内部已经处理
+			// paging.value.reset(1);
 		};
 
 		onMounted(() => {

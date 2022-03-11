@@ -178,7 +178,8 @@ export default {
 		};
 
 		const handleSortChange = (e) => {
-			pagingGroup.value.reset(1);
+			// 内部已经管理
+			// pagingGroup.value.reset(1);
 		};
 
 		onMounted(() => {

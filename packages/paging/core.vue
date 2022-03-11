@@ -28,8 +28,7 @@
 			<vc-table
 				ref="table" 
 				:data-source="data" 
-				:default-sort="defaultSort"
-				v-bind="tableOptions"
+				v-bind="rebuildTableOptions"
 				v-on="tableHooks"
 			>
 				<template #default>
@@ -252,10 +251,13 @@ export default defineComponent({
 		const currentRadio = ref('');
 		
 		const defaultSort = reactive({
-			prop: $query.sortField,
-			order: $query.sortOrder
+			prop: $query.sortField || props.tableOptions?.defaultSort?.prop,
+			order: $query.sortOrder || props.tableOptions?.defaultSort?.order
 		});
 
+		const rebuildTableOptions = computed(() => {
+			return Object.assign(props.tableOptions, { defaultSort });
+		});
 		const primaryKey = computed(() => {
 			return props.rowKey || props.tableOptions.rowKey;
 		});
@@ -420,8 +422,8 @@ export default defineComponent({
 		const handleSortChange = async (e) => {
 			const { prop, order } = e;
 
-			defaultSort.sortField = prop;
-			defaultSort.sortOrder = order;
+			defaultSort.prop = prop;
+			defaultSort.order = order;
 
 			if (props.history) {
 				const route = URL.parse();
@@ -500,6 +502,7 @@ export default defineComponent({
 			data,
 			pageSize,
 			primaryKey,
+			rebuildTableOptions,
 			
 			tableHooks,
 			selection,

@@ -89,7 +89,7 @@ export default defineComponent({
 		single: Boolean,
 		selectable: Boolean,
 	},
-	emits: ['page-size-change', 'search'],
+	emits: ['page-size-change', 'sort-change', 'search'],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
 		const core = ref(null);
@@ -168,6 +168,10 @@ export default defineComponent({
 		const pagingHooks = computed(() => {
 			return {
 				...listeners.value,
+				'sort-change': (e) => {
+					reset(1);
+					emit('sort-change', e);
+				},
 				'page-size-change': (e) => {
 					reset(1);
 					emit('page-size-change', e);
