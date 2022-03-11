@@ -27,15 +27,13 @@ const { ajax } = createHttpClient({
 		return {
 			...options,
 			headers: {
-				'admin-token': '8b1917b8a17cec588cc50477f04ee5de',
-				token: 'd1fb8fcc5709eeffe25e195b7b0eb37fa1b875b4'
+				token: 'e19573493fe483779f5593f56c304f3a'
 			}
 		};
 	}
 });
 const OSS = 'https://wyatest.oss-cn-hangzhou.aliyuncs.com';
-// const BASE = 'https://gxmd-manage.wyawds.com';
-const BASE = 'https://chyy.wyawds.com';
+const BASE = 'https://gxmd-manage.wyawds.com';
 
 const galleryOptions = {
 	ajax,
@@ -48,15 +46,15 @@ const galleryOptions = {
 	// output: 'original',
 	disabledList: [],
 	apis: {
-		URL_GALLERY_CATEGORY_LIST: `${BASE}/product/upload/cat-list.json`,
-		URL_GALLERY_CATEGORY_RENAME: `${BASE}/product/upload/save-cat.json`,
-		URL_GALLERY_CATEGORY_ADD: `${BASE}/product/upload/save-cat.json`,
-		URL_GALLERY_CATEGORY_DELETE: `${BASE}/product/upload/delete-cat.json`,
-		URL_GALLERY_FILE_LIST: `${BASE}/product/upload/file-list.json`,
-		URL_GALLERY_FILE_UPLOAD: `${BASE}/product/upload/add-file.json`,
-		URL_GALLERY_FILE_RENAME: `${BASE}/product/upload/rename-file.json`,
-		URL_GALLERY_FILE_MOVE: `${BASE}/product/upload/remove-file.json`,
-		URL_GALLERY_FILE_DELETE: `${BASE}/product/upload/delete-file.json`,
+		URL_GALLERY_CATEGORY_LIST: `${BASE}/store/upload/cat-list.json`,
+		URL_GALLERY_CATEGORY_RENAME: `${BASE}/store/upload/save-cat.json`,
+		URL_GALLERY_CATEGORY_ADD: `${BASE}/store/upload/save-cat.json`,
+		URL_GALLERY_CATEGORY_DELETE: `${BASE}/store/upload/delete-cat.json`,
+		URL_GALLERY_FILE_LIST: `${BASE}/store/upload/file-list.json`,
+		URL_GALLERY_FILE_UPLOAD: `${BASE}/store/upload/add-file.json`,
+		URL_GALLERY_FILE_RENAME: `${BASE}/store/upload/rename-file.json`,
+		URL_GALLERY_FILE_MOVE: `${BASE}/store/upload/remove-file.json`,
+		URL_GALLERY_FILE_DELETE: `${BASE}/store/upload/delete-file.json`,
 	}
 };
 
