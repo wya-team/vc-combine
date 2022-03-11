@@ -39,7 +39,6 @@ export const useCategory = (refreshFiles) => {
 		const { catId } = valueKey;
 		const target = categories.value.find(it => it[catId] === id);
 		activeCategory.value = target;
-		refreshFiles(1);
 	};
 
 	const createCategory = (callback) => {
@@ -102,6 +101,7 @@ export const useCategory = (refreshFiles) => {
 		// 如果删除的是当前激活的分类，则回到第一个分类
 		if (id === activeCategoryId.value) {
 			setActiveCategory(categories.value[0][catId]);
+			refreshFiles(1);
 		}
 		return id;
 	};

@@ -173,7 +173,10 @@ const {
 	refreshFiles
 );
 
-const handleActiveCategoryChange = setActiveCategory;
+const handleActiveCategoryChange = (id) => {
+	setActiveCategory(id);
+	refreshFiles(1);
+};
 
 const {
 	fileUploadOpts,
@@ -212,6 +215,7 @@ const handleUpload = () => {
 	}).then(({ catId }) => {
 		setActiveCategory(catId);
 		loadCategories();
+		refreshFiles(1);
 	});
 };
 
