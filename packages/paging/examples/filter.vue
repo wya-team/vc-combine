@@ -23,6 +23,10 @@ export default defineComponent({
 	},
 	setup() {
 		const filterRef = ref();
+		const dataForSelect = ref([
+			{ label: 'before选项一', value: '1' },
+			{ label: 'before选项二', value: '2' }
+		]);
 		const modules = ref([
 			{
 				type: 'input',
@@ -53,13 +57,28 @@ export default defineComponent({
 					return new Promise((resolve) => {
 						// 模拟异步获取
 						setTimeout(() => {
-							console.log(123);
 							resolve([
 								{ label: '选项一', value: '1' },
 								{ label: '选项二', value: '2' }
 							]);
 						}, 1000);
 					});
+				},
+				hooks: {
+					change: () => {
+						dataForSelect.value = [
+							{ label: 'dataSource返回ref的下拉选项一', value: '1' },
+							{ label: 'dataSource返回ref的下拉选项二', value: '2' }
+						];
+					}
+				}
+			},
+			{
+				type: 'select',
+				label: 'dataSource返回ref的下拉选择项：',
+				field: 'refSelect',
+				dataSource: () => {
+					return dataForSelect;
 				}
 			},
 			{

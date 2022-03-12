@@ -1,25 +1,30 @@
-import { ref } from 'vue';
+import { ref, computed, isRef } from 'vue';
 
 export const useDataSource = (props) => {
-	const dataSource = ref([]);
+	const _lazyData = ref([]);
 	const isLoading = ref(false);
 
+	const dataSource = computed(() => {
+		return isRef(_lazyData.value) ? _lazyData.value.value : _lazyData.value;
+	});
+
 	const getDataSource = async (userDataSource) => {
-		if (dataSource.value.length) {
-			return dataSource;
+		if (_lazyData.value.length) {
+			return _lazyData;
 		}
 
 		if (typeof userDataSource === 'function') {
+			// 支持返回promise、数组、或者ref（ref.value为数组数据）
 			const res = userDataSource();
 			if (res && res.then) {
 				isLoading.value = true;
-				dataSource.value = await res;
+				_lazyData.value = await res;
 				isLoading.value = false;
 			} else {
-				dataSource.value = res;
+				_lazyData.value = res;
 			}
 		} else {
-			dataSource.value = userDataSource;
+			_lazyData.value = userDataSource;
 		}
 	};
 
@@ -28,7 +33,7 @@ export const useDataSource = (props) => {
 		if (typeof props.dataSource !== 'function') {
 			throw new Error('搜索型下拉框组件的“dataSource”应为function');
 		}
-		dataSource.value = await props.dataSource(keyword);
+		_lazyData.value = await props.dataSource(keyword);
 	};
 
 	return {
