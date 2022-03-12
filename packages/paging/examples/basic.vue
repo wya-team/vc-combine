@@ -11,7 +11,7 @@
 		:disabled="disabled"
 		:history="true"
 		:footer="true"
-		:single="true"
+		:single="false"
 		:selectable="true"
 		:max="10"
 		row-key="id"

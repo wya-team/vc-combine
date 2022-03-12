@@ -318,6 +318,7 @@ export default defineComponent({
 		const resetSelection = (isLoaded) => {
 			const rowKey = primaryKey.value;
 			if (!rowKey) return;
+
 			if (data.value.length && selection.value.length) {
 				let rows = [];
 				const rowKeyValues = selection.value.map(item => item[rowKey]);
@@ -331,6 +332,9 @@ export default defineComponent({
 					emit('selection-change', selection.value, rows);
 					emit('update:model-value', selection.value);
 				}
+
+				console.log(rows, 0);
+				console.log(rows, 0, rows.length);
 				toggleSelection(rows, true);
 			}
 		};
@@ -406,7 +410,8 @@ export default defineComponent({
 				emit('load-pending');
 				load.then((res) => {
 					emit('load-success', res);
-					resetSelection(false);
+					// 赋值之后再复选
+					setTimeout(() => resetSelection(false));
 					return res;
 				}).catch((res) => {
 					emit('load-fail', res);
