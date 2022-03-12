@@ -1,16 +1,17 @@
+import type { Ref } from 'vue';
 import { ref, computed, isRef } from 'vue';
 
 export const useDataSource = (props) => {
-	const _lazyData = ref([]);
+	const _lazyData: Ref = ref([]);
 	const isLoading = ref(false);
 
-	const dataSource = computed(() => {
+	const dataSource = computed((): Array<object> => {
 		return isRef(_lazyData.value) ? _lazyData.value.value : _lazyData.value;
 	});
 
 	const getDataSource = async (userDataSource) => {
-		if (_lazyData.value.length) {
-			return _lazyData;
+		if (dataSource.value.length) {
+			return dataSource.value;
 		}
 
 		if (typeof userDataSource === 'function') {
