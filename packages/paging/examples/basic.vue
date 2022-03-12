@@ -15,6 +15,7 @@
 		:selectable="true"
 		:max="10"
 		row-key="id"
+		allow-selection-keep
 		@sort-change="handleSortChange"
 	>
 		<vc-table-item>

@@ -88,6 +88,10 @@ export default defineComponent({
 		max: Number,
 		single: Boolean,
 		selectable: Boolean,
+		allowSelectionKeep: {
+			type: Boolean,
+			default: false
+		}
 	},
 	emits: ['page-size-change', 'sort-change', 'search', 'update:model-value'],
 	setup(props, { emit }) {
@@ -142,6 +146,11 @@ export default defineComponent({
 		};
 
 		const reset = (force) => {
+			if (!props.allowSelectionKeep) {
+				currentSelected.value = [];
+				emit('update:model-value', []);
+			}
+
 			// 回到首页刷新
 			if (force) {
 				listInfo.value = initPage();
