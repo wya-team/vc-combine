@@ -45,10 +45,11 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, reactive } from 'vue';
 import { InputNumber } from '@wya/vc';
 import { commonProps } from '../hooks/use-filter-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
+import { useFilterManager } from '../hooks';
 
 export default {
 	name: 'vcc-paging-filter-range',
@@ -72,6 +73,7 @@ export default {
 	},
 	emits: ['update:startValue', 'update:endValue', 'search'],
 	setup(props, { emit }) {
+		const { filterManager } = useFilterManager();
 		const start = computed(() => props.children[0]);
 		const end = computed(() => props.children[1]);
 
@@ -83,8 +85,18 @@ export default {
 			return edgeType === 'max' 
 				? (userOpts.max || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MAX : INT_MAX))
 				: (userOpts.min || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MIN : INT_MIN));
-				
 		};
+
+		const reset = () => {
+			emit('update:startValue', '');
+			emit('update:endValue', '');
+		};
+
+		const fieldCtx = reactive({
+			reset
+		});
+
+		filterManager.addField(props.field, fieldCtx);
 		
 		return {
 			start,

@@ -20,8 +20,9 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
 import { Input } from '@wya/vc';
-import { commonProps } from '../hooks/use-filter-common';
+import { useFilterManager, commonProps } from '../hooks';
 
 export default {
 	name: 'vcc-paging-filter-input',
@@ -34,6 +35,7 @@ export default {
 	},
 	emits: ['update:modelValue', 'search'],
 	setup(props, { emit }) {
+		const { filterManager } = useFilterManager();
 		const handleSearch = () => {
 			emit('search');
 		};
@@ -44,6 +46,16 @@ export default {
 				handleSearch();
 			}
 		};
+
+		const reset = () => {
+			emit('update:modelValue', '');
+		};
+
+		const fieldCtx = reactive({
+			reset
+		});
+
+		filterManager.addField(props.field, fieldCtx);
 
 		return {
 			handleSearch,

@@ -45,12 +45,13 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue';
+import { ref, reactive, computed, getCurrentInstance, provide } from 'vue';
 import { Button, Expand, Icon } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
 import { useModules } from './hooks';
 import FilterItem from './filter-item.vue';
+import { FILTER_KEY } from './constants';
 
 export default {
 	name: 'vcc-paging-filter',
@@ -73,8 +74,9 @@ export default {
 		router: Boolean
 	},
 	emits: ['search'],
-	setup(props, { emit }) {
+	setup(props, { emit, expose }) {
 		const vm = getCurrentInstance();
+		const fieldMap = new Map();
 
 		// module项可通过‘show'字段控制是否展示，show=true或者不设置show字段则展示
 		const enableModules = computed(() => props.modules.filter(it => it.show !== false));
@@ -121,7 +123,35 @@ export default {
 			isExpand.value = !isExpand.value;
 		};
 
+		const addField = (field, fieldCtx) => {
+			field && fieldCtx && fieldMap.set(field, fieldCtx);
+		};
+
+		const removeField = (field) => {
+			fieldMap.delete(field);
+		};
+
+		const filterManager = reactive({
+			addField,
+			removeField
+		});
+
+		provide(FILTER_KEY, filterManager);
+
+		const reset = (search = true) => {
+			fieldMap.forEach((ctx) => {
+				const resetFn = ctx.reset;
+				resetFn && resetFn();
+			});
+			search && handleSearch();
+		};
+
+		expose({
+			reset
+		});
+
 		return {
+			reset,
 			isExpand, 
 			showExpand,
 			outerModules,

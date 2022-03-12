@@ -1,6 +1,15 @@
 <template>
 	<div style="padding: 20px;">
-		<vcc-paging-filter :modules="modules" :outer-count="2" history />
+		<vcc-paging-filter
+			ref="filterRef"
+			:modules="modules"
+			:outer-count="2"
+			history
+		/>
+
+		<button @click="handleReset">
+			点击重置
+		</button>
 	</div>
 </template>
 <script>
@@ -13,6 +22,7 @@ export default defineComponent({
 		'vcc-paging-filter': Paging.Filter,
 	},
 	setup() {
+		const filterRef = ref();
 		const modules = ref([
 			{
 				type: 'input',
@@ -36,13 +46,14 @@ export default defineComponent({
 				type: 'select',
 				label: '搜索型下拉选择项：',
 				field: 'searchableSelect',
-				options: {
-					searchable: true
-				},
+				// options: {
+				// 	searchable: true
+				// },
 				dataSource: () => {
 					return new Promise((resolve) => {
 						// 模拟异步获取
 						setTimeout(() => {
+							console.log(123);
 							resolve([
 								{ label: '选项一', value: '1' },
 								{ label: '选项二', value: '2' }
@@ -104,8 +115,8 @@ export default defineComponent({
 			{
 				type: 'rangeDatePicker',
 				label: '时间/日期范围选择：',
-				// field: ['rangeDatePicker_start', 'rangeDatePicker_end'],
-				field: 'rangeDatePicker',
+				field: ['rangeDatePicker_start', 'rangeDatePicker_end'],
+				// field: 'rangeDatePicker',
 				// 将会绑定在vc-date-picker组件上的属性
 				options: {
 					format: 'YYYY-MM-DD HH:mm:ss'
@@ -170,9 +181,18 @@ export default defineComponent({
 				]
 			}
 		]);
+
+		const handleReset = () => {
+			filterRef.value.reset(true);
+		};
+		setTimeout(() => {
+			// modules.value[0].show = false;
+		}, 2000);
 		
 		return {
-			modules
+			filterRef,
+			modules,
+			handleReset
 		};
 	}
 });

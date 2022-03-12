@@ -55,14 +55,14 @@ export default {
 			default: () => []
 		},
 	},
-	emits: ['update:selectValue', 'update:comboValue', 'search'],
+	emits: ['update:selectValue', 'search'],
 	setup(props, { emit }) {
 		const selectModule = computed(() => props.children[0]);
 
 		const handleSearch = () => {
 			emit('search');
 		};
-		
+
 		return {
 			selectModule,
 

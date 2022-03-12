@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { Select, Option, Spin } from '@wya/vc';
 import { commonProps } from '../hooks/use-filter-common';
-import { useDataSource } from '../hooks';
+import { useDataSource, useFilterManager } from '../hooks';
 
 export default {
 	name: 'vcc-paging-filter-select',
@@ -57,6 +57,8 @@ export default {
 	},
 	emits: ['update:modelValue', 'search'],
 	setup(props, { emit }) {
+		const { filterManager } = useFilterManager();
+
 		const handleSearch = () => {
 			emit('search');
 		};
@@ -81,6 +83,16 @@ export default {
 				getDataSource(props.dataSource);
 			}
 		});
+
+		const reset = () => {
+			emit('update:modelValue', '');
+		};
+
+		const fieldCtx = reactive({
+			reset
+		});
+
+		filterManager.addField(props.field, fieldCtx);
 
 		return {
 			isLoading,
