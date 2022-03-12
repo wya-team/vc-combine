@@ -18,12 +18,13 @@
 			<slot :it="item" :index="index" />
 		</template>
 	
-		<!-- TODO loading 包着table -->
 		<vc-radio-group 
-			v-else 
-			v-model="currentRadio" 
+			v-else-if="selectable && primaryKey && max == 1" 
+			:model-value="selection[0] && selection[0][primaryKey]" 
+			:fragment="!selectable || !primaryKey || max != 1"
 			style="width: 100%;"
 			v-bind="radioGroupOptions"
+			@change="handleRadioChange"
 		>
 			<vc-table
 				ref="table" 
@@ -39,7 +40,6 @@
 							v-bind="tableColumnOptions"
 						/>
 						<vc-table-column 
-							v-else
 							width="80"
 							v-bind="tableColumnOptions"
 						>
@@ -63,6 +63,30 @@
 				</template>
 			</vc-table>
 		</vc-radio-group>
+		<vc-table
+			v-else
+			ref="table" 
+			:data-source="data" 
+			v-bind="rebuildTableOptions"
+			v-on="tableHooks"
+		>
+			<template #default>
+				<template v-if="selectable && primaryKey">
+					<vc-table-column
+						v-if="max > 1"
+						type="selection"
+						v-bind="tableColumnOptions"
+					/>
+				</template>
+				<slot />
+			</template>
+			<template #append>
+				<slot name="append" />
+			</template>
+			<template #empty>
+				<slot name="empty" />
+			</template>
+		</vc-table>
 		<div v-if="footer" class="vcc-paging-core__footer">
 			<div>
 				<vc-checkbox
@@ -229,6 +253,7 @@ export default defineComponent({
 		'page-change',
 		'update:current',
 		'sort-change',
+		'row-click',
 		'selection-change'
 	],
 	setup(props, { emit }) {
@@ -247,8 +272,8 @@ export default defineComponent({
 		const loading = ref(false);
 		const currentPage = ref(!props.disabled ? Number($query.page || 1) : 1);
 		const pageSize = ref(defaultPageSize);
+		// 当前选择的
 		const selection = ref([]);
-		const currentRadio = ref('');
 		
 		const defaultSort = reactive({
 			prop: $query.sortField || props.tableOptions?.defaultSort?.prop,
@@ -308,13 +333,19 @@ export default defineComponent({
 
 		const handleRowClick = (row) => {
 			const rowKey = primaryKey.value;
-			if (props.selectable && rowKey) {
-				if (props.max == 1) {
-					selection.value = [{ ...row }];
-					currentRadio.value = row[rowKey];
-					emit('selection-change', selection.value, selection);
-				}
+			if (props.selectable && rowKey && props.max == 1) {
+				selection.value = [row];
+				emit('selection-change', selection.value, selection);
 			}
+			emit('row-click', row);
+		};
+
+		const handleRadioChange = (id) => {
+			const rowKey = primaryKey.value;
+			let row = data.value.find(i => i[rowKey] == id);
+
+			selection.value = [row];
+			emit('selection-change', selection.value, selection);
 		};
 
 		const handleSelectionChange = ($selection) => {
@@ -339,8 +370,6 @@ export default defineComponent({
 		const handleSelectionAll = (v) => {
 			table.value.toggleAllSelection();
 		};
-
-
 
 		const setCurrentPage = ($page) => {
 			currentPage.value = $page;
@@ -453,6 +482,32 @@ export default defineComponent({
 		});
 
 		watch(
+			() => props.modelValue,
+			(v) => {
+				const rowKey = primaryKey.value;
+				if (!props.selectable || !rowKey) {
+					return;
+				}
+
+				if (selection.value !== v) {
+					// 尽量不要传id
+					if (v.some(i => typeof i !== 'object')) {
+						v = v.map(i => {
+							return {
+								[rowKey]: i
+							};
+						});
+					}
+
+					selection.value = v;
+				}
+			},
+			{
+				immediate: true
+			}
+		);
+
+		watch(
 			() => props.disabled,
 			(v) => {
 				if (v) return;
@@ -507,13 +562,13 @@ export default defineComponent({
 			tableHooks,
 			selection,
 			checkedStatus,
-			currentRadio,
 
 			handleRowClick,
 			handleSelectionChange,
 			handleChangePageSize,
 			handleChange,
 			handleSelectionAll,
+			handleRadioChange,
 
 			defaultSort,
 

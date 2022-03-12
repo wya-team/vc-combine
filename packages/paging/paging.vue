@@ -11,7 +11,7 @@
 		<vcc-paging-core
 			ref="core"
 			v-model:current="currentPage"
-			:model-value="modelValue"
+			:model-value="currentSelected"
 			:data-source="listInfo.data"
 			:total="listInfo.total"
 			:count="listInfo.count"
@@ -70,7 +70,6 @@ export default defineComponent({
 		'vcc-paging-filter': PagingFilter
 	},
 	props: {
-		// checkedKeys -> modelValue
 		modelValue: Array,
 		columns: Array,
 		tableOptions: Object,
@@ -89,11 +88,12 @@ export default defineComponent({
 		single: Boolean,
 		selectable: Boolean,
 	},
-	emits: ['page-size-change', 'sort-change', 'search'],
+	emits: ['page-size-change', 'sort-change', 'search', 'update:model-value'],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
 		const core = ref(null);
 		const table = ref(null);
+		const currentSelected = ref([]);
 		const listInfo = ref(initPage());
 		const instance = getCurrentInstance();
 
@@ -168,6 +168,10 @@ export default defineComponent({
 		const pagingHooks = computed(() => {
 			return {
 				...listeners.value,
+				'update:model-value': (e) => {
+					currentSelected.value = v;
+					emit('update:model-value', e);
+				},
 				'sort-change': (e) => {
 					reset(1);
 					emit('sort-change', e);
@@ -184,6 +188,23 @@ export default defineComponent({
 			() => props.current, 
 			() => {
 				currentPage.value = props.current;
+			}
+		);
+
+		watch(
+			() => props.modelValue, 
+			(v) => {
+				if (typeof v !== 'object' || !v) {
+					currentSelected.value = [];
+					return;
+				}
+
+				if (v !== currentSelected.value) {
+					currentSelected.value = v instanceof Array ? v : [v];
+				}
+			},
+			{
+				immediate: true
 			}
 		);
 
@@ -205,6 +226,7 @@ export default defineComponent({
 		});
 
 		return {
+			currentSelected,
 			currentPage,
 			listInfo,
 			pagingHooks,

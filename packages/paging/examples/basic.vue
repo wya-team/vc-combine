@@ -1,6 +1,7 @@
 <template>
 	<vcc-paging
 		ref="paging"
+		:model-value="checked"
 		:page-options="pageOptions"
 		:table-options="tableOptions"
 		:filter-options="{
@@ -12,7 +13,7 @@
 		:footer="true"
 		:single="true"
 		:selectable="true"
-		:max="10"
+		:max="1"
 		row-key="id"
 		@sort-change="handleSortChange"
 	>
@@ -71,6 +72,7 @@ export default defineComponent({
 		const tableOptions = reactive({
 			
 		});
+		const checked = ref([{ id: '1_0' }]); // ['1_0']
 		const modules = ref([
 			{
 				type: 'input',
@@ -125,6 +127,7 @@ export default defineComponent({
 				});
 				console.log(`page: ${$page}@success`);
 
+				console.log(res);
 				return res;
 			} catch (e) {
 				// throw e;
