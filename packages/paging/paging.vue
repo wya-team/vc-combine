@@ -169,7 +169,7 @@ export default defineComponent({
 			return {
 				...listeners.value,
 				'update:model-value': (e) => {
-					currentSelected.value = v;
+					currentSelected.value = e;
 					emit('update:model-value', e);
 				},
 				'sort-change': (e) => {

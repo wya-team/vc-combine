@@ -254,7 +254,8 @@ export default defineComponent({
 		'update:current',
 		'sort-change',
 		'row-click',
-		'selection-change'
+		'selection-change',
+		'update:model-value'
 	],
 	setup(props, { emit }) {
 		const group = inject('paging-group', {});
@@ -326,7 +327,10 @@ export default defineComponent({
 					}
 				});
 
-				isLoaded && emit('selection-change', selection.value, rows);
+				if (isLoaded) {
+					emit('selection-change', selection.value, rows);
+					emit('update:model-value', selection.value);
+				}
 				toggleSelection(rows, true);
 			}
 		};
@@ -336,6 +340,7 @@ export default defineComponent({
 			if (props.selectable && rowKey && props.max == 1) {
 				selection.value = [row];
 				emit('selection-change', selection.value, selection);
+				emit('update:model-value', selection.value);
 			}
 			emit('row-click', row);
 		};
@@ -346,6 +351,7 @@ export default defineComponent({
 
 			selection.value = [row];
 			emit('selection-change', selection.value, selection);
+			emit('update:model-value', selection.value);
 		};
 
 		const handleSelectionChange = ($selection) => {
@@ -364,7 +370,10 @@ export default defineComponent({
 				})
 				.concat($selection);
 
-			!reSelecting && emit('selection-change', selection.value, selection);
+			if (!reSelecting) {
+				emit('selection-change', selection.value, selection);	
+				emit('update:model-value', selection.value);
+			}
 		};
 
 		const handleSelectionAll = (v) => {

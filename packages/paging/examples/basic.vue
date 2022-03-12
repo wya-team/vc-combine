@@ -1,7 +1,7 @@
 <template>
 	<vcc-paging
 		ref="paging"
-		:model-value="checked"
+		v-model="checked"
 		:page-options="pageOptions"
 		:table-options="tableOptions"
 		:filter-options="{
@@ -13,7 +13,7 @@
 		:footer="true"
 		:single="true"
 		:selectable="true"
-		:max="1"
+		:max="10"
 		row-key="id"
 		@sort-change="handleSortChange"
 	>
@@ -37,7 +37,7 @@
 	</vcc-paging>
 </template>
 <script>
-import { ref, reactive, defineComponent, onMounted } from 'vue';
+import { watch, ref, reactive, defineComponent, onMounted } from 'vue';
 import { ajax } from '@wya/http';
 import { Table } from '@wya/vc';
 import Paging from '../index.ts';
@@ -140,6 +140,13 @@ export default defineComponent({
 			// paging.value.reset(1);
 		};
 
+		watch(
+			() => checked.value,
+			(v) => {
+				console.log(v);
+			}
+		);
+
 		onMounted(() => {
 			setTimeout(() => {
 				console.log(paging.value.getData());
@@ -148,6 +155,7 @@ export default defineComponent({
 		});
 
 		return {
+			checked,
 			disabled,
 			paging,
 			modules,
