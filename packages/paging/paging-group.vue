@@ -2,6 +2,7 @@
 	<div class="vcc-paging-group">
 		<vcc-paging-filter 
 			v-if="filterOptions && filterOptions.modules && filterOptions.modules.length" 
+			ref="filter"
 			style="margin-bottom: 12px;"
 			:history="history"
 			:router="router"
@@ -38,6 +39,7 @@ export default defineComponent({
 	emits: ['click', 'change', 'search'],
 	setup(props, { emit }) {
 		const pagings = reactive([]);
+		const filter = ref(null);
 
 		const reset = (force) => {
 			pagings.forEach(i => i.proxy.reset(force));
@@ -72,6 +74,7 @@ export default defineComponent({
 			props,
 			pagings,
 			current, // 有且仅一个激活
+			filter,
 			add: (item) => {
 				item && pagings.push(item);
 			},
@@ -84,6 +87,7 @@ export default defineComponent({
 		});
 
 		return {
+			filter,
 			handleSearch,
 			pagings,
 			current,

@@ -2,6 +2,7 @@
 	<div class="vcc-paging">
 		<vcc-paging-filter 
 			v-if="filterOptions && filterOptions.modules && filterOptions.modules.length" 
+			ref="filter"
 			style="margin-bottom: 12px;"
 			:history="mergeProps.history"
 			:router="mergeProps.router"
@@ -93,6 +94,7 @@ export default defineComponent({
 		const group = inject('paging-group', {});
 		const core = ref(null);
 		const table = ref(null);
+		const filter = ref(null);
 		const currentSelected = ref([]);
 		const listInfo = ref(initPage());
 		const instance = getCurrentInstance();
@@ -222,10 +224,12 @@ export default defineComponent({
 			reset,
 			table,
 			core,
+			filter,
 			getData
 		});
 
 		return {
+			filter,
 			currentSelected,
 			currentPage,
 			listInfo,
