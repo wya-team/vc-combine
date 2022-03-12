@@ -13,7 +13,7 @@
 	</div>
 </template>
 <script>
-import { provide, reactive, defineComponent, computed } from 'vue';
+import { ref, provide, reactive, defineComponent, computed } from 'vue';
 import PagingFilter from './filter.vue';
 
 export default defineComponent({
