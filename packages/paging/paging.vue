@@ -184,12 +184,14 @@ export default defineComponent({
 					emit('update:model-value', e);
 				},
 				'sort-change': (e) => {
-					reset(1);
 					emit('sort-change', e);
+					// 先emit，再reset
+					reset(1);
 				},
 				'page-size-change': (e) => {
-					reset(1);
 					emit('page-size-change', e);
+					// 先emit，再reset
+					reset(1);
 				} 
 			};
 		});
