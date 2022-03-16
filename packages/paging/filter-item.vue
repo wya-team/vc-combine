@@ -68,6 +68,7 @@ export default {
 	components: {
 		[getComponentName('input')]: Input,
 		[getComponentName('select')]: Select,
+		[getComponentName('multipleSelect')]: Select,
 		[getComponentName('cascader')]: Cascader,
 		[getComponentName('range')]: Range,
 		[getComponentName('selectCombo')]: SelectCombo,

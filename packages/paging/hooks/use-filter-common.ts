@@ -1,4 +1,5 @@
 export const commonProps = {
+	type: String,
 	label: String,
 	field: String,
 	labelWidth: String,

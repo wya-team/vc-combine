@@ -47,12 +47,12 @@ export default defineComponent({
 			// 	]
 			// },
 			{
-				type: 'select',
-				label: '搜索型下拉选择项：',
-				field: 'searchableSelect',
-				// options: {
-				// 	searchable: true
-				// },
+				type: 'multipleSelect',
+				label: '多选下拉选择项：',
+				field: 'multipleSelect',
+				options: {
+					max: 2
+				},
 				dataSource: () => {
 					return new Promise((resolve) => {
 						// 模拟异步获取

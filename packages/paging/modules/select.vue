@@ -49,7 +49,7 @@ export default {
 	},
 	props: {
 		...commonProps,
-		modelValue: [Number, String],
+		modelValue: [Number, String, Array],
 		dataSource: {
 			type: [Array, Function],
 			default: () => []
@@ -64,7 +64,9 @@ export default {
 		};
 		const handleChange = (value) => {
 			emit('update:modelValue', value);
-			handleSearch();
+			if (props.type !== 'multipleSelect') {
+				handleSearch();
+			}
 		};
 
 		const {

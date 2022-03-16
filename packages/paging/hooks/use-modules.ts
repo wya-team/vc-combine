@@ -1,17 +1,23 @@
-import { ref, watch, computed, reactive } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { URL } from '@wya/utils';
 
 const getLabelWidth = length => {
 	return `calc(${length}em + 24px)`;
 };
 
+// modelValue需为数组的 filter type
+const ARRAY_TYPES = [
+	'cascader', // 级联
+	'multipleSelect' // 多选select
+];
+
 const getValue = (module, field, historyData, childModule) => {
 	const { type } = module;
 	const { defaultValue } = childModule;
 	let value;
 
-	// 级联选择的modelValue需为数组，需单独处理
-	if (type === 'cascader') {
+	// modelValue需为数组的，需单独处理
+	if (ARRAY_TYPES.includes(type)) {
 		value = historyData[field];
 		// history为true的模式下，是从query上取的逗号拼接的字符串
 		return value 
