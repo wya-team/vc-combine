@@ -16,6 +16,7 @@
 				searchInputStyle
 			]"
 			@keyup="handleMapSearch"
+			@enter="() => handleMapSearch({ keyCode: 13 })"
 		/>
 		<vcc-map 
 			:id="mapId" 
