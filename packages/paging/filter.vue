@@ -68,7 +68,7 @@ export default {
 		},
 		outerCount: {
 			type: Number,
-			default: 1
+			default: 2
 		},
 		history: Boolean,
 		router: Boolean
