@@ -115,7 +115,7 @@ export default defineComponent({
 		 */
 		outerCount: {
 			type: Number,
-			default: 1
+			default: 2
 		},
 		align: {
 			type: String,
