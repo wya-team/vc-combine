@@ -1,7 +1,7 @@
 <template>
 	<div 
 		v-if="currentValue.length > 0" 
-		:class="{ [`is-${align}`]: true }"
+		:class="`is-${align}`"
 		class="vcc-operate"
 	>
 		<template v-for="(item, index) in beforeItems" :key="item.label">
@@ -11,14 +11,14 @@
 				@cancel="handleCancel(item)"
 			/>
 			<vc-divider
-				v-if="index < beforeItems.length - 1 || currentValue.length > outerCount"
+				v-if="index < beforeItems.length - 1 || needExpand"
 				:key="index"
 				vertical
 			/>
 		</template>
 			
 		<vc-dropdown
-			v-if="currentValue.length > outerCount"
+			v-if="needExpand"
 			portal-class-name="vcc-dropdown"
 			placement="bottom-right"
 		>
@@ -125,8 +125,11 @@ export default defineComponent({
 	emits: ['cancel', 'ok', 'click'],
 	setup(props, { emit }) {
 		const currentValue = ref([]);
+		// 是否需要使用展开的方式，当总数量大于外面支持展示的数量时
+		// 比如outerCount=1，此时只有”操作“和”删除“两个操作项，其实外面两个位置已经够展示它们，所以就不需要把”删除“操作放到展开项里
+		const needExpand = computed(() => currentValue.value.length > props.outerCount + 1);
 		const beforeItems = computed(() => {
-			return currentValue.value.slice(0, props.outerCount);
+			return currentValue.value.slice(0, needExpand.value ? props.outerCount : props.outerCount + 1);
 		});
 
 		const handleOk = (item) => {
@@ -147,6 +150,7 @@ export default defineComponent({
 		});
 
 		return {
+			needExpand,
 			currentValue,
 			beforeItems,
 			handleOk,
