@@ -157,7 +157,7 @@ const handlePlay = (item, event) => {
 				thumbnail: url,
 				title: item[fileName]
 			}],
-			opts: {
+			options: {
 				index: 0,
 				history: false,
 				getThumbBoundsFn: (index) => pos
