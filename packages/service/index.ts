@@ -3,5 +3,5 @@ import Store from './store';
 
 export default {
 	createStore: Store.create,
-	clear: (new Base()).clear
+	clear: Store.clear
 };
