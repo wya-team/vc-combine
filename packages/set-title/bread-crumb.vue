@@ -13,14 +13,14 @@
 			</span>
 			<span v-if="index < routes.length - 1" class="vcc-bread-crumb__divider">/</span>
 		</div>
-		<vc-button v-if="showBack" type="primary" style="margin-left: 20px;" @click="route.path && $router.push(route.path)">
+		<vc-button v-if="showBack" type="primary" style="margin-left: 20px;" @click="handleBack">
 			返回
 		</vc-button>
 	</div>
 </template>
 
 <script>
-import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrentInstance, defineEmits } from 'vue';
 import { Button } from '@wya/vc';
 
 /**
@@ -47,10 +47,17 @@ export default defineComponent({
 		const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
 		const leftW = ref(0);
+		const emit = defineEmits(['back']);
 		const handleResize = ({ distance }) => {
 			leftW.value !== distance && (leftW.value = distance);
 		};
-
+		const handleBack = () => {
+			const route = _props.routes.slice(-2, -1);
+			if (route.length) {
+				globalProperties?.$router?.replace?.(route[0].path);
+			}
+			emit('back');
+		};
 		onBeforeMount(() => {
 			globalProperties.$global?.on?.('layout-left-menu', handleResize);
 		});
@@ -67,7 +74,8 @@ export default defineComponent({
 
 		return {
 			leftW,
-			handleResize
+			handleResize,
+			handleBack
 		};
 	}
 });
