@@ -23,7 +23,10 @@
 				{{ item.label }}
 			</vc-option>
 		</vc-select>
-		<div class="vcc-paging-filter-select-combo__combo">
+		<div
+			:style="`margin-left:${gap}px`"
+			class="vcc-paging-filter-select-combo__combo"
+		>
 			<slot />
 		</div>
 	</div>
@@ -42,6 +45,10 @@ export default {
 	props: {
 		label: String,
 		labelWidth: String,
+		gap: {
+			type: Number,
+			default: 3
+		},
 		selectValue: {
 			type: [String, Number],
 			default: ''
@@ -88,7 +95,6 @@ export default {
 
 	&__combo {
 		height: 28px;
-		margin-left: 3px;
 		line-height: 28px;
 
 		.vc-input:first-child,
