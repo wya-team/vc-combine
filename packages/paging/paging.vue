@@ -8,7 +8,11 @@
 			:router="mergeProps.router"
 			v-bind="filterOptions"
 			@search="handleSearch"
-		/>
+		>
+			<template #extra>
+				<slot name="filter-extra" />
+			</template>
+		</vcc-paging-filter>
 		<vcc-paging-core
 			ref="core"
 			v-model:current="currentPage"

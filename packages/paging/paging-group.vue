@@ -8,7 +8,11 @@
 			:router="router"
 			v-bind="filterOptions"
 			@search="handleSearch"
-		/>
+		>
+			<template #extra>
+				<slot name="filter-extra" />
+			</template>
+		</vcc-paging-filter>
 		<slot />
 	</div>
 </template>

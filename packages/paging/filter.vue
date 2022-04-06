@@ -26,6 +26,7 @@
 				{{ isExpand ? '收起' : '展开' }}
 				<vc-icon :type="isExpand ? 'triangle-up' : 'triangle-down'" />
 			</span>
+			<slot name="extra" />
 		</div>
 		<vc-expand v-if="showExpand" v-model="isExpand">
 			<div class="vcc-paging-filter__expand-modules">
