@@ -13,23 +13,34 @@
 			</span>
 			<span v-if="index < routes.length - 1" class="vcc-bread-crumb__divider">/</span>
 		</div>
+		<vc-button v-if="showBack" type="primary" style="margin-left: 20px;" @click="route.path && $router.push(route.path)">
+			返回
+		</vc-button>
 	</div>
 </template>
 
 <script>
 import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { Button } from '@wya/vc';
 
 /**
  * 需要业务层实现$global的eventbus
  */
 export default defineComponent({
 	name: 'vcc-bread-crumb',
+	components: {
+		'vc-button': Button
+	},
 	props: {
 		routes: {
 			type: Array,
 			default() {
 				return [];
 			}
+		},
+		showBack: {
+			type: Boolean,
+			default: false
 		}
 	},
 	setup(_props) {
@@ -65,29 +76,32 @@ export default defineComponent({
 <style lang="scss">
 .vcc-bread-crumb {
 	position: fixed;
-	top: 0px;
+	top: 0;
 	right: 0;
 	z-index: 999;
-	background-color: #ffffff;
-	padding: 0 15px;
-	border-bottom: 1px solid #d9d9d9;
-	height: 56px;
-	font-size: 14px;
 	display: flex;
+	height: 56px;
+	padding: 0 15px;
+	font-size: 14px;
+	background-color: #fff;
+	border-bottom: 1px solid #d9d9d9;
 	align-items: center;
+
 	&__link {
 		color: #676767;
 		cursor: pointer;
+
 		&:hover {
 			color: #5495f6;
 		}
 	}
+
 	&__divider {
 		margin: 0 6px;
 	}
 
 	&__black {
-		color: #000; 
+		color: #000;
 	}
 }
 </style>

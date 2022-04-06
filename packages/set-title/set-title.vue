@@ -1,6 +1,6 @@
 <template>
 	<div class="g-reset"> 
-		<vcc-bread-crumb v-if="routes.length" :routes="routes" />
+		<vcc-bread-crumb v-if="routes.length" :routes="routes" :show-back="showBack" />
 		<slot />
 	</div>
 </template>
@@ -18,6 +18,10 @@ export default defineComponent({
 		routes: {
 			type: Array,
 			default: () => ([])
+		},
+		showBack: {
+			type: Boolean,
+			default: false
 		}
 	},
 	setup(props, ctx) {
