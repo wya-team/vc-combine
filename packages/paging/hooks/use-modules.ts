@@ -74,6 +74,8 @@ export const useModules = (props, modules) => {
 					getFields(it.children);
 				} else {
 					field = normalizeField(it.field, type);
+					it.field = field;
+					
 					if (field) {
 						if (Array.isArray(field)) {
 							field.forEach(_field => {
