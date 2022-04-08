@@ -87,7 +87,7 @@ export default {
 		});
 
 		const reset = () => {
-			emit('update:modelValue', '');
+			emit('update:modelValue', props.type === 'multipleSelect' ? [] : '');
 		};
 
 		const fieldCtx = reactive({
