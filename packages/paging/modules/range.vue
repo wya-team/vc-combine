@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { computed, reactive } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { InputNumber } from '@wya/vc';
 import { commonProps } from '../hooks/use-filter-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
@@ -87,16 +87,27 @@ export default {
 				: (userOpts.min || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MIN : INT_MIN));
 		};
 
-		const reset = () => {
-			emit('update:startValue', '');
-			emit('update:endValue', '');
+
+		const getResetter = (isStart) => {
+			return isStart
+				? () => {
+					emit('update:startValue', ''); 
+				} : () => {
+					emit('update:endValue', ''); 
+				};
 		};
 
-		const fieldCtx = reactive({
-			reset
+		props.children.forEach((it, index) => {
+			filterManager.addField(it.field, {
+				reset: getResetter(index === 0)
+			});
 		});
 
-		filterManager.addField(props.field, fieldCtx);
+		onUnmounted(() => {
+			props.children.forEach((it) => {
+				filterManager.removeField(it.field);
+			});
+		});
 		
 		return {
 			start,

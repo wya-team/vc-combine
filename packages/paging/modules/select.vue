@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { onMounted, reactive } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { Select, Option, Spin } from '@wya/vc';
 import { commonProps } from '../hooks/use-filter-common';
 import { useDataSource, useFilterManager } from '../hooks';
@@ -90,11 +90,11 @@ export default {
 			emit('update:modelValue', props.type === 'multipleSelect' ? [] : '');
 		};
 
-		const fieldCtx = reactive({
-			reset
-		});
+		filterManager.addField(props.field, { reset });
 
-		filterManager.addField(props.field, fieldCtx);
+		onUnmounted(() => {
+			filterManager.removeField(props.field);
+		});
 
 		return {
 			isLoading,

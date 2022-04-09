@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { onMounted, reactive } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { Cascader } from '@wya/vc';
 import { useDataSource, useFilterManager, commonProps } from '../hooks';
 
@@ -75,11 +75,11 @@ export default {
 			emit('update:modelValue', []);
 		};
 
-		const fieldCtx = reactive({
-			reset
-		});
+		filterManager.addField(props.field, { reset });
 
-		filterManager.addField(props.field, fieldCtx);
+		onUnmounted(() => {
+			filterManager.removeField(props.field);
+		});
 		
 		return {
 			isLoading,

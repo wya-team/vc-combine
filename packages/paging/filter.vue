@@ -104,19 +104,23 @@ export default {
 			}
 		};
 
-		const handleSearch = debounce(async () => {
+		const replaceQuery = async (overrideQuery = {}) => {
 			if (props.history) {
 				const route = URL.parse();
 				let query = {
 					...route.query,
 					...keywords.value,
+					...overrideQuery
 				};
 				await routerReplace(URL.merge({
 					path: route.path.join('/'), 
 					query
 				}));
 			}
-			
+		};
+
+		const handleSearch = debounce(async () => {
+			await replaceQuery();
 			emit('search', keywords.value);
 		}, 300);
 
@@ -128,8 +132,19 @@ export default {
 			field && fieldCtx && fieldMap.set(field, fieldCtx);
 		};
 
-		const removeField = (field) => {
+		const removeField = async (field) => {
 			fieldMap.delete(field);
+			// 用于覆盖query上的相应字段，置为''，达到清除效果
+			const overrideQuery = {};
+			if (Array.isArray(field)) {
+				field.forEach(it => {
+					overrideQuery[it] = '';
+				});
+			} else {
+				overrideQuery[field] = '';
+			}
+			await replaceQuery(overrideQuery);
+			emit('search', keywords.value);
 		};
 
 		const filterManager = reactive({
@@ -139,6 +154,7 @@ export default {
 
 		provide(FILTER_KEY, filterManager);
 
+		// 重置筛选
 		const reset = (search = true) => {
 			fieldMap.forEach((ctx) => {
 				const resetFn = ctx.reset;

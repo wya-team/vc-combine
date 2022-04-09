@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { onUnmounted } from 'vue';
 import { Input } from '@wya/vc';
 import { useFilterManager, commonProps } from '../hooks';
 
@@ -51,11 +51,11 @@ export default {
 			emit('update:modelValue', '');
 		};
 
-		const fieldCtx = reactive({
-			reset
-		});
+		filterManager.addField(props.field, { reset });
 
-		filterManager.addField(props.field, fieldCtx);
+		onUnmounted(() => {
+			filterManager.removeField(props.field);
+		});
 
 		return {
 			handleSearch,
