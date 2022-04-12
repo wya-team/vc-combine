@@ -154,12 +154,25 @@ export default {
 
 		provide(FILTER_KEY, filterManager);
 
-		// 重置筛选
-		const reset = (search = true) => {
-			fieldMap.forEach((ctx) => {
-				const resetFn = ctx.reset;
-				resetFn && resetFn();
-			});
+		// 重置筛选项
+		const reset = (field, search = true) => {
+			// 单独重置某些筛选项
+			if (field) {
+				field = Array.isArray(field) ? field : [field];
+				fieldMap.forEach((value, key) => {
+					// key可能是数组，比如 rangeDatePicker 类型的筛选项
+					if (Array.isArray(key) ? key.some(it => field.includes(it)) : field.includes(key)) {
+						const resetFn = value.reset;
+						resetFn && resetFn();
+					}
+				});
+			} else {
+				fieldMap.forEach((ctx) => {
+					const resetFn = ctx.reset;
+					resetFn && resetFn();
+				});
+			}
+			
 			search && handleSearch();
 		};
 
