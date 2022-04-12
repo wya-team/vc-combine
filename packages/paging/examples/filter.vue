@@ -163,6 +163,7 @@ export default defineComponent({
 			},
 			{
 				type: 'selectCombo',
+				gap: 10,
 				children: [
 					{
 						field: 'selectComboType',
@@ -202,11 +203,11 @@ export default defineComponent({
 		]);
 
 		const handleReset = () => {
-			filterRef.value.reset(true);
+			filterRef.value.reset();
 		};
-		setTimeout(() => {
-			// modules.value[0].show = false;
-		}, 2000);
+		// setTimeout(() => {
+		// 	modules.value[0].show = false;
+		// }, 2000);
 		
 		return {
 			filterRef,

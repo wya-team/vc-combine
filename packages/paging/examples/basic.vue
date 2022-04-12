@@ -4,9 +4,7 @@
 		v-model="checked"
 		:page-options="pageOptions"
 		:table-options="tableOptions"
-		:filter-options="{
-			modules
-		}"
+		:filter-options="filterOptions"
 		:load-data="loadData"
 		:disabled="disabled"
 		:history="true"
@@ -74,7 +72,92 @@ export default defineComponent({
 			
 		});
 		const checked = ref([{ id: '1_0' }]); // ['1_0']
+		const filterOptions = reactive({
+			outerCount: 2,
+			modules: [
+				{
+					type: 'select',
+					label: '下拉选择项',
+					field: 'mainSelect',
+					dataSource: [
+						{ label: '选项一', value: 1 },
+						{ label: '选项二', value: 2 }
+					],
+					options: {
+						onChange: (v) => {
+							filterOptions.modules[1].show = !!v;
+						}
+					}
+				},
+				{
+					type: 'select',
+					label: '下拉选择项',
+					field: 'relativeSelect',
+					show: false,
+					dataSource: [
+						{ label: '选项一', value: 1 },
+						{ label: '选项二', value: 2 }
+					]
+				},
+				{
+					type: 'input',
+					label: '关键词',
+					field: 'input',
+					placeholder: '请输入关键词进行搜索'
+				},
+				{
+					type: 'select',
+					label: '下拉选择项',
+					field: 'select',
+					dataSource: [
+						{ label: '选项一', value: 1 },
+						{ label: '选项二', value: 2 }
+					]
+				},
+				{
+					type: 'cascader',
+					label: '级联选择',
+					field: 'cascader',
+					dataSource: [
+						{ label: '选项一', value: 1 },
+						{ label: '选项二', value: 2 },
+						{ 
+							label: '选项三',
+							value: 3,
+							children: [
+								{ label: '选项三 - 1', value: 31 },
+								{ label: '选项三 - 2', value: 32 }    
+							]
+						}
+					]
+				}
+			]
+		});
 		const modules = ref([
+			{
+				type: 'select',
+				label: '下拉选择项',
+				field: 'mainSelect',
+				dataSource: [
+					{ label: '选项一', value: 1 },
+					{ label: '选项二', value: 2 }
+				],
+				options: {
+					onChange: (v) => {
+						modules.value[1].show = !!v;
+					}
+				}
+			},
+			{
+				type: 'select',
+				label: '下拉选择项',
+				field: 'relativeSelect',
+				show: false,
+				dataSource: [
+					{ label: '选项一', value: 1 },
+					{ label: '选项二', value: 2 }
+				]
+			},
 			{
 				type: 'input',
 				label: '关键词',
@@ -162,6 +245,7 @@ export default defineComponent({
 			modules,
 			pageOptions,
 			tableOptions,
+			filterOptions,
 			loadData,
 			handleSortChange
 		};
