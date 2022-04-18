@@ -11,7 +11,7 @@
 				class="vcc-paging-filter__item is-outer"
 				@search="handleSearch"
 			/>
-			<vc-button 
+			<vc-button
 				type="primary"
 				class="vcc-paging-filter__search-btn"
 				@click="handleSearch"
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, getCurrentInstance, provide } from 'vue';
+import { ref, reactive, computed, getCurrentInstance, provide, onBeforeUnmount } from 'vue';
 import { Button, Expand, Icon } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
@@ -76,6 +76,8 @@ export default {
 	},
 	emits: ['search'],
 	setup(props, { emit, expose }) {
+		// 表示是否即将卸载组件（比如路由跳转导致卸载）
+		let willUnmount = false;
 		const vm = getCurrentInstance();
 		const fieldMap = new Map();
 
@@ -113,7 +115,7 @@ export default {
 					...overrideQuery
 				};
 				await routerReplace(URL.merge({
-					path: route.path.join('/'), 
+					path: route.path.join('/'),
 					query
 				}));
 			}
@@ -133,6 +135,9 @@ export default {
 		};
 
 		const removeField = async (field) => {
+			// 如果即将卸载组件，就不进行后续操作
+			if (willUnmount) return;
+
 			fieldMap.delete(field);
 			// 用于覆盖query上的相应字段，置为''，达到清除效果
 			const overrideQuery = {};
@@ -172,7 +177,7 @@ export default {
 					resetFn && resetFn();
 				});
 			}
-			
+
 			search && handleSearch();
 		};
 
@@ -180,9 +185,13 @@ export default {
 			reset
 		});
 
+		onBeforeUnmount(() => {
+			willUnmount = true;
+		});
+
 		return {
 			reset,
-			isExpand, 
+			isExpand,
 			showExpand,
 			outerModules,
 			innerModules,
