@@ -54,8 +54,8 @@ export default defineComponent({
 		});
 
 		const handleSearch = (...rest) => {
-			reset(1);
 			emit('search', ...rest);
+			reset(1);
 		};
 
 		const getCurrentData = (all = false) => {

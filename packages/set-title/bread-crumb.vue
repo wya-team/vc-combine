@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrentInstance, defineEmits } from 'vue';
+import { defineComponent, ref, onBeforeMount, onMounted, onUnmounted, getCurrentInstance } from 'vue';
 import { Button } from '@wya/vc';
 
 /**
@@ -43,11 +43,11 @@ export default defineComponent({
 			default: false
 		}
 	},
-	setup(_props) {
+	emits: ['back'],
+	setup(_props, { emit }) {
 		const globalProperties = getCurrentInstance().appContext.config.globalProperties;
 
 		const leftW = ref(0);
-		const emit = defineEmits(['back']);
 		const handleResize = ({ distance }) => {
 			leftW.value !== distance && (leftW.value = distance);
 		};
