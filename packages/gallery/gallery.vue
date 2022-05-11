@@ -11,7 +11,7 @@
 				<vca-gallery-category-menu
 					:model-value="activeCategoryId"
 					:data-source="categories"
-					:upload-opts="fileUploadOpts"
+					:upload-options="fileUploadOptions"
 					@create="handleCreateCategory"
 					@delete="handleDeleteCategory"
 					@update:modelValue="handleActiveCategoryChange"
@@ -108,7 +108,7 @@ const props = defineProps({
 		type: Number,
 		default: 0
 	},
-	uploadOpts: {
+	uploadOptions: {
 		type: Object,
 		default: () => ({
 			multiple: true,
@@ -154,7 +154,7 @@ const pageOptions = reactive({
 	showSizer: true,
 	showElevator: true,
 	placement: 'top',
-	pageSizeOpts: [20, 30, 40, 100]
+	pageSizeOptions: [20, 30, 40, 100]
 });
 
 const refreshFiles = (page) => {
@@ -179,7 +179,7 @@ const handleActiveCategoryChange = (id) => {
 };
 
 const {
-	fileUploadOpts,
+	fileUploadOptions,
 	selectedFiles,
 	selectedFileIds,
 	loadFiles: _loadFiles,
@@ -207,7 +207,7 @@ const handleUpload = () => {
 	Uploader.popup({
 		catId: activeCategoryId.value,
 		mode: props.mode,
-		uploadOpts: fileUploadOpts,
+		uploadOptions: fileUploadOptions,
 		categories: categories.value,
 		valueKey: props.valueKey,
 		apis: props.apis,

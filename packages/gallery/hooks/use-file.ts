@@ -9,34 +9,34 @@ export const useFile = (props) => {
 
 	const selectedFiles: { value: object[] } = ref([]);
 	const selectedFileIds = computed(() => selectedFiles.value.map(item => item[fileId]));
-	let fileUploadOpts;
+	let fileUploadOptions;
 
 	switch (mode) {
 		case 'video':
-			fileUploadOpts = {
+			fileUploadOptions = {
 				size: 50,
-				...props.uploadOpts,
-				accept: props.uploadOpts.accept || 'video/mp4',
+				...props.uploadOptions,
+				accept: props.uploadOptions.accept || 'video/mp4',
 			};
 			break;
 
 		case 'audio':
-			fileUploadOpts = {
+			fileUploadOptions = {
 				size: 20,
-				...props.uploadOpts,
-				accept: props.uploadOpts.accept || 'audio/mp3,audio/aac',
+				...props.uploadOptions,
+				accept: props.uploadOptions.accept || 'audio/mp3,audio/aac',
 			};
 			break;
 
 		default:
-			fileUploadOpts = {
+			fileUploadOptions = {
 				size: 3,
-				...props.uploadOpts,
-				accept: props.uploadOpts.accept || 'image/jpeg,image/png,image/gif,image/bmp',
+				...props.uploadOptions,
+				accept: props.uploadOptions.accept || 'image/jpeg,image/png,image/gif,image/bmp',
 			};
 	}
 
-	const validFileExts = getExtsByMimeStr(fileUploadOpts.accept, mode);
+	const validFileExts = getExtsByMimeStr(fileUploadOptions.accept, mode);
 
 	/**
 	 * 获取文件禁用原因
@@ -49,7 +49,7 @@ export const useFile = (props) => {
 	 */
 	const getDisabledReason = (file) => {
 		const { fileUrl, fileSize } = valueKey;
-		const { size } = fileUploadOpts;
+		const { size } = fileUploadOptions;
 		const reasons: Array<string> = [];
 		// 文件格式判断
 		!isValidMime(file[fileUrl], validFileExts) && reasons.push('格式不匹配');
@@ -114,7 +114,7 @@ export const useFile = (props) => {
 
 
 	return {
-		fileUploadOpts,
+		fileUploadOptions,
 		selectedFiles,
 		selectedFileIds,
 

@@ -34,10 +34,10 @@
 			<vc-form-item v-if="mode !== 'image'" label="本地文件：" prop="fileUrls">
 				<vc-upload
 					v-if="!formData.fileUrls.length"
-					:size="uploadOpts.size"
+					:size="uploadOptions.size"
 					:max="1"
 					show-tips
-					:accept="uploadOpts.accept"
+					:accept="uploadOptions.accept"
 					@file-before="handleMediaBefore"
 					@begin="handleMediaBegin"
 					@file-error="handleMediaError"
@@ -61,7 +61,7 @@
 					</div>
 				</div>
 				<div style="color: #999;">
-					支持 {{ fileMimes }} 格式，{{ sourceName }}文件大小不超过 {{ uploadOpts.size }}Mb
+					支持 {{ fileMimes }} 格式，{{ sourceName }}文件大小不超过 {{ uploadOptions.size }}Mb
 				</div>
 			</vc-form-item>
 			<vc-form-item v-else label="本地文件：" prop="fileUrls">
@@ -69,11 +69,11 @@
 					v-model="formData.fileUrls"
 					:max="10"
 					:gallery="false"
-					:upload-opts="uploadOpts"
+					:upload-options="uploadOptions"
 					@success="handleImageSuccess"
 				/>
 				<div style="color: #999;">
-					支持 {{ fileMimes }} 格式，最多10张，单张图片大小不超过 {{ uploadOpts.size }}Mb
+					支持 {{ fileMimes }} 格式，最多10张，单张图片大小不超过 {{ uploadOptions.size }}Mb
 				</div>
 			</vc-form-item>
 		</vc-form>
@@ -108,7 +108,7 @@ const props = defineProps({
 		default: 'image',
 		validator: value => Object.keys(SOURCE_MAP).includes(value)
 	},
-	uploadOpts: {
+	uploadOptions: {
 		type: Object,
 		default: () => ({})
 	},
@@ -130,7 +130,7 @@ const {
 const formRef = ref();
 
 const { catId, fileName } = valueKey;
-const mimes = getExtsByMimeStr(props.uploadOpts.accept, props.mode);
+const mimes = getExtsByMimeStr(props.uploadOptions.accept, props.mode);
 
 const visible = ref(false);
 const formData = reactive({

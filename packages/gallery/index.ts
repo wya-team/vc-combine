@@ -4,8 +4,14 @@ import wrapperComponent from './gallery.vue';
 import { SOURCE_MAP } from './constants.js';
 
 const Gallery = new Portal(wrapperComponent, {
-	async onBefore({ mode, valueKey, apis, ...rest }) {
-		const http = rest.ajax || ajax;
+	async onBefore(options) {
+		// 兼容旧api
+		options.request = options.request || options.ajax;
+		options.uploadOptions = options.uploadOptions || options.uploadOpts;
+
+		const { mode, valueKey, apis, ...rest } = options;
+		const http = rest.request || ajax;
+
 		const res = await http({
 			url: apis['URL_GALLERY_CATEGORY_LIST'],
 			type: 'GET',

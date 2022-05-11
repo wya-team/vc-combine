@@ -57,7 +57,7 @@ const props = defineProps({
 		type: Array,
 		default: () => ([])
 	},
-	uploadOpts: {
+	uploadOptions: {
 		type: Object,
 		default: () => ({})
 	},

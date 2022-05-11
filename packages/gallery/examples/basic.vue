@@ -38,7 +38,7 @@ const BASE = 'https://gxmd-manage.wyawds.com';
 const galleryOptions = {
 	ajax,
 	max: 9,
-	uploadOpts: {
+	uploadOptions: {
 		max: 30,
 		multiple: true
 	},
