@@ -309,7 +309,8 @@ export default defineComponent({
 			reSelecting = !!rows.length;
 
 			rows.forEach((item, index) => nextTick(() => {
-				table.value.toggleRowSelection(item, status);
+				// 第三个参数用于不触发内部复选时不触发table下的select事件
+				table.value.toggleRowSelection(item, status, false);
 				if (index === rows.length - 1) {
 					reSelecting = false;
 				}
@@ -333,8 +334,6 @@ export default defineComponent({
 					emit('update:model-value', selection.value);
 				}
 
-				console.log(rows, 0);
-				console.log(rows, 0, rows.length);
 				toggleSelection(rows, true);
 			}
 		};
