@@ -69,6 +69,7 @@ export default defineComponent({
 		});
 
 		onUnmounted(() => {
+			globalProperties.$global?.emit?.('layout-top-menu', { distance: 0 });
 			globalProperties.$global?.off?.('layout-left-menu', handleResize);
 		});
 
