@@ -1,11 +1,11 @@
 <!-- 集成业务的面包屑，暂不考虑抽离 -->
 <template>
 	<div :style="{ left: `${leftW}px` }" class="vcc-bread-crumb">
-		<div 
+		<div
 			v-for="(route, index) in routes"
 			:key="index"
 		>
-			<span 
+			<span
 				:class="index === routes.length - 1 ? 'vcc-bread-crumb__black' : route.path && 'vcc-bread-crumb__link'"
 				@click="route.path && $router.push(route.path)"
 			>
@@ -45,16 +45,19 @@ export default defineComponent({
 	},
 	emits: ['back'],
 	setup(_props, { emit }) {
-		const globalProperties = getCurrentInstance().appContext.config.globalProperties;
+		const vm = getCurrentInstance();
+		const globalProperties = vm.appContext.config.globalProperties;
 
 		const leftW = ref(0);
 		const handleResize = ({ distance }) => {
 			leftW.value !== distance && (leftW.value = distance);
 		};
 		const handleBack = () => {
-			const route = _props.routes.slice(-2, -1);
-			if (route.length) {
-				globalProperties?.$router?.replace?.(route[0].path);
+			const { onBack } = vm.vnode.props;
+			if (onBack) {
+				onBack();
+			} else {
+				globalProperties?.$router?.back();
 			}
 			emit('back');
 		};
