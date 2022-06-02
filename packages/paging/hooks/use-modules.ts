@@ -20,13 +20,16 @@ const getValue = (module, field, historyData, childModule) => {
 	if (ARRAY_TYPES.includes(type)) {
 		value = historyData[field];
 		// history为true的模式下，是从query上取的逗号拼接的字符串
-		return value 
+		return value
 			? Array.isArray(value)
 				? value
-				: String(value).split(',') 
+				: String(value).split(',')
 			: (defaultValue || []);
 	}
-	return String(historyData[field] || defaultValue || '');
+	return String(
+		historyData[field]
+		|| (typeof defaultValue !== 'undefined' ? defaultValue : '')
+	);
 };
 
 export const useModules = (props, modules) => {
@@ -40,7 +43,7 @@ export const useModules = (props, modules) => {
 			}
 			throw new Error('field 应为String或者Array');
 		}
-		return field;	
+		return field;
 	};
 
 
@@ -50,8 +53,8 @@ export const useModules = (props, modules) => {
 	const makeKeywords = () => {
 		const map = {};
 		const { query } = URL.parse();
-		const historyData = props.history 
-			? { ...query, ...keywords.value } 
+		const historyData = props.history
+			? { ...query, ...keywords.value }
 			: keywords.value;
 		let field;
 		let length;
@@ -75,7 +78,7 @@ export const useModules = (props, modules) => {
 				} else {
 					field = normalizeField(it.field, type);
 					it.field = field;
-					
+
 					if (field) {
 						if (Array.isArray(field)) {
 							field.forEach(_field => {
@@ -89,7 +92,7 @@ export const useModules = (props, modules) => {
 				}
 			});
 		};
-		
+
 		getFields(modules.value);
 		// 递归遍历完后，清除activeModule缓存
 		activeModule = null;
