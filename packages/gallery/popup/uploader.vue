@@ -69,7 +69,7 @@
 					v-model="formData.fileUrls"
 					:max="10"
 					:gallery="false"
-					:upload-options="uploadOptions"
+					:upload-options="{ image: uploadOptions }"
 					@success="handleImageSuccess"
 				/>
 				<div style="color: #999;">
@@ -97,7 +97,7 @@ import {
 import { VideoPreviewer } from './video-previewer/index';
 import { AudioPreviewer } from './audio-previewer/index';
 import { SOURCE_MAP } from '../constants';
-import { getExtsByMimeStr } from '../utils'; 
+import { getExtsByMimeStr } from '../utils';
 import { useConfig } from '../hooks/use-config';
 
 const VcFormItem = VcForm.Item;
@@ -163,14 +163,14 @@ const handleMediaBegin = () => {
 
 /**
  * 获取媒体文件时长
- * 
+ *
  * @param {*} mediaFile file
  * @returns {Promise} Promise
  */
 const handleMediaBefore = (mediaFile) => {
 	const mediaEl = document.createElement(SOURCE_MAP[props.mode].elementTag);
 	mediaEl.preload = 'metadata';
-			
+
 	return new Promise((resolve, reject) => {
 		let timer = null;
 		const handler = () => {
@@ -205,7 +205,7 @@ const handleMediaSuccess = (res, file) => {
 	if (!formData[fileName]) {
 		formData[fileName] = res.data.title;
 	}
-			
+
 	formData.list.splice(0, 1, {
 		[fileName]: formData[fileName],
 		[fileUrl]: res.data.url,
