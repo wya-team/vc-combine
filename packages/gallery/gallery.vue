@@ -11,7 +11,6 @@
 				<vca-gallery-category-menu
 					:model-value="activeCategoryId"
 					:data-source="categories"
-					:upload-options="fileUploadOptions"
 					@create="handleCreateCategory"
 					@delete="handleDeleteCategory"
 					@update:modelValue="handleActiveCategoryChange"
@@ -23,7 +22,7 @@
 			<div class="vca-gallery__view--wrapper">
 				<div class="vca-gallery__view">
 					<div class="vca-gallery__view-imgs">
-						<div 
+						<div
 							v-if="false"
 							class="vca-gallery__empty"
 						>

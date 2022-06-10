@@ -10,7 +10,7 @@
 		</div>
 		<div class="vca-gallery-category-menu__list">
 			<vc-transition-slide group>
-				<div 
+				<div
 					v-for="item in dataSource"
 					:key="item[valueKey.catId]"
 					:class="{ 'is-active': modelValue === item[valueKey.catId] }"
@@ -20,18 +20,18 @@
 					<span class="vca-gallery-category-menu__item-name">
 						{{ item[valueKey.catName] }}（{{ item[valueKey.count] }}）
 					</span>
-					<span 
+					<span
 						v-if="!item[valueKey.isDefault]"
 						class="."
 					>
-						<vc-icon 
-							type="edit" 
+						<vc-icon
+							type="edit"
 							class="vca-gallery-category-menu__item-icon"
 							@click.stop="handleRename(item)"
 						/>
 						<span class="vca-gallery-category-menu__item-icon-divider">|</span>
-						<vc-icon 
-							type="empty" 
+						<vc-icon
+							type="empty"
 							class="vca-gallery-category-menu__item-icon"
 							@click.stop="$emit('delete', item)"
 						/>
@@ -57,10 +57,6 @@ const props = defineProps({
 		type: Array,
 		default: () => ([])
 	},
-	uploadOptions: {
-		type: Object,
-		default: () => ({})
-	},
 });
 
 const emit = defineEmits([
@@ -78,7 +74,6 @@ const {
 
 const handleCategoryItem = (item) => {
 	const { catId } = valueKey;
-	console.log(props.modelValue, item[catId]);
 	if (item[catId] === props.modelValue) return;
 	emit('update:modelValue', item[catId]);
 };
