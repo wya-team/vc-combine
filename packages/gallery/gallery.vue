@@ -148,13 +148,13 @@ setConfig({
 
 const isVisible = ref(false);
 const pagingRef = ref(null);
-const pageOptions = reactive({
+const pageOptions = {
 	showTotal: true,
 	showSizer: true,
 	showElevator: true,
 	placement: 'top',
 	pageSizeOptions: [20, 30, 40, 100]
-});
+};
 
 const refreshFiles = (page) => {
 	pagingRef.value.reset(page);

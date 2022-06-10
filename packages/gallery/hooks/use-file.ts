@@ -56,9 +56,9 @@ export const useFile = (props) => {
 		// 文件大小判断
 		size > 0 && file[fileSize] > size * 1024 * 1024 && reasons.push(`大小超过${size}M`);
 		// 媒体文件时长判断
-		mode !== 'image' 
-			&& props.maxDuration > 0 
-			&& file.duration > props.maxDuration 
+		mode !== 'image'
+			&& props.maxDuration > 0
+			&& file.duration > props.maxDuration
 			&& reasons.push(`时长超过${props.maxDuration}s`);
 		return reasons;
 	};
@@ -70,7 +70,7 @@ export const useFile = (props) => {
 			type: 'GET',
 			param: {
 				page,
-				pageSize: 40,
+				pageSize,
 				[catId]: categoryId,
 				[catType]: SOURCE_MAP[mode].fileType
 			}
