@@ -27,7 +27,7 @@ const { ajax } = createHttpClient({
 		return {
 			...options,
 			headers: {
-				token: 'e19573493fe483779f5593f56c304f3a'
+				'share-token': '8d697268774a21628f7c4fe61841aa4a'
 			}
 		};
 	}
