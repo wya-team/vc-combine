@@ -13,7 +13,7 @@
 	</div>
 </template>
 <script>
-import { defineComponent, ref } from 'vue'; 
+import { defineComponent, ref } from 'vue';
 import Paging from '../index.ts';
 
 export default defineComponent({
@@ -37,15 +37,15 @@ export default defineComponent({
 					placeholder: '请输入关键词进行搜索',
 				}
 			},
-			// {
-			// 	type: 'select',
-			// 	label: '下拉选择项：',
-			// 	field: 'select',
-			// 	dataSource: [
-			// 		{ label: '选项一', value: '1' },
-			// 		{ label: '选项二', value: '2' }
-			// 	]
-			// },
+			{
+				type: 'select',
+				label: '下拉选择项：',
+				field: 'select',
+				dataSource: [
+					{ label: '选项一', value: '1' },
+					{ label: '选项二', value: '2' }
+				]
+			},
 			{
 				type: 'multipleSelect',
 				label: '多选下拉选择项：',
@@ -77,9 +77,9 @@ export default defineComponent({
 				type: 'select',
 				label: 'dataSource返回ref的下拉选择项：',
 				field: 'refSelect',
-				dataSource: () => {
-					return dataForSelect;
-				}
+				// 如果返回值为 ref ，请使用 function 返回该 ref 值
+				// props中直接传递ref值会被解包，就不是个ref了
+				dataSource: () => dataForSelect
 			},
 			{
 				type: 'cascader',
@@ -88,12 +88,12 @@ export default defineComponent({
 				dataSource: [
 					{ label: '选项一', value: '1' },
 					{ label: '选项二', value: '2' },
-					{ 
+					{
 						label: '选项三',
 						value: 3,
 						children: [
 							{ label: '选项三 - 1', value: '31' },
-							{ label: '选项三 - 2', value: '32' }    
+							{ label: '选项三 - 2', value: '32' }
 						]
 					}
 				]
@@ -109,12 +109,12 @@ export default defineComponent({
 							resolve([
 								{ label: '选项一', value: '1' },
 								{ label: '选项二', value: '2' },
-								{ 
+								{
 									label: '选项三',
 									value: 3,
 									children: [
 										{ label: '选项三 - 1', value: '31' },
-										{ label: '选项三 - 2', value: '32' }    
+										{ label: '选项三 - 2', value: '32' }
 									]
 								}
 							]);
@@ -208,7 +208,7 @@ export default defineComponent({
 		// setTimeout(() => {
 		// 	modules.value[0].show = false;
 		// }, 2000);
-		
+
 		return {
 			filterRef,
 			modules,
