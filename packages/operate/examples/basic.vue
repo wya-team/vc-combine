@@ -1,10 +1,19 @@
 <template>
 	<div style="margin: 100px;">
-		<vcc-operate 
-			:data-source="dataSource" 
-			:outer-count="2" 
-			@click="handleClick" 
+		<h2>outerCount控制：</h2>
+		<vcc-operate
+			:data-source="dataSource"
+			:outer-count="1"
+			@click="handleClick"
 		/>
+		<div class="demo-block">
+			<h2>单行展示：</h2>
+			<vcc-operate
+				:data-source="dataSource"
+				separator="newline"
+				@click="handleClick"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -49,3 +58,10 @@ const handleClick = (label, item) => {
 	Message.info(label);
 };
 </script>
+
+
+<style lang="scss">
+.demo-block {
+	margin-top: 30px;
+}
+</style>

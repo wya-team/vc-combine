@@ -1,32 +1,37 @@
 <template>
-	<div 
-		v-if="currentValue.length > 0" 
-		:class="`is-${align}`"
+	<div
+		v-if="currentValue.length > 0"
+		:class="[`is-${align}`, { 'is-separator-newline': separator === 'newline' }]"
 		class="vcc-operate"
 	>
 		<template v-for="(item, index) in beforeItems" :key="item.label">
-			<vcc-operate-item 
+			<vcc-operate-item
 				:info="item"
+				class="vcc-operate__item"
 				@ok="handleOk(item)"
 				@cancel="handleCancel(item)"
 			/>
-			<vc-divider
-				v-if="index < beforeItems.length - 1 || needExpand"
-				:key="index"
-				vertical
-			/>
+			<template v-if="index < beforeItems.length - 1 || needExpand">
+				<br v-if="separator === 'newline'">
+				<vc-divider
+					v-else
+					:key="index"
+					vertical
+				/>
+			</template>
 		</template>
-			
+
 		<vc-dropdown
 			v-if="needExpand"
 			portal-class-name="vcc-dropdown"
 			placement="bottom-right"
+			tag="div"
 		>
 			<div class="vcc-operate__text">
 				<span>更多</span>
-				<vc-icon 
-					type="down" 
-					style="margin-bottom: 2px; transform: scale(0.8);" 
+				<vc-icon
+					type="down"
+					style="margin-bottom: 2px; transform: scale(0.8);"
 				/>
 			</div>
 			<template #list>
@@ -37,7 +42,7 @@
 							v-if="item.message && !item.disabled"
 							:portal="false"
 							:title="item.message"
-							tag="li" 
+							tag="li"
 							class="vc-dropdown-item"
 							placement="right"
 							@ok="handleOk(item)"
@@ -68,7 +73,7 @@
 							theme="dark"
 							tag="li"
 						>
-							<div 
+							<div
 								class="vc-dropdown-item"
 								:class="{ 'is-disabled': item.disabled }"
 								@click="handleOk(item)"
@@ -111,11 +116,20 @@ export default defineComponent({
 		dataSource: Array, // [{ show: boolean, label: string, disabled: boolean, message: string, tip: string }]
 		/**
 		 * 外部展示的个数，其余的放在“更多”里面；
-		 * outerCount 外向的（外向的在外面，内向的躲在“更多”里面）
 		 */
 		outerCount: {
 			type: Number,
 			default: 2
+		},
+		/**
+		 * 分隔符
+		 * 默认 divider -> |
+		 * newline -> 换行
+		 */
+		separator: {
+			type: String,
+			default: 'divider',
+			validator: (v) => ['divider', 'newline'].includes(v)
 		},
 		align: {
 			type: String,
@@ -171,16 +185,34 @@ export default defineComponent({
 	&.is-right {
 		justify-content: flex-end;
 	}
-}
 
-.vcc-operate__text {
-	color: #5495f6;
-	cursor: pointer;
-}
+	&.is-separator-newline {
+		display: block;
+		align-items: initial;
 
-.vcc-operate__item {
-	&.is-tip {
-		list-style: none;
+		&.is-center {
+			text-align: center;
+		}
+
+		&.is-right {
+			text-align: right;
+		}
+
+		.vc-dropdown,
+		.vcc-operate-item {
+			margin-top: 6px;
+		}
+	}
+
+	.vcc-operate__text {
+		color: #5495f6;
+		cursor: pointer;
+	}
+
+	.vcc-operate__item {
+		&.is-tip {
+			list-style: none;
+		}
 	}
 }
 </style>

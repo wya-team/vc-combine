@@ -2,6 +2,8 @@
 	<vc-popconfirm
 		v-if="info.message"
 		:title="info.message"
+		tag="div"
+		class="vcc-operate-item"
 		@ok="handleOk"
 		@cancel="handleCancel"
 	>
@@ -9,12 +11,13 @@
 			{{ info.label }}
 		</span>
 	</vc-popconfirm>
-	<span
-		v-else
-		class="vcc-operate-item__text is-inline"
-		@click="handleOk"
-		v-text="info.label"
-	/>
+	<div v-else class="vcc-operate-item">
+		<span
+			class=" vcc-operate-item__text is-inline"
+			@click="handleOk"
+			v-text="info.label"
+		/>
+	</div>
 </template>
 
 <script>
@@ -50,13 +53,18 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.vcc-operate-item__text {
-	color: #5495f6;
-	cursor: pointer;
+.vcc-operate-item {
+	display: inline-block;
 
-	&.is-inline {
-		display: inline-block;
-		text-align: right;
+	.vcc-operate-item__text {
+		color: #5495f6;
+		cursor: pointer;
+
+		&.is-inline {
+			display: inline-block;
+			text-align: right;
+		}
 	}
 }
+
 </style>
