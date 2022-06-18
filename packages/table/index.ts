@@ -1,7 +1,7 @@
 import ActionsColumn from './actions-column.vue';
 
-const Table = {};
-
-Table.ActionsColumn = ActionsColumn;
+const Table = {
+	ActionsColumn
+};
 
 export default Table;
