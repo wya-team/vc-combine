@@ -102,7 +102,7 @@ export default {
 			if (globalProperties.$router && props.router) {
 				await globalProperties.$router.replace(fullPath);
 			} else {
-				window.history.replaceState(null, null, fullPath);
+				window.history.replaceState(window.history.state, '', fullPath);
 			}
 		};
 
