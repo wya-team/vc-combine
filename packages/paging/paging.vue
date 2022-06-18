@@ -123,12 +123,13 @@ export default defineComponent({
 			}
 
 			let body = {};
-			if (res.data instanceof Array) {
-				body.list = res.data;
+			if (res.data instanceof Array || res instanceof Array) {
+				let data = res.data || res;
+				body.list = data;
 				body.page = {
 					current: 1,
 					total: 1,
-					count: res.data.length,
+					count: data.length,
 				};
 			} else {
 				body = res.data || res;
