@@ -1,22 +1,22 @@
 <template>
-	<Table.Column
+	<vc-table-column
 		label="操作"
 		fixed="right"
 		align="right"
 		:width="width"
 	>
 		<template #default="{ row, $index }">
-			<VccOperate
+			<vcc-operate
 				:data-source="typeof actions === 'function' ? actions(row, $index) : actions"
 				v-bind="operateOptions"
 				@ok="$emit('action', $event, row, $index)"
 			/>
 		</template>
-	</Table.Column>
+	</vc-table-column>
 </template>
 
 <script setup lang="ts">
-import { Table } from '@wya/vc';
+import { Table as VcTableColumn } from '@wya/vc';
 import VccOperate from '@wya/vcc-operate';
 
 defineProps({
