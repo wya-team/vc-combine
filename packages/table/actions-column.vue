@@ -7,7 +7,7 @@
 	>
 		<template #default="{ row, $index }">
 			<vcc-operate
-				:data-source="typeof actions === 'function' ? actions(row, $index) : actions"
+				:data-source="typeof dataSource === 'function' ? dataSource(row, $index) : dataSource"
 				v-bind="operateOptions"
 				@ok="$emit('action', $event, row, $index)"
 			/>
@@ -24,8 +24,8 @@ defineProps({
 		type: [Number, String],
 		default: 140
 	},
-	// 可接收一个数组或者一个返回 actions 数组的同步函数
-	actions: {
+	// 可接收一个数组或者一个返回 dataSource 数组的同步函数
+	dataSource: {
 		type: [Array, Function],
 		default: () => ([])
 	},
