@@ -15,7 +15,7 @@
 	</Table.Column>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Table } from '@wya/vc';
 import VccOperate from '@wya/vcc-operate';
 
