@@ -71,7 +71,7 @@ module.exports = {
 			}
 		}
 	 ],
-	 
+
 	"rules":
 	{
 		// vue https://github.com/vuejs/eslint-plugin-vue
@@ -112,7 +112,7 @@ module.exports = {
 		// 	}
 		// ],
 
-		// airbnb 
+		// airbnb
 		"comma-dangle": ["warn", {
 			"arrays": "never",
 			"objects": "ignore",
@@ -135,7 +135,7 @@ module.exports = {
 		"no-plusplus": 0,
 		"no-unused-expressions": 0,
 		"no-undef": ["warn"],
-		"no-unused-vars": 0,
+		"no-unused-vars": 1,
 		"import/no-extraneous-dependencies": 0,
 		"import/prefer-default-export": 0,
 		"import/newline-after-import": ["warn"],
