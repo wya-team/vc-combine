@@ -1,28 +1,31 @@
 <template>
-	<VccPaging
+	<vcc-paging
 		:load-data="loadData"
 		:history="true"
 		:router="true"
 		:footer="true"
 	>
-		<Table.Column
+		<vc-table-column
 			prop="xxx"
 			label="名称"
 			min-width="120"
 		/>
 
-		<VccActionsColumn
+		<vcc-table-actions-column
 			width="200"
-			:actions="getActions"
+			:data-source="getActions"
 			@action="handleAction"
 		/>
-	</VccPaging>
+	</vcc-paging>
 </template>
 
 <script setup lang="ts">
 import { Table } from '@wya/vc';
 import VccPaging from '@wya/vcc-paging';
-import { VccActionsColumn } from '../index';
+import VccTable from '../index';
+
+const VcTableColumn = Table.Column;
+const VccTableActionsColumn = VccTable.ActionsColumn;
 
 // const actions = [
 // 	{ label: '操作一' },

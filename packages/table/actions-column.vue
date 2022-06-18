@@ -15,9 +15,17 @@
 	</vc-table-column>
 </template>
 
+<script lang="ts">
+export default {
+	name: 'vcc-table-actions-column'
+};
+</script>
+
 <script setup lang="ts">
-import { Table as VcTableColumn } from '@wya/vc';
+import { Table } from '@wya/vc';
 import VccOperate from '@wya/vcc-operate';
+
+const VcTableColumn = Table.Column;
 
 defineProps({
 	width: {
