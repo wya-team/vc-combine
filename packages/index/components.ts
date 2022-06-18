@@ -5,12 +5,14 @@ import SectionTitle from '@wya/vcc-section-title';
 import Footer from '@wya/vcc-footer';
 import Map from '@wya/vcc-map';
 import Operate from '@wya/vcc-operate';
+import Table from '@wya/vcc-table';
 
 const PagingCore = Paging.Core;
 const PagingGroup = Paging.Group;
 const PagingFilter = Paging.Filter;
 
 const MapLocation = Map.Location;
+const TableActionsColumn = Table.ActionsColumn;
 
 export {
 	Paging,
@@ -22,5 +24,6 @@ export {
 	Footer,
 	Map,
 	MapLocation,
-	Operate
+	Operate,
+	TableActionsColumn
 };

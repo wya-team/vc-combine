@@ -1,5 +1,7 @@
-import VccActionsColumn from './actions-column.vue';
+import ActionsColumn from './actions-column.vue';
 
-export {
-	VccActionsColumn
-};
+const Table = {};
+
+Table.ActionsColumn = ActionsColumn;
+
+export default Table;

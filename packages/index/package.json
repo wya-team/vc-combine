@@ -14,6 +14,7 @@
     "@wya/vcc-paging": "^0.0.51",
     "@wya/vcc-section-title": "^0.0.6",
     "@wya/vcc-service": "^0.0.5",
-    "@wya/vcc-set-title": "^0.0.11"
+    "@wya/vcc-set-title": "^0.0.11",
+    "@wya/vcc-table": "~"
   }
 }
