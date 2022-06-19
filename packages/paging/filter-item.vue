@@ -1,6 +1,6 @@
 <template>
 	<!-- 数值范围筛选项 type === 'range' -->
-	<component 
+	<component
 		:is="getComponentName('range')"
 		v-if="module.type === 'range'"
 		:start-value="getModelValue(module.children[0])"
@@ -14,20 +14,18 @@
 	/>
 
 	<!-- 下拉组合筛选项 type === 'selectCombo' -->
-	<component 
+	<component
 		:is="getComponentName('selectCombo')"
 		v-else-if="module.type === 'selectCombo'"
 		:select-value="getModelValue(module.children[0])"
-		:combo-value="getModelValue(module.children[1])"
 		:label-width="labelWidth"
 		:class="$attrs.class"
 		v-bind="module"
 		@search="handleSearch"
 		@update:select-value="onModelValueChange(module.children[0], $event)"
-		@update:combo-value="onModelValueChange(module.children[1], $event)"
 	>
 		<!-- 通过文件名引用自身组件 -->
-		<filter-item 
+		<filter-item
 			:module="module.children[1]"
 			:get-model-value="getModelValue"
 			:on-model-value-change="onModelValueChange"
@@ -37,7 +35,7 @@
 	</component>
 
 	<!-- 其它筛选项 -->
-	<component 
+	<component
 		:is="getComponentName(module.type)"
 		v-else
 		:model-value="getModelValue(module)"
@@ -85,7 +83,7 @@ export default {
 		labelWidth: String
 	},
 	emits: ['search'],
-	
+
 	setup(props, { emit }) {
 		const handleSearch = () => {
 			emit('search');
