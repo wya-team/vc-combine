@@ -98,7 +98,7 @@ module.exports = {
 		"@typescript-eslint/ban-types": 0,
 		"@typescript-eslint/no-non-null-assertion": 0,
 		"@typescript-eslint/explicit-module-boundary-types": 0,
-		"@typescript-eslint/no-unused-vars": 0,
+		"@typescript-eslint/no-unused-vars": 1,
 		"@typescript-eslint/no-inferrable-types": 0,
 		// https://github.com/typescript-eslint/typescript-eslint/issues/2483
 		"@typescript-eslint/no-shadow": "error",
@@ -135,7 +135,7 @@ module.exports = {
 		"no-plusplus": 0,
 		"no-unused-expressions": 0,
 		"no-undef": ["warn"],
-		"no-unused-vars": 1,
+		"no-unused-vars": 0,
 		"import/no-extraneous-dependencies": 0,
 		"import/prefer-default-export": 0,
 		"import/newline-after-import": ["warn"],
