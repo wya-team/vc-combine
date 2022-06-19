@@ -1,7 +1,7 @@
 <template>
 	<div class="vcc-paging-filter-select-combo">
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -9,7 +9,7 @@
 		</span>
 		<vc-select
 			:model-value="selectValue"
-			:style="{ width: `${selectModule.width || 90}px`, marginLeft: label ? '' : '24px' }" 
+			:style="{ width: `${selectModule.width || 90}px`, marginLeft: label ? '' : '24px' }"
 			class="vcc-paging-filter-select-combo__select"
 			v-bind="selectModule.options || {}"
 			@change="$emit('update:selectValue', $event)"
@@ -50,10 +50,6 @@ export default {
 			default: 3
 		},
 		selectValue: {
-			type: [String, Number],
-			default: ''
-		},
-		comboValue: {
 			type: [String, Number],
 			default: ''
 		},
