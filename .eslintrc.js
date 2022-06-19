@@ -19,11 +19,11 @@ module.exports = {
 	},
 	// 四个级别： base/essential/strongly-recommended/recommended, 使用最高约束
 	"extends": [
+		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:vue/vue3-recommended",
 		"plugin:jsdoc/recommended",
 		"plugin:markdown/recommended",
-		"eslint:recommended",
 		"airbnb-base"
 	],
 	"plugins": [
@@ -102,6 +102,7 @@ module.exports = {
 		"@typescript-eslint/no-inferrable-types": 0,
 		// https://github.com/typescript-eslint/typescript-eslint/issues/2483
 		"@typescript-eslint/no-shadow": "error",
+		"@typescript-eslint/member-delimiter-style": 'warn',
 		"no-shadow": "off",
 
 		// "@typescript-eslint/no-unused-vars": [
