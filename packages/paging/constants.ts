@@ -1,4 +1,5 @@
 import type { InjectionKey } from "vue";
+import type { FilterManager } from './filter-types';
 
 export const INT_MIN = 0;
 // 整型数值输入框最大值默认值：10位数字
@@ -9,4 +10,4 @@ export const FLOAT_MAX = 99999999.99;
 export const AMOUNT_MIN = FLOAT_MIN;
 export const AMOUNT_MAX = FLOAT_MAX;
 
-export const FILTER_KEY: InjectionKey<string> = Symbol('filter');
+export const FILTER_KEY: InjectionKey<FilterManager> = Symbol('filter');

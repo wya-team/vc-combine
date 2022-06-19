@@ -3,7 +3,7 @@
 		<div v-if="outerModules.length">
 			<vcc-paging-filter-item
 				v-for="item in outerModules"
-				:key="String(item.field)"
+				:key="getVForKey(item)"
 				:module="item"
 				:get-model-value="getModelValue"
 				:on-model-value-change="onModelValueChange"
@@ -32,7 +32,7 @@
 			<div class="vcc-paging-filter__expand-modules">
 				<vcc-paging-filter-item
 					v-for="item in innerModules"
-					:key="String(item.field)"
+					:key="getVForKey(item)"
 					:module="item"
 					:get-model-value="getModelValue"
 					:on-model-value-change="onModelValueChange"
@@ -45,16 +45,34 @@
 	</div>
 </template>
 
-<script>
-import { ref, reactive, computed, getCurrentInstance, provide, onBeforeUnmount } from 'vue';
+<script lang="ts">
+import type { ComponentInternalInstance, PropType } from 'vue';
+import {
+	ref,
+	reactive,
+	computed,
+	getCurrentInstance,
+	provide,
+	onBeforeUnmount,
+	defineComponent
+} from 'vue';
 import { Button, Expand, Icon } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
+import type {
+	Modules,
+	Module,
+	ModuleWithField,
+	FilterModuleField,
+	FilterManager,
+	FilterFieldCtx,
+	FieldMap
+} from './filter-types';
 import { useModules } from './hooks';
 import FilterItem from './filter-item.vue';
 import { FILTER_KEY } from './constants';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter',
 	components: {
 		'vc-button': Button,
@@ -64,7 +82,7 @@ export default {
 	},
 	props: {
 		modules: {
-			type: Array,
+			type: Array as PropType<Modules>,
 			default: () => []
 		},
 		outerCount: {
@@ -78,8 +96,8 @@ export default {
 	setup(props, { emit, expose }) {
 		// 表示是否即将卸载组件（比如路由跳转导致卸载）
 		let willUnmount = false;
-		const vm = getCurrentInstance();
-		const fieldMap = new Map();
+		const vm = getCurrentInstance() as ComponentInternalInstance;
+		const fieldMap: FieldMap = new Map();
 
 		// module项可通过‘show'字段控制是否展示，show=true或者不设置show字段则展示
 		const enableModules = computed(() => props.modules.filter(it => it.show !== false));
@@ -87,6 +105,10 @@ export default {
 		const outerModules = computed(() => enableModules.value.slice(0, props.outerCount));
 		const innerModules = computed(() => enableModules.value.slice(props.outerCount));
 		const showExpand = computed(() => enableModules.value.length > props.outerCount);
+
+		const getVForKey = (module: Module) => {
+			return String(module.type === 'range' ? module.children[0].field : (module as ModuleWithField).field);
+		};
 
 		let isExpand = ref(false);
 
@@ -97,7 +119,7 @@ export default {
 			onModelValueChange
 		} = useModules(props, enableModules);
 
-		const routerReplace = async (fullPath) => {
+		const routerReplace = async (fullPath: string) => {
 			const { globalProperties } = vm.appContext.config;
 			if (globalProperties.$router && props.router) {
 				await globalProperties.$router.replace(fullPath);
@@ -130,11 +152,11 @@ export default {
 			isExpand.value = !isExpand.value;
 		};
 
-		const addField = (field, fieldCtx) => {
-			field && fieldCtx && fieldMap.set(field, fieldCtx);
+		const addField = (field: FilterModuleField, fieldCtx: FilterFieldCtx) => {
+			fieldMap.set(field, fieldCtx);
 		};
 
-		const removeField = async (field) => {
+		const removeField = async (field: FilterModuleField) => {
 			// 如果即将卸载组件，就不进行后续操作
 			if (willUnmount) return;
 
@@ -152,21 +174,25 @@ export default {
 			emit('search', keywords.value);
 		};
 
-		const filterManager = reactive({
+		const filterManager: FilterManager = reactive({
 			addField,
 			removeField
 		});
 
-		provide(FILTER_KEY, filterManager);
+		provide<FilterManager>(FILTER_KEY, filterManager);
 
 		// 重置筛选项
-		const reset = (field, search = true) => {
+		const reset = (fields?: FilterModuleField | FilterModuleField[], search = true) => {
 			// 单独重置某些筛选项
-			if (field) {
-				field = Array.isArray(field) ? field : [field];
+			if (fields) {
+				fields = (Array.isArray(fields) ? fields : [fields]);
 				fieldMap.forEach((value, key) => {
 					// key可能是数组，比如 rangeDatePicker 类型的筛选项
-					if (Array.isArray(key) ? key.some(it => field.includes(it)) : field.includes(key)) {
+					if (
+						Array.isArray(key)
+							? key.some(it => (fields as FilterModuleField[]).includes(it))
+							: (fields as FilterModuleField[]).includes(key)
+					) {
 						const resetFn = value.reset;
 						resetFn && resetFn();
 					}
@@ -195,6 +221,7 @@ export default {
 			showExpand,
 			outerModules,
 			innerModules,
+			getVForKey,
 			keywords,
 			labelWidth,
 			routerReplace,
@@ -204,7 +231,7 @@ export default {
 			onModelValueChange
 		};
 	},
-};
+});
 
 </script>
 
