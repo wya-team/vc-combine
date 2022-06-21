@@ -15,6 +15,6 @@
     "@wya/vcc-section-title": "^0.0.6",
     "@wya/vcc-service": "^0.0.5",
     "@wya/vcc-set-title": "^0.0.11",
-    "@wya/vcc-table": "~"
+    "@wya/vcc-table": "^0.0.4"
   }
 }
