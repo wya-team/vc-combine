@@ -2,6 +2,8 @@ import type { Ref } from 'vue';
 
 export type FilterModuleField = string | string[]
 
+export type FieldValue = string | number
+
 export type LabelValueItem<T extends true | false = false> = {
 	label: string;
 	value: number | string;
@@ -24,6 +26,8 @@ export interface BindOptions {
 	options?: object;
 	hooks?: object;
 }
+
+export type FormItemIndicator = ModuleWithoutChildren | RangeItem
 
 export interface RangeItem extends BindOptions {
 	field: string;
@@ -88,7 +92,7 @@ export interface RangeDatePickerModule extends ModuleBase, BindOptions {
 export type Module = InputModule | SelectModule | MultipleSelectModule | RangeModule
 | CascaderModule | SelectComboModule | DatePickerModule | RangeDatePickerModule
 
-export type ModuleWithField = Exclude<Module, RangeModule | SelectComboModule>
+export type ModuleWithoutChildren = Exclude<Module, RangeModule | SelectComboModule>
 
 export type Modules = Module[]
 

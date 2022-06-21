@@ -1,7 +1,21 @@
 import { ref, watch, computed } from 'vue';
 import { URL } from '@wya/utils';
+import type {
+	Module,
+	FieldValue,
+	FilterModuleField,
+	FormItemIndicator,
+	ModuleWithoutChildren
+} from '../filter-types';
 
-const getLabelWidth = length => {
+export type GetModelValue = (module: FormItemIndicator) => unknown
+
+export type OnModelValueChange = (
+	module: FormItemIndicator,
+	value: FieldValue[] | FieldValue
+) => void
+
+const getLabelWidth = (length: number) => {
 	return `calc(${length}em + 24px)`;
 };
 
@@ -33,7 +47,7 @@ const getValue = (module, field, historyData, childModule) => {
 };
 
 export const useModules = (props, modules) => {
-	const normalizeField = (field, type) => {
+	const normalizeField = (field: FilterModuleField, type: Module['type']) => {
 		if (type === 'rangeDatePicker') {
 			if (Array.isArray(field)) {
 				return field;
@@ -41,7 +55,7 @@ export const useModules = (props, modules) => {
 			if (typeof field === 'string') {
 				return [`${field}_start`, `${field}_end`];
 			}
-			throw new Error('field 应为String或者Array');
+			throw new Error('时间范围筛选项的 field 应为 String 或者 Array 类型');
 		}
 		return field;
 	};
@@ -99,24 +113,26 @@ export const useModules = (props, modules) => {
 		keywords.value = map;
 	};
 
-	const onModelValueChange = (module, value) => {
-		const { type, field } = module;
+	const onModelValueChange: OnModelValueChange = (module, value) => {
+		const { field } = module;
+		const { type } = module as ModuleWithoutChildren;
 		if (type === 'rangeDatePicker') {
 			const fields = normalizeField(field, type);
 			keywords.value[fields[0]] = value[0];
 			keywords.value[fields[1]] = value[1];
 		} else {
-			keywords.value[field] = value;
+			keywords.value[field as string] = value;
 		}
 	};
 
-	const getModelValue = (module) => {
-		const { type, field } = module;
-		if (type === 'rangeDatePicker') {
+	const getModelValue: GetModelValue = (module) => {
+		const { field } = module;
+		const { type } = module as ModuleWithoutChildren;
+		if ((type) === 'rangeDatePicker') {
 			const fields = normalizeField(field, type);
 			return [keywords.value[fields[0]], keywords.value[fields[1]]];
 		}
-		return keywords.value[field];
+		return keywords.value[field as string];
 	};
 
 	const labelWidth = computed(() => getLabelWidth(maxLength.value));

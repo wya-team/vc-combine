@@ -62,7 +62,7 @@ import { debounce } from 'lodash';
 import type {
 	Modules,
 	Module,
-	ModuleWithField,
+	ModuleWithoutChildren,
 	FilterModuleField,
 	FilterManager,
 	FilterFieldCtx,
@@ -107,7 +107,7 @@ export default defineComponent({
 		const showExpand = computed(() => enableModules.value.length > props.outerCount);
 
 		const getVForKey = (module: Module) => {
-			return String(module.type === 'range' ? module.children[0].field : (module as ModuleWithField).field);
+			return String(module.type === 'range' ? module.children[0].field : (module as ModuleWithoutChildren).field);
 		};
 
 		let isExpand = ref(false);
