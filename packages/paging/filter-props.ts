@@ -1,5 +1,5 @@
 import type { ExtractPropTypes, PropType } from 'vue';
-import { Modules } from './filter-types';
+import type { Modules } from './filter-types';
 
 export const filterProps = {
 	modules: {
