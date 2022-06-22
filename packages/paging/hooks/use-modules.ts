@@ -1,12 +1,15 @@
 import { ref, watch, computed } from 'vue';
 import { URL } from '@wya/utils';
+import type { ComputedRef } from 'vue';
 import type {
 	Module,
 	FieldValue,
 	FilterModuleField,
 	FormItemIndicator,
-	ModuleWithoutChildren
+	ModuleWithoutChildren,
+	RangeItem
 } from '../filter-types';
+import type { FilterProps } from '../filter-props';
 
 export type GetModelValue = (module: FormItemIndicator) => unknown
 
@@ -14,6 +17,10 @@ export type OnModelValueChange = (
 	module: FormItemIndicator,
 	value: FieldValue[] | FieldValue
 ) => void
+
+export interface Keywords {
+	[key: string]: FieldValue[] | FieldValue;
+}
 
 const getLabelWidth = (length: number) => {
 	return `calc(${length}em + 24px)`;
@@ -25,7 +32,7 @@ const ARRAY_TYPES = [
 	'multipleSelect' // 多选select
 ];
 
-const getValue = (module, field, historyData, childModule) => {
+const getValue = (module: Module, field: string, historyData: Keywords, childModule) => {
 	const { type } = module;
 	const { defaultValue } = childModule;
 	let value;
@@ -46,8 +53,9 @@ const getValue = (module, field, historyData, childModule) => {
 	);
 };
 
-export const useModules = (props, modules) => {
-	const normalizeField = (field: FilterModuleField, type: Module['type']) => {
+export const useModules = (props: FilterProps, modules: ComputedRef<Module[]>) => {
+
+	const normalizeField = (field: FilterModuleField, type: Module['type']): FilterModuleField => {
 		if (type === 'rangeDatePicker') {
 			if (Array.isArray(field)) {
 				return field;
@@ -61,46 +69,47 @@ export const useModules = (props, modules) => {
 	};
 
 
-	let keywords = ref({});
+	const keywords = ref<Keywords>({});
 	let maxLength = ref(0);
 
 	const makeKeywords = () => {
-		const map = {};
+		const map: Keywords = {};
 		const { query } = URL.parse();
-		const historyData = props.history
+		const historyData: Keywords = props.history
 			? { ...query, ...keywords.value }
 			: keywords.value;
-		let field;
-		let length;
+		let field: FilterModuleField;
+		let length: number;
 		// 记录当前正在处理的module
-		let activeModule = null;
+		let activeModule: Module | null = null;
 
-		const getFields = (fieldItems) => {
+		const getFields = (fieldItems: (Module | RangeItem)[]) => {
 			fieldItems.forEach(it => {
-				const type = it.type;
+				const { type, label } = it as Module;
 				if (type) {
-					activeModule = it;
+					activeModule = it as Module;
 				}
 
-				length = it.label && it.label.length;
+				length = label ? label.length : 0;
 				if (length && length > maxLength.value) {
 					maxLength.value = length;
 				}
 
-				if (it.children && it.children.length) {
-					getFields(it.children);
+				const { children } = it as Exclude<Module, ModuleWithoutChildren>;
+				if (children && children.length) {
+					getFields(children);
 				} else {
-					field = normalizeField(it.field, type);
-					it.field = field;
+					field = normalizeField((it as ModuleWithoutChildren | RangeItem).field, type);
+					(it as ModuleWithoutChildren | RangeItem).field = field;
 
 					if (field) {
 						if (Array.isArray(field)) {
 							field.forEach(_field => {
 								// 存在children的module，此时it是activeModule.children的子项，而非activeModule
-								map[_field] = getValue(activeModule, _field, historyData, it);
+								map[_field] = getValue(activeModule as Module, _field, historyData, it);
 							});
 						} else {
-							map[field] = getValue(activeModule, field, historyData, it);
+							map[field] = getValue(activeModule as Module, field, historyData, it);
 						}
 					}
 				}

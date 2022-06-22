@@ -22,25 +22,28 @@ export interface ModuleBase {
 	show?: boolean;
 }
 
-export interface BindOptions {
+// 公共的表单项配置
+export interface CommonFormItemConfig {
+	defaultValue?: FieldValue | FieldValue[];
 	options?: object;
 	hooks?: object;
 }
 
+
 export type FormItemIndicator = ModuleWithoutChildren | RangeItem
 
-export interface RangeItem extends BindOptions {
+export interface RangeItem extends CommonFormItemConfig {
 	field: string;
 }
 
-export type GetSelectModule<T extends 'select' | 'multipleSelect'> = ModuleBase & BindOptions & {
+export type GetSelectModule<T extends 'select' | 'multipleSelect'> = ModuleBase & CommonFormItemConfig & {
 	type: T;
 	field: string;
 	dataSource: SelectDataSource;
 }
 
 // 输入项
-export interface InputModule extends ModuleBase, BindOptions {
+export interface InputModule extends ModuleBase, CommonFormItemConfig {
 	type: 'input';
 	field: string;
 	modelValue: string;
@@ -60,7 +63,7 @@ export interface RangeModule extends ModuleBase {
 }
 
 // 级联选择项
-export interface CascaderModule extends ModuleBase, BindOptions {
+export interface CascaderModule extends ModuleBase, CommonFormItemConfig {
 	type: 'cascader';
 	field: string;
 	dataSource: CascaderLabelValueItem[] | (() => CascaderLabelValueItem[] | Ref<CascaderLabelValueItem[]>);
@@ -77,13 +80,13 @@ export interface SelectComboModule {
 }
 
 // 时间选择项
-export interface DatePickerModule extends ModuleBase, BindOptions {
+export interface DatePickerModule extends ModuleBase, CommonFormItemConfig {
 	type: 'datePicker';
 	field: string;
 }
 
 // 时间范围选择项
-export interface RangeDatePickerModule extends ModuleBase, BindOptions {
+export interface RangeDatePickerModule extends ModuleBase, CommonFormItemConfig {
 	type: 'rangeDatePicker';
 	field: string | [string, string];
 }

@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import type { ComponentInternalInstance, PropType } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import {
 	ref,
 	reactive,
@@ -60,7 +60,6 @@ import { Button, Expand, Icon } from '@wya/vc';
 import { URL } from '@wya/utils';
 import { debounce } from 'lodash';
 import type {
-	Modules,
 	Module,
 	ModuleWithoutChildren,
 	FilterModuleField,
@@ -71,6 +70,7 @@ import type {
 import { useModules } from './hooks';
 import FilterItem from './filter-item.vue';
 import { FILTER_KEY } from './constants';
+import { filterProps } from './filter-props';
 
 export default defineComponent({
 	name: 'vcc-paging-filter',
@@ -80,18 +80,7 @@ export default defineComponent({
 		'vc-icon': Icon,
 		'vcc-paging-filter-item': FilterItem
 	},
-	props: {
-		modules: {
-			type: Array as PropType<Modules>,
-			default: () => []
-		},
-		outerCount: {
-			type: Number,
-			default: 1
-		},
-		history: Boolean,
-		router: Boolean
-	},
+	props: filterProps,
 	emits: ['search'],
 	setup(props, { emit, expose }) {
 		// 表示是否即将卸载组件（比如路由跳转导致卸载）
