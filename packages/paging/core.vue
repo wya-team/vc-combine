@@ -87,6 +87,11 @@
 				<slot name="empty" />
 			</template>
 		</vc-table>
+
+		<template v-if="mode === 'piece' && !data.length">
+			<slot name="empty" />
+		</template>
+
 		<div v-if="footer" class="vcc-paging-core__footer">
 			<div>
 				<vc-checkbox
