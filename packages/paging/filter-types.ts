@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 
-export type FilterModuleField = string | string[]
+export type FilterModuleField = string | [string, string]
 
 export type FieldValue = string | number
 
@@ -85,7 +85,7 @@ export interface DatePickerModule extends ModuleBase, BindOptions {
 // 时间范围选择项
 export interface RangeDatePickerModule extends ModuleBase, BindOptions {
 	type: 'rangeDatePicker';
-	field: string | string[];
+	field: string | [string, string];
 }
 
 
