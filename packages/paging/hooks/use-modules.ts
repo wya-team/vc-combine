@@ -128,7 +128,7 @@ export const useModules = (props, modules) => {
 	const getModelValue: GetModelValue = (module) => {
 		const { field } = module;
 		const { type } = module as ModuleWithoutChildren;
-		if ((type) === 'rangeDatePicker') {
+		if (type === 'rangeDatePicker') {
 			const fields = normalizeField(field, type);
 			return [keywords.value[fields[0]], keywords.value[fields[1]]];
 		}
