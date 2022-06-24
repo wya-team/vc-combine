@@ -31,7 +31,9 @@ export interface ModuleBase {
 // 公共的表单项配置
 export interface CommonFormItemConfig {
 	defaultValue?: FieldValue | FieldValue[];
-	options?: object;
+	options?: {
+		[key: string]: unknown;
+	};
 	hooks?: object;
 }
 
@@ -40,6 +42,7 @@ export type FormItemIndicator = ModuleWithoutChildren | RangeItem
 
 export interface RangeItem extends CommonFormItemConfig {
 	field: string;
+	width?: number;
 }
 
 export type GetSelectModule<T extends 'select' | 'multipleSelect'> = ModuleBase & CommonFormItemConfig & {

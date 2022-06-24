@@ -9,8 +9,7 @@
 		</span>
 		<vc-input-number
 			:model-value="startValue"
-			:max="getEdgeValue('max', start)"
-			:min="start.min"
+			:max="getEdgeValue('max', start.options)"
 			:step="false"
 			:precision="0"
 			placeholder=""
@@ -27,8 +26,7 @@
 		~
 		<vc-input-number
 			:model-value="endValue"
-			:max="getEdgeValue('max', end)"
-			:min="end.min"
+			:max="getEdgeValue('max', end.options)"
 			:step="false"
 			:precision="0"
 			placeholder=""
@@ -45,21 +43,25 @@
 	</div>
 </template>
 
-<script>
-import { computed, onUnmounted } from 'vue';
+<script lang="ts">
+import { computed, onUnmounted, defineComponent, PropType } from 'vue';
 import { InputNumber } from '@wya/vc';
 import { pick } from 'lodash';
 import { commonProps } from '../hooks/use-filter-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
 import { useFilterManager } from '../hooks';
+import type { RangeItem } from '../filter-types';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-range',
 	components: {
 		'vc-input-number': InputNumber
 	},
 	props: {
-		...pick(commonProps, ['type', 'label', 'labelWidth']),
+		...pick(
+			commonProps,
+			['type', 'label', 'labelWidth']
+		) as Pick<typeof commonProps, 'type' | 'label' | 'labelWidth'>,
 		startValue: {
 			type: [Number, String],
 			default: ''
@@ -69,7 +71,7 @@ export default {
 			default: ''
 		},
 		children: {
-			type: Array,
+			type: Array as PropType<RangeItem[]>,
 			default: () => []
 		},
 	},
@@ -83,14 +85,15 @@ export default {
 			emit('search');
 		};
 
-		const getEdgeValue = (edgeType, userOpts) => {
+		const getEdgeValue = (edgeType: 'max' | 'min', userOpts: { [key: string]: unknown } = {}) => {
+			const precision = userOpts.precision as number;
 			return edgeType === 'max'
-				? (userOpts.max || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MAX : INT_MAX))
-				: (userOpts.min || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MIN : INT_MIN));
+				? (userOpts.max || (precision && precision > 0 ? AMOUNT_MAX : INT_MAX))
+				: (userOpts.min || (precision && precision > 0 ? AMOUNT_MIN : INT_MIN));
 		};
 
 
-		const getResetter = (isStart) => {
+		const getResetter = (isStart: boolean) => {
 			return isStart
 				? () => {
 					emit('update:startValue', '');
@@ -118,7 +121,7 @@ export default {
 			handleSearch,
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">
