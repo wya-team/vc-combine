@@ -4,6 +4,7 @@ export const commonProps = {
 	field: {
 		type: String,
 		default: '',
+		required: true
 	},
 	labelWidth: String,
 	width: {
