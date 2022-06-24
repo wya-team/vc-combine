@@ -32,11 +32,12 @@
 	</div>
 </template>
 
-<script>
-import { computed } from 'vue';
+<script lang="ts">
+import { computed, defineComponent, PropType } from 'vue';
 import { Select, Option } from '@wya/vc';
+import { SelectModule, Module } from '../filter-types';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-select-combo',
 	components: {
 		'vc-select': Select,
@@ -54,7 +55,7 @@ export default {
 			default: ''
 		},
 		children: {
-			type: Array,
+			type: (Array as unknown) as PropType<[SelectModule, Module]>,
 			default: () => []
 		},
 	},
@@ -72,7 +73,7 @@ export default {
 			handleSearch,
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">
