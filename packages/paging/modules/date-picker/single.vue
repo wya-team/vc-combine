@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -9,7 +9,7 @@
 		</span>
 		<vc-date-picker
 			:model-value="modelValue"
-			:style="`width: ${width}px`" 
+			:style="`width: ${width}px`"
 			type="datetime"
 			format="YYYY-MM-DD HH:mm:ss"
 			placement="bottom-left"
@@ -24,12 +24,12 @@
 	</div>
 </template>
 
-<script>
-import { onUnmounted } from 'vue';
+<script lang="ts">
+import { onUnmounted, defineComponent } from 'vue';
 import { DatePicker } from '@wya/vc';
 import { useFilterManager, commonProps } from '../../hooks';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-date-picker-single',
 	components: {
 		'vc-date-picker': DatePicker
@@ -48,7 +48,7 @@ export default {
 		const handleSearch = () => {
 			emit('search');
 		};
-		const handleChange = (value) => {
+		const handleChange = (value: string) => {
 			emit('update:modelValue', value);
 		};
 
@@ -61,13 +61,13 @@ export default {
 		onUnmounted(() => {
 			filterManager.removeField(props.field);
 		});
-		
+
 		return {
 			handleSearch,
 			handleChange
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">

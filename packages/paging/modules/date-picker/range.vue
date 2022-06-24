@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -9,7 +9,7 @@
 		</span>
 		<vc-date-picker
 			:model-value="modelValue"
-			:style="`width: ${width}px`" 
+			:style="`width: ${width}px`"
 			type="datetimerange"
 			format="YYYY-MM-DD HH:mm:ss"
 			placement="bottom-left"
@@ -24,21 +24,24 @@
 	</div>
 </template>
 
-<script>
-import { onUnmounted } from 'vue';
+<script lang="ts">
+import { onUnmounted, defineComponent, PropType } from 'vue';
 import { DatePicker } from '@wya/vc';
 import { useFilterManager, commonProps } from '../../hooks';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-date-picker-range',
 	components: {
 		'vc-date-picker': DatePicker
 	},
 	props: {
 		...commonProps,
-		field: Array,
+		field: {
+			type: (Array as unknown) as PropType<[string, string]>,
+			default: () => []
+		},
 		modelValue: {
-			type: Array,
+			type: (Array as unknown) as PropType<[string, string] | []>,
 			default: () => []
 		},
 		width: {
@@ -53,7 +56,7 @@ export default {
 		const handleSearch = () => {
 			emit('search');
 		};
-		const handleChange = (value) => {
+		const handleChange = (value: typeof props.modelValue) => {
 			emit('update:modelValue', value);
 		};
 
@@ -66,13 +69,13 @@ export default {
 		onUnmounted(() => {
 			filterManager.removeField(props.field);
 		});
-		
+
 		return {
 			handleSearch,
 			handleChange
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">

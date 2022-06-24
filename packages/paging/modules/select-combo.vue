@@ -35,7 +35,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
 import { Select, Option } from '@wya/vc';
-import { SelectModule, Module } from '../filter-types';
+import type { SelectComboModule } from '../filter-types';
 
 export default defineComponent({
 	name: 'vcc-paging-filter-select-combo',
@@ -55,7 +55,7 @@ export default defineComponent({
 			default: ''
 		},
 		children: {
-			type: (Array as unknown) as PropType<[SelectModule, Module]>,
+			type: (Array as unknown) as PropType<SelectComboModule['children']>,
 			default: () => []
 		},
 	},

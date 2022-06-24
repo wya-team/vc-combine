@@ -50,7 +50,7 @@ import { pick } from 'lodash';
 import { commonProps } from '../hooks/use-filter-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
 import { useFilterManager } from '../hooks';
-import type { RangeItem } from '../filter-types';
+import type { RangeModule } from '../filter-types';
 
 export default defineComponent({
 	name: 'vcc-paging-filter-range',
@@ -71,7 +71,7 @@ export default defineComponent({
 			default: ''
 		},
 		children: {
-			type: Array as PropType<RangeItem[]>,
+			type: (Array as unknown) as PropType<RangeModule['children']>,
 			default: () => []
 		},
 	},
