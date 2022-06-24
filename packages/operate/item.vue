@@ -20,9 +20,10 @@
 	</div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
 import { Popconfirm } from '@wya/vc';
+import type { ActionItem } from './action-types';
 
 export default defineComponent({
 	name: 'vcc-operate-item',
@@ -31,7 +32,7 @@ export default defineComponent({
 	},
 	props: {
 		info: {
-			type: Object,
+			type: Object as PropType<ActionItem>,
 			default: () => ({})
 		}
 	},

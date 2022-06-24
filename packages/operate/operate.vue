@@ -95,10 +95,11 @@
 		</vc-dropdown>
 	</div>
 </template>
-<script>
-import { defineComponent, computed, watch, ref } from 'vue';
+<script lang="ts">
+import { defineComponent, computed, watch, ref, PropType } from 'vue';
 import { Dropdown, Popconfirm, Popover, Icon, Divider } from '@wya/vc';
 import Item from './item.vue';
+import type { ActionItem } from './action-types';
 
 export default defineComponent({
 	name: 'vcc-operate',
@@ -113,7 +114,10 @@ export default defineComponent({
 		'vcc-operate-item': Item
 	},
 	props: {
-		dataSource: Array, // [{ show: boolean, label: string, disabled: boolean, message: string, tip: string }]
+		dataSource: {
+			type: Array as PropType<ActionItem[]>,
+			default: () => []
+		},
 		/**
 		 * 外部展示的个数，其余的放在“更多”里面；
 		 */
@@ -129,7 +133,7 @@ export default defineComponent({
 		separator: {
 			type: String,
 			default: 'divider',
-			validator: (v) => ['divider', 'newline'].includes(v)
+			validator: (v: string) => ['divider', 'newline'].includes(v)
 		},
 		align: {
 			type: String,
@@ -138,7 +142,7 @@ export default defineComponent({
 	},
 	emits: ['cancel', 'ok', 'click'],
 	setup(props, { emit }) {
-		const currentValue = ref([]);
+		const currentValue = ref<ActionItem[]>([]);
 		// 是否需要使用展开的方式，当总数量大于外面支持展示的数量时
 		// 比如outerCount=1，此时只有”操作“和”删除“两个操作项，其实外面两个位置已经够展示它们，所以就不需要把”删除“操作放到展开项里
 		const needExpand = computed(() => currentValue.value.length > props.outerCount + 1);
@@ -146,12 +150,12 @@ export default defineComponent({
 			return currentValue.value.slice(0, needExpand.value ? props.outerCount : props.outerCount + 1);
 		});
 
-		const handleOk = (item) => {
+		const handleOk = (item: ActionItem) => {
 			if (item.disabled) return;
 			emit('click', item.label, item);
 			emit('ok', item.label, item);
 		};
-		const handleCancel = (item) => {
+		const handleCancel = (item: ActionItem) => {
 			emit('cancel', item.label, item);
 		};
 
