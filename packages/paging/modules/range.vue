@@ -1,7 +1,7 @@
 <template>
 	<div class="vcc-paging-filter-range">
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -13,7 +13,7 @@
 			:min="start.min"
 			:step="false"
 			:precision="0"
-			placeholder="" 
+			placeholder=""
 			output="string"
 			:style="{ width: `${start.width || 100}px` }"
 			class="vcc-paging-filter-range__input-start"
@@ -22,6 +22,7 @@
 			@clear="handleSearch"
 			@enter="handleSearch"
 			@update:model-value="$emit('update:startValue', $event)"
+			v-on="start.hooks || {}"
 		/>
 		~
 		<vc-input-number
@@ -30,7 +31,7 @@
 			:min="end.min"
 			:step="false"
 			:precision="0"
-			placeholder="" 
+			placeholder=""
 			output="string"
 			:style="{ width: `${end.width || 100}px` }"
 			class="vcc-paging-filter-range__input-end"
@@ -39,7 +40,7 @@
 			@clear="handleSearch"
 			@enter="handleSearch"
 			@update:model-value="$emit('update:endValue', $event)"
-			v-on="hooks"
+			v-on="end.hooks || {}"
 		/>
 	</div>
 </template>
@@ -47,6 +48,7 @@
 <script>
 import { computed, onUnmounted } from 'vue';
 import { InputNumber } from '@wya/vc';
+import { pick } from 'lodash';
 import { commonProps } from '../hooks/use-filter-common';
 import { AMOUNT_MIN, AMOUNT_MAX, INT_MIN, INT_MAX } from '../constants';
 import { useFilterManager } from '../hooks';
@@ -57,7 +59,7 @@ export default {
 		'vc-input-number': InputNumber
 	},
 	props: {
-		...commonProps,
+		...pick(commonProps, ['type', 'label', 'labelWidth']),
 		startValue: {
 			type: [Number, String],
 			default: ''
@@ -82,7 +84,7 @@ export default {
 		};
 
 		const getEdgeValue = (edgeType, userOpts) => {
-			return edgeType === 'max' 
+			return edgeType === 'max'
 				? (userOpts.max || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MAX : INT_MAX))
 				: (userOpts.min || (userOpts.precision && userOpts.precision > 0 ? AMOUNT_MIN : INT_MIN));
 		};
@@ -91,9 +93,9 @@ export default {
 		const getResetter = (isStart) => {
 			return isStart
 				? () => {
-					emit('update:startValue', ''); 
+					emit('update:startValue', '');
 				} : () => {
-					emit('update:endValue', ''); 
+					emit('update:endValue', '');
 				};
 		};
 
@@ -108,7 +110,7 @@ export default {
 				filterManager.removeField(it.field);
 			});
 		});
-		
+
 		return {
 			start,
 			end,
