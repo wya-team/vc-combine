@@ -1,7 +1,7 @@
 <template>
 	<div class="vcc-paging-filter-select">
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -9,7 +9,7 @@
 		</span>
 		<vc-select
 			:model-value="modelValue"
-			:style="`width: ${width}px`" 
+			:style="`width: ${width}px`"
 			:load-data="asyncSearch"
 			clearable
 			v-bind="options"
@@ -18,7 +18,7 @@
 			@visible-change="handleVisibleChange"
 			v-on="hooks"
 		>
-			<vc-spin 
+			<vc-spin
 				v-if="isLoading"
 				:size="16"
 				class="vcc-paging-filter-select__loading"
@@ -34,13 +34,15 @@
 	</div>
 </template>
 
-<script>
-import { onMounted, onUnmounted } from 'vue';
+<script lang="ts">
+import type { PropType } from 'vue';
+import { onMounted, onUnmounted, defineComponent } from 'vue';
 import { Select, Option, Spin } from '@wya/vc';
 import { commonProps } from '../hooks/use-filter-common';
 import { useDataSource, useFilterManager } from '../hooks';
+import type { FieldValue, SelectDataSource } from '../filter-types';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-select',
 	components: {
 		'vc-select': Select,
@@ -49,9 +51,9 @@ export default {
 	},
 	props: {
 		...commonProps,
-		modelValue: [Number, String, Array],
+		modelValue: [Number, String, Array] as PropType<FieldValue | FieldValue[]>,
 		dataSource: {
-			type: [Array, Function],
+			type: [Array, Function] as PropType<SelectDataSource>,
 			default: () => []
 		}
 	},
@@ -74,15 +76,15 @@ export default {
 			dataSource,
 			getDataSource,
 			asyncSearch
-		} = useDataSource(props);
+		} = useDataSource(props.dataSource);
 
 		const handleVisibleChange = () => {
-			getDataSource(props.dataSource);
+			getDataSource();
 		};
 
 		onMounted(() => {
 			if (props.modelValue !== '' && props.modelValue !== undefined) {
-				getDataSource(props.dataSource);
+				getDataSource();
 			}
 		});
 
@@ -105,7 +107,7 @@ export default {
 			handleVisibleChange
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">

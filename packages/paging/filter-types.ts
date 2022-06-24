@@ -12,7 +12,13 @@ export type LabelValueItem<T extends true | false = false> = {
 
 export type CascaderLabelValueItem = LabelValueItem<true>
 
-export type SelectDataSource = LabelValueItem[] | (() => LabelValueItem[] | Ref<LabelValueItem[]>)
+export type SelectDataSource = LabelValueItem[]
+	| ((keyword?: string) => LabelValueItem[] | Ref<LabelValueItem[]>)
+	| ((keyword?: string) => Promise<LabelValueItem[] | Ref<LabelValueItem[]>>)
+
+export type CascaderDataSource = CascaderLabelValueItem[]
+	| (() => CascaderLabelValueItem[] | Ref<CascaderLabelValueItem[]>)
+	| (() => Promise<CascaderLabelValueItem[] | Ref<CascaderLabelValueItem[]>>);
 
 export interface ModuleBase {
 	type: string;
@@ -66,7 +72,7 @@ export interface RangeModule extends ModuleBase {
 export interface CascaderModule extends ModuleBase, CommonFormItemConfig {
 	type: 'cascader';
 	field: string;
-	dataSource: CascaderLabelValueItem[] | (() => CascaderLabelValueItem[] | Ref<CascaderLabelValueItem[]>);
+	dataSource: CascaderDataSource;
 }
 
 // 下拉组合项

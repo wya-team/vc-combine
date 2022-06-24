@@ -1,7 +1,10 @@
 export const commonProps = {
 	type: String,
 	label: String,
-	field: String,
+	field: {
+		type: String,
+		default: '',
+	},
 	labelWidth: String,
 	width: {
 		type: Number,

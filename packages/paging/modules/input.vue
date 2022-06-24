@@ -1,7 +1,7 @@
 <template>
 	<div class="vcc-paging-filter-input">
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -19,12 +19,12 @@
 	</div>
 </template>
 
-<script>
-import { onUnmounted } from 'vue';
+<script lang="ts">
+import { onUnmounted, defineComponent } from 'vue';
 import { Input } from '@wya/vc';
 import { useFilterManager, commonProps } from '../hooks';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-input',
 	components: {
 		'vc-input': Input
@@ -62,7 +62,7 @@ export default {
 			handleChange
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">

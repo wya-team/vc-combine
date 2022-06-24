@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<span 
-			v-if="label" 
+		<span
+			v-if="label"
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
@@ -10,7 +10,7 @@
 		<vc-cascader
 			:model-value="modelValue"
 			:data-source="optionList"
-			:style="`width: ${width}px`" 
+			:style="`width: ${width}px`"
 			placeholder="请选择"
 			change-on-select
 			clearable
@@ -23,12 +23,14 @@
 	</div>
 </template>
 
-<script>
-import { onMounted, onUnmounted } from 'vue';
+<script lang="ts">
+import type { PropType } from 'vue';
+import { onMounted, onUnmounted, defineComponent } from 'vue';
 import { Cascader } from '@wya/vc';
 import { useDataSource, useFilterManager, commonProps } from '../hooks';
+import type { FieldValue, CascaderDataSource } from '../filter-types';
 
-export default {
+export default defineComponent({
 	name: 'vcc-paging-filter-input',
 	components: {
 		'vc-cascader': Cascader
@@ -36,11 +38,11 @@ export default {
 	props: {
 		...commonProps,
 		modelValue: {
-			type: Array,
+			type: Array as PropType<FieldValue[]>,
 			default: () => []
 		},
 		dataSource: {
-			type: [Array, Function],
+			type: [Array, Function] as PropType<CascaderDataSource>,
 			default: () => []
 		}
 	},
@@ -59,15 +61,15 @@ export default {
 			isLoading,
 			dataSource,
 			getDataSource,
-		} = useDataSource(props);
+		} = useDataSource(props.dataSource);
 
 		const handleVisibleChange = () => {
-			getDataSource(props.dataSource);
+			getDataSource();
 		};
 
 		onMounted(() => {
 			if (props.modelValue && props.modelValue.length) {
-				getDataSource(props.dataSource);
+				getDataSource();
 			}
 		});
 
@@ -80,7 +82,7 @@ export default {
 		onUnmounted(() => {
 			filterManager.removeField(props.field);
 		});
-		
+
 		return {
 			isLoading,
 			optionList: dataSource,
@@ -89,7 +91,7 @@ export default {
 			handleVisibleChange
 		};
 	},
-};
+});
 </script>
 
 <style lang="scss">
