@@ -31,6 +31,7 @@ class StoreService extends Base {
 			cache = false,
 			param: defaultParam = {},
 			getParam = () => ({}),
+			dynamic = false
 		} = defaultOptions;
 		let store: any;
 		cache && (store = Storage.get(`${key}`));
@@ -64,6 +65,7 @@ class StoreService extends Base {
 					localData: compare(param, store),
 					loading: false,
 					param,
+					dynamic,
 					...opts,
 					type: 'GET', // opts里面可能存在type, vc-select内
 				}).then((response: any) => {
