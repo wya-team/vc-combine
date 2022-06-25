@@ -58,8 +58,13 @@ class StoreService extends Base {
 			result[key] = ref(parser ? parser(responseData) : responseData);
 			result[loadingKey] = ref(false);
 
-			result[loadKey] = (param: any, opts: Options = {}) => { // eslint-disable-line
+			result[loadKey] = (param: any = {}, opts: Options = {}) => { // eslint-disable-line
 				result[loadingKey].value = true;
+				param = {
+					...defaultParam,
+					...userParam,
+					...param
+				};
 				return globalProperties?.$request?.({
 					url, // 必须是mutationType
 					localData: compare(param, store),
