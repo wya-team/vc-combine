@@ -3,11 +3,7 @@
 		<!-- 原生table -->
 		<table v-if="mode === 'native'" class="vcc-paging-core__native">
 			<thead>
-				<slot :columns="columns" name="header">
-					<th v-for="item in columns" :key="item">
-						{{ item }}
-					</th>
-				</slot>
+				<slot name="header" />
 			</thead>
 			<slot :data-source="data" />
 		</table>

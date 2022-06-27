@@ -46,7 +46,11 @@
 				<slot name="empty" />
 			</template>
 			<template #header>
-				<slot name="header" :columns="columns" />
+				<slot name="header" v-bind="columns">
+					<th v-for="item in columns" :key="item">
+						{{ item }}
+					</th>
+				</slot>
 			</template>
 			<template #default="it">
 				<slot v-if="['piece', 'native'].includes(mode)" v-bind="it" />
