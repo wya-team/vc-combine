@@ -45,7 +45,7 @@
 			<template #empty>
 				<slot name="empty" />
 			</template>
-			<template #header>
+			<template v-if="mode === 'native'" #header>
 				<slot name="header" v-bind="columns">
 					<th v-for="item in columns" :key="item">
 						{{ item }}
