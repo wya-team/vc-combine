@@ -45,8 +45,11 @@
 			<template #empty>
 				<slot name="empty" />
 			</template>
+			<template #header>
+				<slot name="header" :columns="columns" />
+			</template>
 			<template #default="it">
-				<slot v-if="mode === 'piece'" v-bind="it" />
+				<slot v-if="['piece', 'native'].includes(mode)" v-bind="it" />
 				<slot v-else />
 			</template>		
 		</vcc-paging-core>

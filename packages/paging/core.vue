@@ -3,7 +3,7 @@
 		<!-- 原生table -->
 		<table v-if="mode === 'native'" class="vcc-paging-core__native">
 			<thead>
-				<slot v-bind="columns" name="header">
+				<slot :columns="columns" name="header">
 					<th v-for="item in columns" :key="item">
 						{{ item }}
 					</th>
@@ -169,7 +169,10 @@ export default defineComponent({
 		tableColumnOptions: Object,
 		radioOptions: Object,
 		radioGroupOptions: Object,
-		columns: Array, // native table
+		columns: { // native table
+			type: Array,
+			default: () => ([])
+		},
 		// ---- end
 		// ---- page 组件属性 start
 		pageOptions: {
