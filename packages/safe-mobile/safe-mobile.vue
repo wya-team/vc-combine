@@ -12,6 +12,12 @@
 	</div>
 </template>
 
+<script lang="ts">
+export default {
+	name: 'vcc-safe-mobile'
+};
+</script>
+
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Icon as VcIcon } from '@wya/vc';
