@@ -6,6 +6,7 @@ import Footer from '@wya/vcc-footer';
 import Map from '@wya/vcc-map';
 import Operate from '@wya/vcc-operate';
 import Table from '@wya/vcc-table';
+import SafeMobile from '@wya/vcc-safe-mobile';
 
 const PagingCore = Paging.Core;
 const PagingGroup = Paging.Group;
@@ -25,5 +26,6 @@ export {
 	Map,
 	MapLocation,
 	Operate,
+	SafeMobile,
 	TableActionsColumn
 };
