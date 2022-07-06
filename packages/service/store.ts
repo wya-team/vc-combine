@@ -1,4 +1,4 @@
-import { ref, reactive, onBeforeMount, onBeforeUnmount, getCurrentInstance } from 'vue';
+import { ref, onBeforeMount, onBeforeUnmount, getCurrentInstance } from 'vue';
 import { isEqualWith, cloneDeep } from 'lodash';
 import { Storage } from '@wya/utils';
 import Base from './base';
@@ -38,17 +38,18 @@ class StoreService extends Base {
 		store = store || resetStore();
 
 		// clear
-		!cache && this._add(() => {
+		const clearFn = () => {
 			store = resetStore();
-		});
+		};
 		return (userOptions: Options = {}) => {
+			!cache && this._add(clearFn);
 			const { globalProperties } = getCurrentInstance()?.appContext?.config as any;
 			const { param: userParam = {} } = userOptions;
 			const options = { ...defaultOptions, ...userOptions };
 			const { autoLoad = true, autoClear = false } = options;
 			// 方法首字母大写
 			const strFn = key.charAt(0).toUpperCase() + key.slice(1);
-			
+
 			const result = {};
 			const loadKey = `load${strFn}`;
 			const clearKey = `clear${strFn}`;
@@ -79,8 +80,8 @@ class StoreService extends Base {
 						response
 					};
 					result[key].value = parser ? parser(store.response.data) : store.response.data;
-					typeof cache === 'function' 
-						? cache(key, store) 
+					typeof cache === 'function'
+						? cache(key, store)
 						: (cache && Storage.set(`${key}`, store));
 					return response;
 				}).catch((response: any) => {

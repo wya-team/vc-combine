@@ -8,6 +8,8 @@ class Base {
 	}
 
 	_add = (cb: any) => {
+		if (this._cbs.includes(cb)) return;
+
 		this._cbs.push(cb);
 	}
 
