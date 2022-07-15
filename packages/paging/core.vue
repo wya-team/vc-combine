@@ -3,7 +3,7 @@
 		<!-- 原生table -->
 		<table v-if="mode === 'native'" class="vcc-paging-core__native">
 			<thead>
-				<slot name="header" />
+				<slot v-bind="columns" name="header" />
 			</thead>
 			<slot :data-source="data" />
 		</table>

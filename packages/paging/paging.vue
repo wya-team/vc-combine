@@ -46,7 +46,7 @@
 				<slot name="empty" />
 			</template>
 			<template v-if="mode === 'native'" #header>
-				<slot name="header" v-bind="columns">
+				<slot name="header">
 					<th v-for="item in columns" :key="item">
 						{{ item }}
 					</th>
@@ -83,7 +83,10 @@ export default defineComponent({
 	},
 	props: {
 		modelValue: Array,
-		columns: Array,
+		columns: { // native table
+			type: Array,
+			default: () => ([])
+		},
 		tableOptions: Object,
 		pageOptions: Object,
 		history: Boolean,
