@@ -89,7 +89,7 @@ export default defineComponent({
 		const fieldMap: FieldMap = new Map();
 
 		// module项可通过‘show'字段控制是否展示，show=true或者不设置show字段则展示
-		const enableModules = computed(() => props.modules.filter(it => it.show !== false));
+		const enableModules = computed(() => props.modules.filter(it => typeof it.show === 'undefined' || !!it.show));
 
 		const outerModules = computed(() => enableModules.value.slice(0, props.outerCount));
 		const innerModules = computed(() => enableModules.value.slice(props.outerCount));
