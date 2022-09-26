@@ -101,6 +101,7 @@ export default defineComponent({
 		filterOptions: Object,
 		max: Number,
 		single: Boolean,
+		paginate: Boolean, // 当返回数据为[]时，是否需要有分页器（通常避免一次性展示过多）
 		selectable: Boolean,
 		allowSelectionKeep: {
 			type: Boolean,
@@ -135,12 +136,24 @@ export default defineComponent({
 			let body = {};
 			if (res.data instanceof Array || res instanceof Array) {
 				let data = res.data || res;
-				body.list = data;
-				body.page = {
-					current: 1,
-					total: 1,
-					count: data.length,
-				};
+				if (!props.paginate) {
+					body.list = data;
+					body.page = {
+						current: 1,
+						total: 1,
+						count: data.length,
+					};
+				} else {
+					// 返回数据为数组时需要分页的场景
+					let start = ($page - 1) * pageSize;
+					body.list = data.slice(start, start + pageSize);
+					body.page = {
+						current: $page,
+						total: Math.ceil(data.length / pageSize),
+						count: data.length,
+					};
+				}
+				
 			} else {
 				body = res.data || res;
 			}
