@@ -6,13 +6,14 @@ import Base from './base';
 const resetStore = () => {
 	return cloneDeep({
 		param: {},
+		promise: undefined,
 		response: undefined
 	});
 };
 
 const defaultCompare = (newParam: any, localObj: any) => {
 	return isEqualWith(newParam, localObj.param)
-		? localObj.response
+		? localObj
 		: undefined;
 };
 
@@ -31,7 +32,8 @@ class StoreService extends Base {
 			cache = false,
 			param: defaultParam = {},
 			getParam = () => ({}),
-			dynamic = false
+			dynamic = false,
+			onAfter
 		} = defaultOptions;
 		let store: any;
 		cache && (store = Storage.get(`${key}`));
@@ -47,55 +49,57 @@ class StoreService extends Base {
 			const { param: userParam = {} } = userOptions;
 			const options = { ...defaultOptions, ...userOptions };
 			const { autoLoad = true, autoClear = false } = options;
-			// 方法首字母大写
-			const strFn = key.charAt(0).toUpperCase() + key.slice(1);
-
-			const result = {};
-			const loadKey = `load${strFn}`;
-			const clearKey = `clear${strFn}`;
-			const loadingKey = `loading${strFn}`;
 
 			const responseData = (store.response || {}).data || [];
-			result[key] = ref(parser ? parser(responseData) : responseData);
-			result[loadingKey] = ref(false);
+			const currentValue = ref(parser ? parser(responseData) : responseData);
+			const isLoading = ref(false);
 
-			result[loadKey] = (param: any = {}, opts: Options = {}) => { // eslint-disable-line
-				result[loadingKey].value = true;
+			const loadData = async (param: any = {}, opts: Options = {}) => { // eslint-disable-line
+				isLoading.value = true;
 				param = {
 					...defaultParam,
 					...userParam,
 					...param
 				};
-				return globalProperties?.$request?.({
-					url, // 必须是mutationType
-					localData: compare(param, store),
-					loading: false,
-					param,
-					dynamic,
-					...opts,
-					type: 'GET', // opts里面可能存在type, vc-select内
-				}).then((response: any) => {
-					store = {
+
+				try {
+					let { promise, response } = compare(param, store) || {};
+
+					promise = promise || globalProperties?.$request?.({
+						url,
+						localData: response,
+						loading: false,
 						param,
-						response
-					};
-					result[key].value = parser ? parser(store.response.data) : store.response.data;
+						dynamic,
+						onAfter,
+						...opts,
+						type: 'GET', // opts里面可能存在type, vc-select内
+					});
+
+					store.param = param;
+					store.promise = promise;
+
+					response = await promise;
+					store.response = response;
+
+					currentValue.value = parser ? parser(store.response.data) : store.response.data;
 					typeof cache === 'function'
 						? cache(key, store)
 						: (cache && Storage.set(`${key}`, store));
 					return response;
-				}).catch((response: any) => {
+				} catch (response) {
 					return Promise.reject(response);
-				}).finally(() => {
-					result[loadingKey].value = false;
-				});
+				} finally {
+					isLoading.value = false;
+				}
 			};
-			result[clearKey] = () => {
+
+			const clearData = () => {
 				store = resetStore();
 			};
 
 			onBeforeMount(() => {
-				autoLoad && (result[loadKey])({
+				autoLoad && loadData({
 					...defaultParam,
 					...userParam,
 					...getParam(this)
@@ -103,10 +107,18 @@ class StoreService extends Base {
 			});
 
 			onBeforeUnmount(() => {
-				autoClear && result[clearKey]();
+				autoClear && clearData();
 			});
 
-			return result;
+			// 方法首字母大写
+			const strFn = key.charAt(0).toUpperCase() + key.slice(1);
+
+			return {
+				[key]: currentValue,
+				[`loading${strFn}`]: isLoading,
+				[`load${strFn}`]: loadData,
+				[`clear${strFn}`]: clearData
+			};
 		};
 	}
 }
