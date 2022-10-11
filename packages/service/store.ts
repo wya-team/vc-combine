@@ -29,13 +29,13 @@ class StoreService extends Base {
 			dynamic = false
 		} = defaultOptions;
 		let store: any = [];
-		cache && (store = Storage.get(key) || []);
 
-		// clear
-		const clearFn = () => (store = []);
+		if (cache) {
+			const persistData = Storage.get(key);
+			store = Array.isArray(persistData) ? persistData : [];
+		}
 
 		return (userOptions: Options = {}) => {
-			!cache && this._add(clearFn);
 			const { globalProperties } = getCurrentInstance()?.appContext?.config as any;
 			const { param: userParam = {} } = userOptions;
 			const options = { ...defaultOptions, ...userOptions };
@@ -106,12 +106,11 @@ class StoreService extends Base {
 
 			const clearData = () => (store = []);
 
-			onBeforeMount(() => {
-				autoLoad && loadData({
-					...defaultParam,
-					...userParam,
-					...getParam(this)
-				});
+			onBeforeMount(async () => {
+				if (autoLoad) {
+					const param$ = await getParam(this);
+					loadData(param$);
+				}
 			});
 
 			onBeforeUnmount(() => {
@@ -121,6 +120,7 @@ class StoreService extends Base {
 			// 方法首字母大写
 			const strFn = key.charAt(0).toUpperCase() + key.slice(1);
 
+			!cache && this._add(clearData);
 			return {
 				[key]: currentValue,
 				[`loading${strFn}`]: isLoading,
