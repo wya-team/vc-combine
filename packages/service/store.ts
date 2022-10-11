@@ -1,20 +1,14 @@
 import { ref, onBeforeMount, onBeforeUnmount, getCurrentInstance } from 'vue';
-import { isEqualWith, cloneDeep } from 'lodash';
+import { isEqualWith } from 'lodash';
 import { Storage } from '@wya/utils';
 import Base from './base';
 
-const resetStore = () => {
-	return cloneDeep({
-		param: {},
-		promise: undefined,
-		response: undefined
-	});
+const defaultCompare = (newParam: any, localObj: any) => {
+	return isEqualWith(newParam, localObj.param);
 };
 
-const defaultCompare = (newParam: any, localObj: any) => {
-	return isEqualWith(newParam, localObj.param)
-		? localObj
-		: undefined;
+const getIndex = (newParam: any, store, compare: any) => {
+	return store.findIndex(i => compare(newParam, i));
 };
 
 class StoreService extends Base {
@@ -28,21 +22,18 @@ class StoreService extends Base {
 			key,
 			url,
 			compare = defaultCompare,
-			parser = null,
+			parser = (v) => v,
 			cache = false,
 			param: defaultParam = {},
 			getParam = () => ({}),
-			dynamic = false,
-			onAfter
+			dynamic = false
 		} = defaultOptions;
-		let store: any;
-		cache && (store = Storage.get(`${key}`));
-		store = store || resetStore();
+		let store: any = [];
+		cache && (store = Storage.get(key) || []);
 
 		// clear
-		const clearFn = () => {
-			store = resetStore();
-		};
+		const clearFn = () => (store = []);
+
 		return (userOptions: Options = {}) => {
 			!cache && this._add(clearFn);
 			const { globalProperties } = getCurrentInstance()?.appContext?.config as any;
@@ -50,8 +41,8 @@ class StoreService extends Base {
 			const options = { ...defaultOptions, ...userOptions };
 			const { autoLoad = true, autoClear = false } = options;
 
-			const responseData = (store.response || {}).data || [];
-			const currentValue = ref(parser ? parser(responseData) : responseData);
+			const responseData = ((store[getIndex(userParam, store, compare)] || {}).response || {}).data || [];
+			const currentValue = ref(parser(responseData, userParam, store));
 			const isLoading = ref(false);
 
 			const loadData = async (param: any = {}, opts: Options = {}) => { // eslint-disable-line
@@ -63,29 +54,48 @@ class StoreService extends Base {
 				};
 
 				try {
-					let { promise, response } = compare(param, store) || {};
+					let index = getIndex(param, store, compare);
 
+					let store$ = store[index];
+					if (!store$ && index === -1) {
+						store$ = {
+							param,
+							response: undefined,
+							promise: undefined
+						};
+						store.push(store$);
+					}
+
+					let { response, promise } = store$;
 					promise = promise || globalProperties?.$request?.({
 						url,
 						localData: response,
 						loading: false,
 						param,
 						dynamic,
-						onAfter,
 						...opts,
 						type: 'GET', // opts里面可能存在type, vc-select内
 					});
 
-					store.param = param;
-					store.promise = promise;
+					store$.param = param;
+					store$.promise = promise;
 
 					response = await promise;
-					store.response = response;
-
-					currentValue.value = parser ? parser(store.response.data) : store.response.data;
-					typeof cache === 'function'
-						? cache(key, store)
-						: (cache && Storage.set(`${key}`, store));
+					store$.response = response;
+					
+					currentValue.value = parser(response.data, param, store);
+						
+					if (cache) {
+						let persistData = store.map(i => {
+							return {
+								param: i.param,
+								response: i.response
+							};
+						});
+						typeof cache === 'function'
+							? cache(key, param, persistData)
+							: (cache && Storage.set(key, persistData));
+					}
 					return response;
 				} catch (response) {
 					return Promise.reject(response);
@@ -94,9 +104,7 @@ class StoreService extends Base {
 				}
 			};
 
-			const clearData = () => {
-				store = resetStore();
-			};
+			const clearData = () => (store = []);
 
 			onBeforeMount(() => {
 				autoLoad && loadData({
