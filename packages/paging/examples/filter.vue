@@ -13,7 +13,7 @@
 	</div>
 </template>
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import Paging from '../index.ts';
 
 export default defineComponent({
@@ -27,6 +27,15 @@ export default defineComponent({
 			{ label: 'before选项一', value: '1' },
 			{ label: 'before选项二', value: '2' }
 		]);
+
+		const asyncData = ref([]);
+
+		onMounted(() => setTimeout(() => {
+			asyncData.value = [
+				{ label: '选项一', value: '1' },
+				{ label: '选项二', value: '2' }
+			];
+		}));
 		const modules = ref([
 			{
 				type: 'input',
@@ -39,12 +48,18 @@ export default defineComponent({
 			},
 			{
 				type: 'select',
-				label: '下拉选择项：',
+				label: '下拉选择项value：',
 				field: 'select',
 				dataSource: [
 					{ label: '选项一', value: '1' },
 					{ label: '选项二', value: '2' }
 				]
+			},
+			{
+				type: 'select',
+				label: '下拉选择项ref：',
+				field: 'select',
+				dataSource: asyncData
 			},
 			{
 				type: 'multipleSelect',

@@ -60,16 +60,16 @@ export default defineComponent({
 		const {
 			isLoading,
 			dataSource,
-			getDataSource,
-		} = useDataSource(props.dataSource);
+			setDataSource,
+		} = useDataSource();
 
 		const handleVisibleChange = () => {
-			getDataSource();
+			setDataSource();
 		};
 
 		onMounted(() => {
 			if (props.modelValue && props.modelValue.length) {
-				getDataSource();
+				setDataSource();
 			}
 		});
 

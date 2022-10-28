@@ -5,7 +5,7 @@
 			:style="{ width: labelWidth }"
 			class="vcc-paging-filter-item-label"
 		>
-			{{ label }}
+			{{ label }} 
 		</span>
 		<vc-select
 			:model-value="modelValue"
@@ -74,17 +74,17 @@ export default defineComponent({
 		const {
 			isLoading,
 			dataSource,
-			getDataSource,
+			setDataSource,
 			asyncSearch
-		} = useDataSource(props.dataSource);
+		} = useDataSource();
 
 		const handleVisibleChange = () => {
-			getDataSource();
+			setDataSource();
 		};
 
 		onMounted(() => {
 			if (props.modelValue !== '' && props.modelValue !== undefined) {
-				getDataSource();
+				setDataSource();
 			}
 		});
 
