@@ -1,10 +1,10 @@
 <template>
 	<div :class="{ 'is-inline': inline }" class="vcc-safe-mobile">
 		<span class="vcc-safe-mobile__mobile">
-			{{ isEncrypted && value ? encryptMobile(value) : value }}
+			{{ isEncrypted && value ? encrypt(value) : value }}
 		</span>
 		<vc-icon
-			v-if="visibleChangeable"
+			v-if="!disabled"
 			:type="isEncrypted ? 'invisible' : 'visible'"
 			class="vcc-safe-mobile__toggle-icon"
 			@click="handleToggle"
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 export default {
-	name: 'vcc-safe-mobile'
+	name: 'vcc-encrypt'
 };
 </script>
 
@@ -23,25 +23,41 @@ import { ref } from 'vue';
 import { Icon as VcIcon } from '@wya/vc';
 
 const props = defineProps({
-	// 手机号码
 	value: {
 		type: String,
 		default: ''
 	},
 	// 初始可见性
 	visible: Boolean,
-	// 是否可以切换 visible
-	visibleChangeable: {
+	disabled: {
 		type: Boolean,
-		default: true
+		default: false
 	},
 	// 是否以行内元素形式展示
-	inline: Boolean
+	inline: Boolean,
+	from: {
+		type: Number,
+		default: 3
+	},
+	length: {
+		type: Number,
+		default: 4
+	}
 });
 const emit = defineEmits(['update:visible']);
 
-const encryptMobile = (str: string) => {
-	return str.replace(/^(\d{3})\d+(\d{4})$/, '$1****$2');
+const encrypt = (v) => {
+	v = v || '';
+	let repeat = props.length || 0;
+	let content = v.substring(0, props.from);
+
+	while (repeat) {
+		content += '*';
+		repeat--;
+	}
+
+	content += v.substring(props.from + props.length);
+	return content;
 };
 
 const isEncrypted = ref(!props.visible);
