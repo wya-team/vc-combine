@@ -1,18 +1,18 @@
 {
   "name": "@wya/vcc",
-  "version": "0.1.49",
+  "version": "0.1.50",
   "main": "dist/index.js",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@wya/vcc-encrypt": "^0.0.2",
     "@wya/vcc-footer": "^0.0.6",
     "@wya/vcc-gallery": "^0.0.38",
     "@wya/vcc-map": "^0.0.4",
     "@wya/vcc-operate": "^0.0.7",
     "@wya/vcc-paging": "^0.0.59",
-    "@wya/vcc-encrypt": "^0.0.1",
     "@wya/vcc-section-title": "^0.0.6",
     "@wya/vcc-service": "^0.0.10",
     "@wya/vcc-set-title": "^0.0.11",
