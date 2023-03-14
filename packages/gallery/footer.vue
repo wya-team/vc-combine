@@ -98,6 +98,7 @@ const handleDel = async () => {
 	&__selected-tip {
 		width: 230px;
 		text-align: left;
+		white-space: nowrap;
 	}
 
 	&__btn-wrapper {
