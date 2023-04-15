@@ -43,6 +43,7 @@ class StoreService extends Base {
 			const { 
 				autoLoad = true, 
 				autoClear = false, 
+				alone = false,
 				request = globalProperties?.$request 
 			} = options;
 
@@ -111,15 +112,13 @@ class StoreService extends Base {
 
 			const clearData = () => (store = []);
 
-			onBeforeMount(async () => {
-				if (autoLoad) {
-					const param$ = await getParam(this);
-					loadData(param$);
-				}
+			!alone && autoLoad && onBeforeMount(async () => {
+				const param$ = await getParam(this);
+				loadData(param$);
 			});
 
-			onBeforeUnmount(() => {
-				autoClear && clearData();
+			!alone && autoClear && onBeforeUnmount(() => {
+				clearData();
 			});
 
 			// 方法首字母大写
