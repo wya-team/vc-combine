@@ -36,10 +36,15 @@ class StoreService extends Base {
 		}
 
 		return (userOptions: Options = {}) => {
-			const { globalProperties } = getCurrentInstance()?.appContext?.config as any;
+			const { globalProperties } = getCurrentInstance()?.appContext?.config || {};
+
 			const { param: userParam = {} } = userOptions;
 			const options = { ...defaultOptions, ...userOptions };
-			const { autoLoad = true, autoClear = false } = options;
+			const { 
+				autoLoad = true, 
+				autoClear = false, 
+				request = globalProperties?.$request 
+			} = options;
 
 			const responseData = ((store[getIndex(userParam, store, compare)] || {}).response || {}).data || [];
 			const currentValue = ref(parser(responseData, userParam, store));
@@ -67,7 +72,7 @@ class StoreService extends Base {
 					}
 
 					let { response, promise } = store$;
-					promise = promise || globalProperties?.$request?.({
+					promise = promise || request?.({
 						url,
 						localData: response,
 						loading: false,
