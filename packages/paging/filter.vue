@@ -198,7 +198,8 @@ export default defineComponent({
 
 		expose({
 			reset,
-			search: handleSearch
+			search: handleSearch,
+			getKeywords: () => keywords.value
 		});
 
 		onBeforeUnmount(() => {
