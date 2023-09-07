@@ -197,7 +197,8 @@ export default defineComponent({
 		};
 
 		expose({
-			reset
+			reset,
+			search: handleSearch
 		});
 
 		onBeforeUnmount(() => {
