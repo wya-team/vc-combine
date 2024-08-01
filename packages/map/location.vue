@@ -49,7 +49,7 @@
 import { watch, ref, reactive, defineComponent, inject } from 'vue';
 import { Utils } from '@wya/utils';
 import { Input } from '@wya/vc';
-import Map from ".";
+import Map from "./map";
 
 export default defineComponent({
 	name: 'vcc-map-location',

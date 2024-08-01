@@ -1,8 +1,7 @@
 import { URL, Load } from '@wya/utils';
 
-let AMAP_SCRIPT_SRC = '//webapi.amap.com/maps?v=1.4.14&key=b400a1891f67168f2a48f0021aaf93e8';
-let AMAP_UI_SCRIPT_SRC = '//webapi.amap.com/ui/1.0/main.js?v=1.0.11';
-
+let AMAP_SCRIPT_SRC = '//webapi.amap.com/maps?v=2.0&key=11bfdd50d6183c24a8b7f58612560a41';
+let AMAP_UI_SCRIPT_SRC = '//webapi.amap.com/ui/1.1/main.js?v=1.1';
 let location: any;
 
 let locationManager: MapManager;
