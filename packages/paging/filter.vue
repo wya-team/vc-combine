@@ -111,7 +111,8 @@ export default defineComponent({
 		const routerReplace = async (fullPath: string) => {
 			const { globalProperties } = vm.appContext.config;
 			if (globalProperties.$router && props.router) {
-				await globalProperties.$router.replace(fullPath);
+				const base = globalProperties.$router.options.history.base;
+				await globalProperties.$router.replace(fullPath.replace(new RegExp(`^${base}`), ''));
 			} else {
 				window.history.replaceState(window.history.state, '', fullPath);
 			}
