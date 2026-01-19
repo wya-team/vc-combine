@@ -4,4 +4,7 @@ export interface ActionItem {
 	tip?: string;
 	disabled?: boolean;
 	show?: boolean;
+	onCancel?: (item: ActionItem) => void;
+	onClick?: (item: ActionItem) => void;
+	onOk?: (item: ActionItem) => void;
 }

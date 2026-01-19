@@ -153,9 +153,18 @@ export default defineComponent({
 		const handleOk = (item: ActionItem) => {
 			if (item.disabled) return;
 			emit('click', item.label, item);
+			if (typeof item.onOk === 'function') {
+				return item.onOk(item);
+			} else if (typeof item.onClick === 'function') {
+				return item.onClick(item);
+			}
 			emit('ok', item.label, item);
 		};
 		const handleCancel = (item: ActionItem) => {
+			emit('click', item.label, item);
+			if (typeof item.onCancel === 'function') {
+				return item.onCancel(item);
+			}
 			emit('cancel', item.label, item);
 		};
 
