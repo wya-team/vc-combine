@@ -1,15 +1,15 @@
 import type { App } from 'vue';
-import * as components from './components';
+import * as Components from './components';
 
 const install = (app: App, _options: Options): void => {
-	Object.keys(components).forEach(c => {
-		app.component(components[c].name, components[c]);
+	Object.keys(Components).forEach(c => {
+		app.component(Components[c].name, Components[c]);
 	});
 };
 
 export * from './assist';
 export * from './components';
-export { install };
+export { install, Components };
 export default {
 	install
 };
